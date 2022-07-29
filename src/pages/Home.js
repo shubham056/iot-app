@@ -174,7 +174,7 @@ const Home = () => {
             <div className="row">
               <div className="col-lg-6 col-sm-6 data-aos" data-aos="fade-right">
                 <div className="about-img-2">
-                  <img src="assets/images/about/combination-chart.png" alt className="img-fluid" />
+                  <img src="assets/images/about/combination-chart.png" alt="img" className="img-fluid" />
                 </div>
               </div>
               <div className="col-lg-6 col-sm-6 data-aos" data-aos="fade-left">
@@ -219,7 +219,7 @@ const Home = () => {
                 <div className="owl-carousel owl-theme " id="review-carousel">
                   <div className="review-content">
                     <div className="client-review-img">
-                      <img src="assets/images/clients/img-1.jpg" alt className="img-fluid " />
+                      <img src="assets/images/clients/img-1.jpg" alt="img" className="img-fluid " />
                     </div>
                     <p>High Life narwhal, banh mi PBR single-origin coffee Odd Future actually aliqua polaroid befor.We design beautiful modern engaging websites that always latest responsive technologies.</p>
                     <div className="client-info">
@@ -229,7 +229,7 @@ const Home = () => {
                   </div>
                   <div className="review-content">
                     <div className="client-review-img">
-                      <img src="assets/images/clients/img-1.jpg" alt className="img-fluid " />
+                      <img src="assets/images/clients/img-1.jpg" alt="img" className="img-fluid " />
                     </div>
                     <p>Focus on engaging, reusable content that decrease the cost per leads while helps you to increase profits margin.modern engaging websites that always latest responsive technologies.</p>
                     <div className="client-info">
@@ -239,7 +239,7 @@ const Home = () => {
                   </div>
                   <div className="review-content">
                     <div className="client-review-img">
-                      <img src="assets/images/clients/img-1.jpg" alt className="img-fluid " />
+                      <img src="assets/images/clients/img-1.jpg" alt="img" className="img-fluid " />
                     </div>
                     <p>High Life narwhal, banh mi PBR single-origin coffee Odd Future actually aliqua polaroid befor.We design beautiful modern engaging websites that always latest responsive technologies.</p>
                     <div className="client-info">

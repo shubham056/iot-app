@@ -1,4 +1,4 @@
-import { Route, useLocation, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "../redux/features/AuthenticationSlice";
 import { logout } from "../redux/features/AuthenticationSlice";

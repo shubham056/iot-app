@@ -7,7 +7,7 @@ export const Footer = () => {
       <div className="row">
         <div className="col-lg-3 col-sm-6">
           <div className="footer-logo">
-            <img src="assets/images/logo2.png" alt className="img-fluid" />
+            <img src="assets/images/logo2.png" alt="img" className="img-fluid" />
           </div>
         </div>
         <div className="col-lg-3 col-sm-6">

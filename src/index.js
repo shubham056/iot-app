@@ -5,15 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { store } from './redux/store'
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
 import axios from "axios";
-import { Navigate } from "react-router-dom";
 
 let persistor = persistStore(store);
-const TopRightAlertContext = createContext()
+//const TopRightAlertContext = createContext()
 
 axios.defaults.baseURL = "https://iot-admin.herokuapp.com/api/v1/";
 axios.defaults.headers.post['Content-Type'] = 'application/json';
