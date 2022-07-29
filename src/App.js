@@ -23,13 +23,13 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        <Route path="/contact-us" element={<PrivateRoute><Contact /></PrivateRoute>} />
-        <Route path="/about-us" element={<PrivateRoute><About /></PrivateRoute>} />
-        <Route path="/support" element={<PrivateRoute><Support /></PrivateRoute>} />
         <Route path="/listing" element={<PrivateRoute><Listing /></PrivateRoute>} />
         <Route path="/view-listing" element={<PrivateRoute><ViewListing /></PrivateRoute>} />
         <Route path="/logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
 
+        <Route path="/contact-us" element={<ProtectedRoute><Contact /></ProtectedRoute>} />
+        <Route path="/about-us" element={<ProtectedRoute><About /></ProtectedRoute>} />
+        <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
         <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />
         <Route path="/signup" element={<ProtectedRoute><Signup /></ProtectedRoute>} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />

@@ -16,11 +16,8 @@ const Login = () => {
   //const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(clearMessage());
-  // }, [dispatch]);
-  
 
+  
   const loginSchema = Yup.object().shape({
     email: Yup.string().email('Enter valid email id.').required('Email id is required.'),
     password: Yup.string().required('Password is required.')
