@@ -1,16 +1,29 @@
 import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import ProtectedRoute from "./Routes/ProtectedRoute";
+import PrivateRoute from "./Routes/PrivateRoute";
+//pages
+import Home from "./pages/Home";
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Welcome to IOT APP.
-        </p>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<PrivateRoute><Home /></PrivateRoute>} />
+        
+
+        <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
