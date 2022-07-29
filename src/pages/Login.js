@@ -16,9 +16,9 @@ const Login = () => {
   //const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(clearMessage());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(clearMessage());
+  // }, [dispatch]);
   
 
   const loginSchema = Yup.object().shape({

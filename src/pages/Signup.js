@@ -12,9 +12,9 @@ import { Link } from 'react-router-dom';
 const Signup = () => {
     const { message } = useSelector((state) => state.message);
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(clearMessage());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(clearMessage());
+    // }, [dispatch]);
 
     //form validations schema 
     const signupSchema = Yup.object().shape({
