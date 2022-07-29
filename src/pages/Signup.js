@@ -46,10 +46,10 @@ const Signup = () => {
             .then(() => {
                 console.log("redirect to login")
                 console.log(message)
-                { alert.show("Successfully signup.") }
+               
             })
             .catch(() => {
-                { message && alert.show(message) }
+              
             });
     }
 

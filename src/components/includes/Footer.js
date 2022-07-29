@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export const Footer = () => {
   return (
@@ -13,24 +14,24 @@ export const Footer = () => {
         <div className="col-lg-3 col-sm-6">
           <div className="footer-menu2">
             <ul>
-              <li><a href="#">Content management</a></li>
-              <li><a href="#">Email Marketing</a></li>
-              <li><a href="#">Social Marketing</a></li>
-              <li><a href="#">Keyword Alanytics</a></li>
-              <li><a href="#">Site Optimization</a></li>
-              <li><a href="#">Pay per click</a></li>
+              <li><Link to="/">Content management</Link></li>
+              <li><Link to="/">Email Marketing</Link></li>
+              <li><Link to="/">Social Marketing</Link></li>
+              <li><Link to="/">Keyword Alanytics</Link></li>
+              <li><Link to="/">Site Optimization</Link></li>
+              <li><Link to="/">Pay per click</Link></li>
             </ul>
           </div>
         </div>
         <div className="col-lg-3 col-sm-6">
           <div className="footer-menu2">
             <ul>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms &amp; Conditions</a></li>
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">Affiliates</a></li>
-              <li><a href="#">Help Center</a></li>
+              <li><Link to="/">Services</Link></li>
+              <li><Link to="/">Privacy Policy</Link></li>
+              <li><Link to="/">Terms &amp; Conditions</Link></li>
+              <li><Link to="/">FAQ</Link></li>
+              <li><Link to="/">Affiliates</Link></li>
+              <li><Link to="/">Help Center</Link></li>
             </ul>
           </div>
         </div>

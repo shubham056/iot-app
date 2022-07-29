@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
 
@@ -21,8 +22,8 @@ const Home = () => {
                       <div className="slider-content white ">
                         <h1>Internet of things (IoT), data <br />visualization, hardware monitors</h1>
                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
-                        <a href="#" className="btn btn-primary circled">Learn More</a>
-                        <a href="#" className="btn btn-trans-white ml5 circled">Services</a>
+                        <Link to="/" className="btn btn-primary circled">Learn More</Link>
+                        <Link to="/" className="btn btn-trans-white ml5 circled">Services</Link>
                       </div>
                     </div>
                   </div>
@@ -38,8 +39,8 @@ const Home = () => {
                       <div className="slider-content white ">
                         <h1>Internet of things (IoT), data <br />visualization, hardware monitors</h1>
                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
-                        <a href="#" className="btn btn-primary circled">Learn More</a>
-                        <a href="#" className="btn btn-trans-white ml5 circled">Services</a>
+                        <Link to="/" className="btn btn-primary circled">Learn More</Link>
+                        <Link to="/" className="btn btn-trans-white ml5 circled">Services</Link>
                       </div>
                     </div>
                   </div>
@@ -55,8 +56,8 @@ const Home = () => {
                       <div className="slider-content white ">
                         <h1>Internet of things (IoT), data <br />visualization, hardware monitors</h1>
                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
-                        <a href="#" className="btn btn-success ml5 circled">Services</a>
-                        <a href="#" className="btn btn-trans-white circled">Learn More</a>
+                        <Link to="/" className="btn btn-success ml5 circled">Services</Link>
+                        <Link to="/" className="btn btn-trans-white circled">Learn More</Link>
                       </div>
                     </div>
                   </div>
@@ -203,7 +204,7 @@ const Home = () => {
                   <p className="text-muted">Start Your project with easy pricing and attract your visitors</p>
                 </div>
                 <div className="col-lg-2 text-right">
-                  <a href="#" className="btn btn-primary circled">See Pricing</a>
+                  <Link to="/" className="btn btn-primary circled">See Pricing</Link>
                 </div>
               </div>
             </div>

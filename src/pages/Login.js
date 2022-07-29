@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/includes/Footer';
 import { Header } from '../components/includes/Header';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 import { useDispatch, useSelector } from "react-redux";
 import { login, register as signUp } from "../redux/features/AuthenticationSlice";
@@ -14,7 +13,7 @@ import * as Yup from 'yup'
 
 const Login = () => {
   //define states
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  //const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -45,11 +44,9 @@ const Login = () => {
       .unwrap()
       .then((response) => {
         console.log("redirect to dashboard")
-        toast("Wow so easy!");
-        { alert.show("Logged in successfully.") }
       })
       .catch(() => {
-        { message && alert.show("Please enter valid credentials.") }
+        
       });
   }
 

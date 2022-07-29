@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
 
@@ -18,28 +19,28 @@ const ViewListing = () => {
                                           <h4>Area Device Name <i className="icofont icofont-reply-all" /></h4>
                                           <hr />
                                           <div className="tags top_tag">
-                                              <a href="#" className="tag-cloud-link ">Control</a>
-                                              <a href="#" className="tag-cloud-link ">Diagnostic</a>
-                                              <a href="#" className="tag-cloud-link ">A117</a>
-                                              <a href="#" className="tag-cloud-link">Trend</a>
+                                              <Link to="/" className="tag-cloud-link ">Control</Link>
+                                              <Link to="/" className="tag-cloud-link ">Diagnostic</Link>
+                                              <Link to="/" className="tag-cloud-link ">A117</Link>
+                                              <Link to="/" className="tag-cloud-link">Trend</Link>
                                           </div>
                                       </div>
                                       <div className="tags">
                                           <div className="tag_box">
                                               <span>XXXXX</span>
-                                              <a href="#" className="tag-cloud-link ">A101</a>
+                                              <Link to="/" className="tag-cloud-link ">A101</Link>
                                           </div>
                                           <div className="tag_box">
                                               <span>XXXXX</span>
-                                              <a href="#" className="tag-cloud-link ">A101</a>
+                                              <Link to="/" className="tag-cloud-link ">A101</Link>
                                           </div>
                                           <div className="tag_box">
                                               <span>XXXXX</span>
-                                              <a href="#" className="tag-cloud-link ">A101</a>
+                                              <Link to="/" className="tag-cloud-link ">A101</Link>
                                           </div>
                                           <div className="tag_box">
                                               <span>XXXXX</span>
-                                              <a href="#" className="tag-cloud-link ">A101</a>
+                                              <Link to="/" className="tag-cloud-link ">A101</Link>
                                           </div>
                                       </div>
                                       <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
@@ -47,8 +48,8 @@ const ViewListing = () => {
                                               <div className="col-xl-3 col-lg-3 col-md-3 col-sm-12">
                                                   <div className="row">
                                                       <div className="tags left_wraper">
-                                                          <a href="#" className="tag-cloud-link bg_green">Power</a>
-                                                          <a href="#" className="tag-cloud-link ">Energy</a>
+                                                          <Link to="/" className="tag-cloud-link bg_green">Power</Link>
+                                                          <Link to="/" className="tag-cloud-link ">Energy</Link>
                                                       </div>
                                                   </div>
                                               </div>
@@ -56,8 +57,8 @@ const ViewListing = () => {
                                                   <div className="row right_wraper">
                                                       <div className="tags ">
                                                           <span>XXXXX</span>
-                                                          <a href="#" className="tag-cloud-link bg_green">Daily</a>
-                                                          <a href="#" className="tag-cloud-link">Monthly</a>
+                                                          <Link to="/" className="tag-cloud-link bg_green">Daily</Link>
+                                                          <Link to="/" className="tag-cloud-link">Monthly</Link>
                                                       </div>
                                                       <div className="graph_wraper">
                                                       </div>
@@ -66,10 +67,10 @@ const ViewListing = () => {
                                           </div>
                                       </div>
                                       <div className="tags bottom_tag">
-                                          <a href="#" className="tag-cloud-link bg_green">Total</a>
-                                          <a href="#" className="tag-cloud-link ">Phase - 1</a>
-                                          <a href="#" className="tag-cloud-link ">Phase - 2</a>
-                                          <a href="#" className="tag-cloud-link">Phase - 3</a>
+                                          <Link to="/" className="tag-cloud-link bg_green">Total</Link>
+                                          <Link to="/" className="tag-cloud-link ">Phase - 1</Link>
+                                          <Link to="/" className="tag-cloud-link ">Phase - 2</Link>
+                                          <Link to="/" className="tag-cloud-link">Phase - 3</Link>
                                       </div>
                                   </div>
                               </div>
