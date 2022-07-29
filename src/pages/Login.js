@@ -5,7 +5,7 @@ import { Header } from '../components/includes/Header';
 
 
 import { useDispatch, useSelector } from "react-redux";
-import { login, register as signUp } from "../redux/features/AuthenticationSlice";
+import { login } from "../redux/features/AuthenticationSlice";
 import { clearMessage } from "../redux/features/Message";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -19,11 +19,7 @@ const Login = () => {
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
-  const initialValues = {
-    email: "",
-    password: "",
-  };
-
+  
 
   const loginSchema = Yup.object().shape({
     email: Yup.string().email('Enter valid email id.').required('Email id is required.'),

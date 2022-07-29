@@ -10,16 +10,11 @@ import * as Yup from 'yup'
 import { Link } from 'react-router-dom';
 
 const Signup = () => {
-    const { isLoggedIn } = useSelector((state) => state.auth);
     const { message } = useSelector((state) => state.message);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(clearMessage());
     }, [dispatch]);
-    const initialValues = {
-        email: "",
-        password: "",
-    };
 
     //form validations schema 
     const signupSchema = Yup.object().shape({

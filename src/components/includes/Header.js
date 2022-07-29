@@ -28,10 +28,10 @@ export const Header = () => {
                                         ?
                                         <>
                                             <li>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b></li>
-                                            {/* <li class="sub_show"><a href="javascript:void(0)"> Surender Kumar <i class="icofont icofont-caret-down"></i></a>
+                                            {/* <li class="sub_show"><Link to="javascript:void(0)"> Surender Kumar <i class="icofont icofont-caret-down"></i></Link>
 
                                                 <ul class="sub_nav">
-                                                    <li><a href="" class="logout">Logout</a></li>
+                                                    <li><Link to="" class="logout">Logout</Link></li>
                                                 </ul>
                                             </li> */}
                                         </>
@@ -51,9 +51,9 @@ export const Header = () => {
             </div>
             <nav className="navbar navbar-expand-lg">
                 <div className="container">
-                    <a className="navbar-brand" href="#">
+                    <Link className="navbar-brand" to="/">
                         <img src="assets/images/logo.jpg" alt="logo" className="img-fluid logo" />
-                    </a>
+                    </Link>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="fa fa-bars" />
                     </button>

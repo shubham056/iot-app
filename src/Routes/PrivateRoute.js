@@ -8,7 +8,7 @@ function PrivateRoute({ children }) {
   const user = JSON.parse(localStorage.getItem("user"));
   //console.log("user private roure value",user)
 
-  if(user == undefined){
+  if(user === undefined){
     dispatch(logout())
     }
 
