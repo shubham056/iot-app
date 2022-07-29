@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/includes/Footer';
 import { Header } from '../components/includes/Header';
@@ -67,9 +67,18 @@ const Login = () => {
               <div className="col-lg-12 col-sm-12">
                 <div className="contact-form2">
                   <h4 className="text-uppercase">Login to your Account</h4>
+                  {message && (
+                    <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                      {message}
+                      <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                  )}
+
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
-                      <input 
+                      <input
                         type="text"
                         {...register("email")}
                         placeholder="Email address"
@@ -88,7 +97,7 @@ const Login = () => {
                       <span style={{ color: 'red' }}>{errors.password?.message}</span>
 
                     </div>
-                    <button type='submit' className="btn btn-primary">Sign In</button>
+                    <button style={{ width: "100%" }} type='submit' className="btn btn-primary">Sign In</button>
                     <div className="forgot">
                       <a href>Forgot Password?</a>
                     </div>

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
+import { Footer } from '../components/includes/Footer'
 
-const Dashboard = () => {
+const About = () => {
   return (
     <div>
   <Header/>
@@ -13,7 +13,7 @@ const Dashboard = () => {
         <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
           <div className="row">
             <div className="dashboard_wrap">
-              <h1>My Dashboard</h1>
+              <h1>About Us</h1>
               <ul>
                 <li>
                   <a href>
@@ -40,4 +40,5 @@ const Dashboard = () => {
 </div>
   )
 }
-export default Dashboard
+
+export default About 

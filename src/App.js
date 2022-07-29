@@ -13,12 +13,22 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Logout from './pages/Logout';
+import Listing from './pages/Listing';
+import ViewListing from './pages/ViewListing';
+import Contact from './pages/Contact';
+import About from './pages/About';
+import Support from './pages/Support';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/contact-us" element={<PrivateRoute><Contact /></PrivateRoute>} />
+        <Route path="/about-us" element={<PrivateRoute><About /></PrivateRoute>} />
+        <Route path="/support" element={<PrivateRoute><Support /></PrivateRoute>} />
+        <Route path="/listing" element={<PrivateRoute><Listing /></PrivateRoute>} />
+        <Route path="/view-listing" element={<PrivateRoute><ViewListing /></PrivateRoute>} />
         <Route path="/logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
 
         <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />

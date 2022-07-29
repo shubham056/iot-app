@@ -5,6 +5,7 @@ import { selectUser } from "../../redux/features/AuthenticationSlice";
 
 export const Header = () => {
     const isAuthenticated = useSelector(selectUser);
+    const { user: currentUser } = useSelector((state) => state.auth);
     return (
         <header>
             <div className="top_heder">
@@ -26,7 +27,7 @@ export const Header = () => {
                                     isAuthenticated
                                         ?
                                         <>
-                                         <li><Link to="/logout" class="logout">Logout</Link></li>
+                                            <li>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b></li>
                                             {/* <li class="sub_show"><a href="javascript:void(0)"> Surender Kumar <i class="icofont icofont-caret-down"></i></a>
 
                                                 <ul class="sub_nav">
@@ -64,14 +65,33 @@ export const Header = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/" className="nav-link page-scroll">About</Link>
+                                <Link to="/about-us" className="nav-link page-scroll">About</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/" className="nav-link page-scroll" >Support</Link>
+                                <Link to="/support" className="nav-link page-scroll" >Support</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/" className="nav-link page-scroll" >Contact</Link>
+                                <Link to="/contact-us" className="nav-link page-scroll" >Contact</Link>
                             </li>
+                            {
+                                isAuthenticated
+                                    ?
+                                    <>
+                                        <li className="nav-item">
+                                            <Link to="/listing" className="nav-link page-scroll">Listing</Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/view-listing" className="nav-link page-scroll">View Listing</Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/logout" className="nav-link page-scroll" ><strong>Logout</strong></Link>
+                                        </li>
+                                    </>
+
+                                    :
+                                    null
+                            }
+
                         </ul>
                     </div>
                 </div>
