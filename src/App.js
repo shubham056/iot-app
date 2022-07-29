@@ -27,9 +27,9 @@ function App() {
         <Route path="/view-listing" element={<PrivateRoute><ViewListing /></PrivateRoute>} />
         <Route path="/logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
 
-        <Route path="/contact-us" element={<ProtectedRoute><Contact /></ProtectedRoute>} />
-        <Route path="/about-us" element={<ProtectedRoute><About /></ProtectedRoute>} />
-        <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
+        <Route path="/contact-us" element={<Contact />} />
+        <Route path="/about-us" element={<About />} />
+        <Route path="/support" element={<Support />} />
         <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />
         <Route path="/signup" element={<ProtectedRoute><Signup /></ProtectedRoute>} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
