@@ -1,6 +1,10 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/features/AuthenticationSlice";
 
 export const Header = () => {
+    const isAuthenticated = useSelector(selectUser);
     return (
         <header>
             <div className="top_heder">
@@ -18,8 +22,27 @@ export const Header = () => {
                         </div>
                         <div className="top_right">
                             <ul>
-                                <li><a href><i className="icofont icofont-login" /> Login</a></li>
-                                <li><a href><i className="icofont icofont-ui-user" /> Register</a></li>
+                                {
+                                    isAuthenticated
+                                        ?
+                                        <>
+                                         <li><Link to="/logout" class="logout">Logout</Link></li>
+                                            {/* <li class="sub_show"><a href="javascript:void(0)"> Surender Kumar <i class="icofont icofont-caret-down"></i></a>
+
+                                                <ul class="sub_nav">
+                                                    <li><a href="" class="logout">Logout</a></li>
+                                                </ul>
+                                            </li> */}
+                                        </>
+                                        :
+                                        <>
+                                            <li><Link to="/login"><i className="icofont icofont-login" /> Login</Link></li>
+                                            <li><Link to="/signup"><i className="icofont icofont-ui-user" /> Register</Link></li>
+                                        </>
+
+                                }
+
+
                             </ul>
                         </div>
                     </div>
@@ -36,18 +59,18 @@ export const Header = () => {
                     <div className="collapse navbar-collapse " id="navbar-collapse">
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
-                                <a className="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <Link to="/" className="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Home
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link page-scroll" href="#about">About</a>
+                                <Link to="/" className="nav-link page-scroll">About</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link page-scroll" href="#blog">Support</a>
+                                <Link to="/" className="nav-link page-scroll" >Support</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link page-scroll" href="#contact">Contact</a>
+                                <Link to="/" className="nav-link page-scroll" >Contact</Link>
                             </li>
                         </ul>
                     </div>

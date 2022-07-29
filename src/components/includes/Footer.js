@@ -49,12 +49,12 @@ export const Footer = () => {
       <div className="row">
         <div className="col-lg-6 col-sm-6">
           <div className="footer-btm">
-            <p>Business Template made by <span>Company Name</span></p>
+            <p>Business Template made by <span>AGILE INDUSTRIES</span></p>
           </div>
         </div>
         <div className="col-lg-6 col-sm-6">
           <div className="footer-btm text-right">
-            <p>Copyright Reserved to <span>Company Name .2018</span></p>
+            <p>Copyright Reserved to <span>AGILE INDUSTRIES @2022</span></p>
           </div>
         </div>
       </div>

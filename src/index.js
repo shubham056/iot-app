@@ -15,7 +15,7 @@ import { Navigate } from "react-router-dom";
 let persistor = persistStore(store);
 const TopRightAlertContext = createContext()
 
-axios.defaults.baseURL = "https://growth-operating-system-api.herokuapp.com/api/v1/";
+axios.defaults.baseURL = "https://iot-admin.herokuapp.com/api/v1/";
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
