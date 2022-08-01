@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/includes/Footer';
 import { Header } from '../components/includes/Header';
+import { ToastContainer, Slide, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 import { useDispatch, useSelector } from "react-redux";
@@ -16,8 +18,12 @@ const Login = () => {
   //const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   const dispatch = useDispatch();
+  const [isLoading, setisLoading] = useState(false)
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
 
-  
+
   const loginSchema = Yup.object().shape({
     email: Yup.string().email('Enter valid email id.').required('Email id is required.'),
     password: Yup.string().required('Password is required.')
@@ -31,16 +37,22 @@ const Login = () => {
   const { register, formState: { errors, isSubmitting }, handleSubmit, } = useForm(formOptionsLogin);
   //login submit handler
   const onSubmit = formValue => {
-
-    console.log(JSON.stringify(formValue));//print form data to console
+    setisLoading(true)
+    //console.log(JSON.stringify(formValue))
     dispatch(login(formValue))
       .unwrap()
-      .then((response) => {
-        console.log("redirect to dashboard")
+      .then(() => {
+        setisLoading(false)
       })
-      .catch(() => {
-        
+      .catch((error) => {
+        setisLoading(false)
       });
+  }
+
+  {
+    message && toast.info(message, {
+      toastId: 23453643
+    })
   }
 
 
@@ -57,15 +69,14 @@ const Login = () => {
               <div className="col-lg-12 col-sm-12">
                 <div className="contact-form2">
                   <h4 className="text-uppercase">Login to your Account</h4>
-                  {message && (
+                  {/* {message && (
                     <div className="alert alert-danger alert-dismissible fade show" role="alert">
                       {message}
                       <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                       </button>
                     </div>
-                  )}
-
+                  )} */}
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
                       <input
@@ -87,7 +98,15 @@ const Login = () => {
                       <span style={{ color: 'red' }}>{errors.password?.message}</span>
 
                     </div>
-                    <button style={{ width: "100%" }} type='submit' className="btn btn-primary">Sign In</button>
+                    {
+                      isLoading
+                        ?
+                        <button style={{ width: "100%" }} className="btn btn-primary">Sign In...  <div className="spinner-border" />
+                        </button>
+
+                        :
+                        <button style={{ width: "100%" }} type='submit' className="btn btn-primary">Sign In</button>
+                    }
                     <div className="forgot">
                       <a href>Forgot Password?</a>
                     </div>
@@ -105,6 +124,17 @@ const Login = () => {
 
         {/* FOOTER STYLES END */}
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        transition={Slide}
+      />
 
     </>
   )
