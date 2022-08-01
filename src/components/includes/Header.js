@@ -99,9 +99,6 @@ export const Header = () => {
                                         <li className="nav-item">
                                             <Link to="/view-listing" className="nav-link page-scroll">View Listing</Link>
                                         </li>
-                                        <li className="nav-item">
-                                            <Link to="/logout" className="nav-link page-scroll" ><strong>Logout</strong></Link>
-                                        </li>
                                     </>
 
                                     :
