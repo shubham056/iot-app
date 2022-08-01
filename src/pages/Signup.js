@@ -1,20 +1,25 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
+import { ToastContainer, Slide, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useDispatch, useSelector } from "react-redux";
 import { register as signUp } from "../redux/features/AuthenticationSlice";
 import { clearMessage } from "../redux/features/Message";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Signup = () => {
+const Signup = (props) => {
+    let navigate = useNavigate();
+    const [isLoading, setisLoading] = useState(false)
     const { message } = useSelector((state) => state.message);
     const dispatch = useDispatch();
-    // useEffect(() => {
-    //     dispatch(clearMessage());
-    // }, [dispatch]);
+    useEffect(() => {
+        dispatch(clearMessage());
+    }, [dispatch]);
 
     //form validations schema 
     const signupSchema = Yup.object().shape({
@@ -35,17 +40,25 @@ const Signup = () => {
     const { register, formState: { errors, isSubmitting }, handleSubmit, } = useForm(formOptions);
     //login submit handler
     const onSubmit = formValue => {
-        console.log(JSON.stringify(formValue));//print form data to console
+        setisLoading(true)
+        //console.log(JSON.stringify(formValue));//print form data to console
         dispatch(signUp(formValue))
             .unwrap()
             .then(() => {
-                console.log("redirect to login")
-                console.log(message)
-               
+                setisLoading(false)
+                setTimeout(() => {
+                    navigate("/login", { replace: true });
+                 }, 3100);
             })
             .catch(() => {
-              
+                setisLoading(false)
             });
+    }
+
+    {
+        message && toast.info(message, {
+            toastId: 23453643
+        })
     }
 
     return (
@@ -60,15 +73,15 @@ const Signup = () => {
                             <div className="col-lg-12 col-sm-12">
                                 <div className="contact-form2">
                                     <h4 className="text-uppercase">Register</h4>
-                                    
-                                    {message && (
-                                    <div className="alert alert-warning  alert-dismissible fade show" role="alert">
-                                        {message}
-                                        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    )}
+
+                                    {/* {message && (
+                                        <div className="alert alert-warning  alert-dismissible fade show" role="alert">
+                                            {message}
+                                            <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                    )} */}
 
                                     <form onSubmit={handleSubmit(onSubmit)}>
                                         <div className="form-group">
@@ -117,7 +130,16 @@ const Signup = () => {
                                             />
                                             <span style={{ color: 'red' }}>{errors.confirmPwd?.message}</span>
                                         </div>
-                                        <button style={{ width: "100%" }} type='submit' href="#" className="btn btn-primary">Sign Up</button>
+                                        {
+                                            isLoading
+                                                ?
+                                                <button style={{ width: "100%" }} className="btn btn-primary">Sign Up...  <div className="spinner-border" />
+                                                </button>
+
+                                                :
+                                                <button style={{ width: "100%" }} type='submit' href="#" className="btn btn-primary">Sign Up</button>
+                                        }
+
                                         <br /><br />
                                         <p><a href>
                                             Already have account? <Link to="/login">SignIn</Link>
@@ -133,7 +155,17 @@ const Signup = () => {
                 <Footer />
                 {/* FOOTER STYLES END */}
             </div>
-
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                transition={Slide}
+            />
         </>
     )
 }
