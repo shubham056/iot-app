@@ -77,7 +77,7 @@ export const Header = () => {
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
                                 <Link to="/" className="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Home
+                                    {isAuthenticated ? 'Dashboard': 'Home'}
                                 </Link>
                             </li>
                             <li className="nav-item">

@@ -23,6 +23,7 @@ const NotFound = () => {
                                         <div className="error-details">
                                             Sorry, an error has occured, Requested page not found!
                                         </div>
+                                        <br/>
                                         <div className="error-actions">
                                             <Link to="/" className="btn btn-primary btn-lg m-10" style={{ margin: 10,textTransform:'capitalize' }}><i className="icofont icofont-home"></i>
                                                 Take Me Home </Link>
