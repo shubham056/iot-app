@@ -25,7 +25,7 @@ import NotFound from './pages/NotFound';
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      <Routes> 
         <Route path='*' element={<NotFound />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/listing" element={<PrivateRoute><Listing /></PrivateRoute>} />

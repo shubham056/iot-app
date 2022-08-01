@@ -15,7 +15,7 @@ const NotFound = () => {
                         <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <div className="row">
                                 <div className="dashboard_wrap">
-                                    <div className='text-center'>
+                                    <div className='text-center'> 
                                         <h1>
                                             Oops!</h1>
                                         <h2>
