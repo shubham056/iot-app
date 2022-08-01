@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/includes/Footer';
 import { Header } from '../components/includes/Header';
-import { ToastContainer, Slide, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/features/AuthenticationSlice";
 import { clearMessage } from "../redux/features/Message";
@@ -124,17 +121,6 @@ const Login = () => {
 
         {/* FOOTER STYLES END */}
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        transition={Slide}
-      />
     </>
   )
 }

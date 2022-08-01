@@ -71,7 +71,7 @@ $   ('a.page-scroll').on('click', function(event) {
    ========================================================================== */
 	
 	$(window).on('load', function() {
-		handlePreloader();
+		//handlePreloader();
 	});
     
     
@@ -99,6 +99,6 @@ $   ('a.page-scroll').on('click', function(event) {
       });
               
     
-    new WOW().init();
+   // new WOW().init();
 		
 })(window.jQuery);

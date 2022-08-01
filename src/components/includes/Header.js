@@ -27,10 +27,26 @@ export const Header = () => {
                                     isAuthenticated
                                         ?
                                         <>
-                                            <li>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b></li>
-                                            {/* <li class="sub_show"><Link to="javascript:void(0)"> Surender Kumar <i class="icofont icofont-caret-down"></i></Link>
+                                            <div className="">
+                                                <div className="dropdown">
+                                                    <button className="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style={{textTransform:'capitalize'}}>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b>
+                                                    
+                                                    </button>
+                                                    <div className="dropdown-menu">
+                                                        <Link className="dropdown-item" to="/profile">Profile</Link>
+                                                        <Link className="dropdown-item" to="/change-password">Change Password</Link>
+                                                        <Link className="dropdown-item" to="/logout">Logout</Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            {/* <li>Welcome <b></b></li> */}
+                                            {/* <li class="sub_show"><Link to="#"> {`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`} <i class="icofont icofont-caret-down"></i></Link>
 
                                                 <ul class="sub_nav">
+                                                    <li><Link to="" class="logout">Profile</Link></li>
+                                                    <li><Link to="" class="logout">Change Password</Link></li>
                                                     <li><Link to="" class="logout">Logout</Link></li>
                                                 </ul>
                                             </li> */}

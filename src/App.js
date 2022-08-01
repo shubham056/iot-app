@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import PrivateRoute from "./Routes/PrivateRoute";
+import {ToastContainer,theme} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 //pages
 import Home from "./pages/Home";
 import Login from './pages/Login';
@@ -17,14 +19,18 @@ import ViewListing from './pages/ViewListing';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Support from './pages/Support';
+import ChangePassword from './pages/ChangePassword';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='*' element={<NotFound />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/listing" element={<PrivateRoute><Listing /></PrivateRoute>} />
         <Route path="/view-listing" element={<PrivateRoute><ViewListing /></PrivateRoute>} />
+        <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
         <Route path="/logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
 
         <Route path="/contact-us" element={<Contact />} />
@@ -35,6 +41,17 @@ function App() {
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
       </Routes>
+      <ToastContainer
+                position="top-right"
+                autoClose={2500}
+                hideProgressBar={true}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                theme={"colored"}
+            />
     </BrowserRouter>
   );
 }

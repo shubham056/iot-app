@@ -1874,7 +1874,13 @@ section {
 /*----------------------------------
      EXTRA PAGE STYLES
 ---------------------------------------*/
-
+.page-banner-support {
+    position: relative;
+    padding: 170px 0px 70px;
+    background: url("../images/slider/banner_business_support.jpg") !important;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
 .page-banner {
     position: relative;
     padding: 170px 0px 70px;
@@ -2258,6 +2264,7 @@ section {
     width: 100%;
     display: none;
     z-index: 101;
+    top:40px;
 }
 .sub_nav li {
     width: 100%;
@@ -2268,7 +2275,7 @@ section {
     text-align: right;
     padding-right: 10px;
 }
-.top_bx ul li a {color: #fff; font-size: 14px;}
+.top_bx ul li a {color: #fff; font-size: 14px; display: block;} 
 .top_bx ul li a:hover {}
 
 
@@ -2422,3 +2429,47 @@ background: #fff;
 .sub_nav ul {}
 .sub_nav ul li {}
 .sub_nav ul li a {}
+.top_bx ul li a:hover + .sub_nav {
+    display: block;
+}
+.top_bx ul li a:focus + .sub_nav {
+    display: block;
+}
+.top_right button {
+    padding: 0 10px;
+    line-height: 40px;
+    background-color: #063767 !important;
+    border-color: #063767 !important;
+}
+.top_right button:focus {box-shadow: none !important;}
+.top_right div.dropdown-menu {
+    /* float: none; */
+    width: 200px;
+    right: 0;
+    top: 42px;
+    position: absolute;
+    left: inherit;
+    background: #1e4a75;
+    color: #fff;
+    padding: 0;
+}
+.top_right div.dropdown-menu .dropdown-item {
+    color: #fff;
+    border-bottom: 1px solid #6c6a6a;
+}
+.top_right div.dropdown-menu .dropdown-item:last-child {
+    color: #fff;
+    border-bottom:none;
+}
+.top_right div.dropdown-menu .dropdown-item:hover {
+    background: #063767;
+}
+.top_right div.dropdown-menu .dropdown-item:focus {
+    background: #063767;
+}
+
+.support-info li {
+    padding: 10px 0px;
+    display: inline-block;
+    width: 32%;
+}
