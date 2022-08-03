@@ -34,7 +34,7 @@ const Portal = () => {
         password: Yup.string().required('Password is required.')
             .matches(
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case (!@#\$%\^&\*) Character"
             ),
     })
     const signupSchema = Yup.object().shape({
@@ -44,7 +44,7 @@ const Portal = () => {
         password: Yup.string().required('Password is required.')
             .matches(
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case (!@#\$%\^&\*) Character"
             ),
         confirmPwd: Yup.string().required('Password is required.').oneOf([Yup.ref('password')], 'Passwords does not match.'),
     })

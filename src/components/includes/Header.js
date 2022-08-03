@@ -37,15 +37,15 @@ export const Header = () => {
                                 isAuthenticated
                                     ?
                                     <>
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <Link to="/listing" className="nav-link page-scroll">Listing</Link>
                                         </li>
                                         <li className="nav-item">
                                             <Link to="/view-listing" className="nav-link page-scroll">View Listing</Link>
-                                        </li>
-                                        <div className="">
+                                        </li> */}
+                                        <div className="top_right">
                                                 <div className="dropdown">
-                                                    <button className="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style={{ textTransform: 'capitalize' }}>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b>
+                                                    <button className="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style={{ textTransform: 'capitalize',borderRadius:25 }}>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b>
 
                                                     </button>
                                                     <div className="dropdown-menu">
