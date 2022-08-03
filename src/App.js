@@ -21,6 +21,7 @@ import About from './pages/About';
 import Support from './pages/Support';
 import ChangePassword from './pages/ChangePassword';
 import NotFound from './pages/NotFound';
+import Portal from './pages/Portal';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/contact-us" element={<Contact />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/portal" element={<ProtectedRoute><Portal /></ProtectedRoute>} />
         <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />
         <Route path="/signup" element={<ProtectedRoute><Signup /></ProtectedRoute>} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />

@@ -8,63 +8,7 @@ export const Header = () => {
     const { user: currentUser } = useSelector((state) => state.auth);
     return (
         <header>
-            <div className="top_heder">
-                <div className="container">
-                    <div className="top_bx">
-                        <div className="top_left">
-                            <ul>
-                                <li>
-                                    <span><i className="icofont icofont-email" /> email@companyname.com</span>
-                                </li>
-                                <li>
-                                    <span><i className="icofont icofont-phone" /> +234-5657865</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="top_right">
-                            <ul>
-                                {
-                                    isAuthenticated
-                                        ?
-                                        <>
-                                            <div className="">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style={{textTransform:'capitalize'}}>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b>
-                                                    
-                                                    </button>
-                                                    <div className="dropdown-menu">
-                                                        <Link className="dropdown-item" to="/profile">Profile</Link>
-                                                        <Link className="dropdown-item" to="/change-password">Change Password</Link>
-                                                        <Link className="dropdown-item" to="/logout">Logout</Link>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-
-                                            {/* <li>Welcome <b></b></li> */}
-                                            {/* <li class="sub_show"><Link to="#"> {`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`} <i class="icofont icofont-caret-down"></i></Link>
-
-                                                <ul class="sub_nav">
-                                                    <li><Link to="" class="logout">Profile</Link></li>
-                                                    <li><Link to="" class="logout">Change Password</Link></li>
-                                                    <li><Link to="" class="logout">Logout</Link></li>
-                                                </ul>
-                                            </li> */}
-                                        </>
-                                        :
-                                        <>
-                                            <li><Link to="/login"><i className="icofont icofont-login" /> Login</Link></li>
-                                            <li><Link to="/signup"><i className="icofont icofont-ui-user" /> Register</Link></li>
-                                        </>
-
-                                }
-
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <nav className="navbar navbar-expand-lg">
                 <div className="container">
                     <Link className="navbar-brand" to="/">
@@ -77,7 +21,7 @@ export const Header = () => {
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
                                 <Link to="/" className="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {isAuthenticated ? 'Dashboard': 'Home'}
+                                    {isAuthenticated ? 'Dashboard' : 'Home'}
                                 </Link>
                             </li>
                             <li className="nav-item">
@@ -99,11 +43,27 @@ export const Header = () => {
                                         <li className="nav-item">
                                             <Link to="/view-listing" className="nav-link page-scroll">View Listing</Link>
                                         </li>
+                                        <div className="">
+                                                <div className="dropdown">
+                                                    <button className="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style={{ textTransform: 'capitalize' }}>Welcome <b>{`${currentUser.data.profile.first_name} ${currentUser.data.profile.last_name}`}</b>
+
+                                                    </button>
+                                                    <div className="dropdown-menu">
+                                                        <Link className="dropdown-item" to="/profile">Profile</Link>
+                                                        <Link className="dropdown-item" to="/change-password">Change Password</Link>
+                                                        <Link className="dropdown-item" to="/logout">Logout</Link>
+                                                    </div>
+                                                </div>
+                                            </div>
                                     </>
 
                                     :
-                                    null
+                                    <li className="nav-item">
+                                        <Link className="btn btn-primary btn-sm circled" to="/portal">Portal</Link>
+                                    </li>
                             }
+
+
 
                         </ul>
                     </div>
