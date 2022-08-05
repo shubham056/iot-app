@@ -2740,18 +2740,20 @@ header {
 .welcome_wraper p {margin-top: 10px;}
 .second_box {
     width: 100%;
-    display: flex;
+    display: inline-block;
     margin-bottom: 20px;
 }
 .second_box button {
     padding: 0;
     /* float: right; */
-    width: 32%;
+    width: 29%;
     border-radius: 4px;
     height: 40px;
+    display: inline-block;
 }
 .second_box div.form-group {
-    width: 78%;
+    width: 70%;
+    display: inline-block;
 }
 .second_box input {
     width: 97% !important;
@@ -3010,3 +3012,23 @@ select.list-dt:focus {
     margin-left: 19px;
 }
 .button_in button i {font-size: 14px; color: #fff;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

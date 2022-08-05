@@ -22,6 +22,7 @@ import Support from './pages/Support';
 import ChangePassword from './pages/ChangePassword';
 import NotFound from './pages/NotFound';
 import Portal from './pages/Portal';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/listing" element={<PrivateRoute><Listing /></PrivateRoute>} />
         <Route path="/view-listing" element={<PrivateRoute><ViewListing /></PrivateRoute>} />
         <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
 
         <Route path="/contact-us" element={<Contact />} />
@@ -45,7 +47,7 @@ function App() {
       </Routes>
       <ToastContainer
                 position="top-right"
-                autoClose={2500}
+                autoClose={3000}
                 hideProgressBar={true}
                 newestOnTop
                 closeOnClick
