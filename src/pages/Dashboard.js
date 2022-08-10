@@ -165,7 +165,7 @@ const Dashboard = () => {
   //   },
   // ];
 
-
+console.log(isAddArea)
 
   function createTreeView(location) {
     var tree = [],
@@ -214,7 +214,7 @@ const Dashboard = () => {
                       return (
                         <>
                           <input onChange={e => search(e.target.value)} placeholder="Search area & device" />
-                          <button className="btn-primary btn-sm" onClick={resetOpenNodes} >Collapse All</button>
+                          <button className="btn-info btn-sm" style={{margin:5}} onClick={resetOpenNodes} >Collapse All</button>
                           <ul className="tree-item-group">
                             {items.map(props => {
                               const childrenProps = {
@@ -247,7 +247,7 @@ const Dashboard = () => {
                   </TreeMenu>
 
                   <br />
-                  <button type="button" class="btn btn-primary btn-sm">Add Area</button>
+                  <button type="button" class="btn btn-info btn-sm" style={{borderRadius:25}} onClick={()=> setIsAddArea(true)}>Add Area</button>
                 </div>
               </div>
             </div>
@@ -257,56 +257,7 @@ const Dashboard = () => {
 
                   {/* Add Area Form */}
 
-                  <div className="welcome_wraper">
-                    <div className="section-heading text-center">
-                      <section className="login_wraper">
-                        <div className="container">
-                          <div className="row">
-                            <div className="col-lg-12 col-sm-12">
-                              <div className="contact-form2">
-                                <h4 className="text-uppercase text-center">Add Area</h4>
-                                <form onSubmit={handleSubmit(onSubmit)}>
-                                  <div className="form-group">
-                                    <label htmlFor="exampleInputEmail1">Select Parent Category</label>
-                                    <select
-                                      {...register("parent_id")}
-                                      className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
-                                    >
-                                      <option value="">----- Select Category -----</option>
-                                      {optionTemplate}
-                                    </select>
-                                    <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
-                                  </div>
-                                  <div className="form-group">
-                                    <label htmlFor="exampleInputPassword1">Area</label>
-                                    <input
-                                      type="text"
-                                      {...register("area_name")}
-                                      placeholder="Enter Area name"
-                                      className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
-                                      autoComplete="off"
-                                    />
-                                    <span style={{ color: 'red' }}>{errors.area_name?.message}</span>
-                                  </div>
-                                  {
-                                    isLoading
-                                      ?
-                                      <button className="btn btn-primary">Submit...<div className="spinner-border" />
-                                      </button>
-
-                                      :
-                                      <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Submit</button>
-                                  }
-
-                                </form>
-
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </section>
-                    </div>
-                  </div>
+                 
 
 
                   {/*graph chart*/}
@@ -377,6 +328,61 @@ const Dashboard = () => {
                           </div>
                         </div>
                       </div>
+                      :
+                      isAddArea
+                      ?
+                      <div className="welcome_wraper">
+                      <div className="section-heading text-center">
+                        <section className="login_wraper">
+                          <div className="container">
+                            <div className="row">
+                              <div className="col-lg-12 col-sm-12">
+                                <div className="contact-form2">
+                                  <h4 className="text-uppercase text-center">Add Area</h4>
+                                  <form onSubmit={handleSubmit(onSubmit)}>
+                                    <div className="form-group">
+                                      <select
+                                        {...register("parent_id")}
+                                        className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
+                                      >
+                                        <option value="">---------- Select Category ----------</option>
+                                        {optionTemplate}
+                                      </select>
+                                      <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
+                                    </div>
+                                    <div className="form-group">
+                                      <input
+                                        type="text"
+                                        {...register("area_name")}
+                                        placeholder="Enter Area name"
+                                        className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
+                                        autoComplete="off"
+                                      />
+                                      <span style={{ color: 'red' }}>{errors.area_name?.message}</span>
+                                    </div>
+                                    {
+                                      isLoading
+                                        ?
+                                        <button className="btn btn-primary" style={{borderRadius:25}}>Submit...<div className="spinner-border" />
+                                        </button>
+  
+                                        :
+                                        <>
+                                        <button type="submit" style={{borderRadius:25,margin:10}} className="btn btn-primary" disabled={isSubmitting}>Submit</button>
+                                        <button type="button" style={{borderRadius:25}} className="btn btn-danger" onClick={()=>setIsAddArea(false)}>Close</button>
+                                        </>
+                                        
+                                    }
+  
+                                  </form>
+  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
+                    </div>
                       :
                       <div className="welcome_wraper">
                         <div className="section-heading text-center">
