@@ -165,7 +165,7 @@ const Dashboard = () => {
   //   },
   // ];
 
-console.log(isAddArea)
+  console.log(isAddArea)
 
   function createTreeView(location) {
     var tree = [],
@@ -210,11 +210,11 @@ console.log(isAddArea)
               <div className>
                 <div id="left" className="span3">
                   <TreeMenu data={root}>
-                    {({ search, items, resetOpenNodes  }) => {
+                    {({ search, items, resetOpenNodes }) => {
                       return (
                         <>
                           <input onChange={e => search(e.target.value)} placeholder="Search area & device" />
-                          <button className="btn-info btn-sm" style={{margin:5}} onClick={resetOpenNodes} >Collapse All</button>
+                          <button className="btn-info btn-sm" style={{ margin: 5 }} onClick={resetOpenNodes} >Collapse All</button>
                           <ul className="tree-item-group">
                             {items.map(props => {
                               const childrenProps = {
@@ -247,7 +247,7 @@ console.log(isAddArea)
                   </TreeMenu>
 
                   <br />
-                  <button type="button" class="btn btn-info btn-sm" style={{borderRadius:25}} onClick={()=> setIsAddArea(true)}>Add Area</button>
+                  <button type="button" class="btn btn-info btn-sm" style={{ borderRadius: 25 }} onClick={() => setIsAddArea(true)}>Add Area</button>
                 </div>
               </div>
             </div>
@@ -257,140 +257,195 @@ console.log(isAddArea)
 
                   {/* Add Area Form */}
 
-                 
+
 
 
                   {/*graph chart*/}
                   {
                     showGraph
                       ?
-                      <div className="grpah_table">
-                        <div className="col-lg-12 box_graph device_name">
-                          <div className="widget_categories right-widget top_heding ">
-                            <h4>{areaName} {devicename} <span /> <i className="icofont icofont-reply-all" /></h4>
-                          </div>
-                        </div>
-                        <div className="col-lg-12 box_graph">
-                          <div className="widget_categories right-widget top_heding">
-                            <div className="tags top_tag">
-                              <a href="#" className="tag-cloud-link ">Control</a>
-                              <a href="#" className="tag-cloud-link ">Diagnostic</a>
-                              <a href="#" className="tag-cloud-link ">A117</a>
-                              <a href="#" className="tag-cloud-link">Trend</a>
-                            </div>
-                          </div>
-                          <div className="tags">
-                            <div className="tag_box">
-                              <span>XXXXX</span>
-                              <a href="#" className="tag-cloud-link ">A101</a>
-                            </div>
-                            <div className="tag_box">
-                              <span>XXXXX</span>
-                              <a href="#" className="tag-cloud-link ">A101</a>
-                            </div>
-                            <div className="tag_box">
-                              <span>XXXXX</span>
-                              <a href="#" className="tag-cloud-link ">A101</a>
-                            </div>
-                            <div className="tag_box">
-                              <span>XXXXX</span>
-                              <a href="#" className="tag-cloud-link ">A101</a>
-                            </div>
-                          </div>
-                          <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                            <div className="row">
-                              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                      isAddArea
+                        ?
+                        <div className="welcome_wraper">
+                          <div className="section-heading text-center">
+                            <section className="login_wraper">
+                              <div className="container">
                                 <div className="row">
-                                  <div className="tags left_wraper">
-                                    <a href="#" className="tag-cloud-link bg_green">Power</a>
-                                    <a href="#" className="tag-cloud-link ">Energy</a>
+                                  <div className="col-lg-12 col-sm-12">
+                                    <div className="contact-form2">
+                                      <h4 className="text-uppercase text-center">Add Area</h4>
+                                      <form onSubmit={handleSubmit(onSubmit)}>
+                                        <div className="form-group">
+                                          <select
+                                            {...register("parent_id")}
+                                            className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
+                                          >
+                                            <option value="">---------- Select Category ----------</option>
+                                            {optionTemplate}
+                                          </select>
+                                          <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
+                                        </div>
+                                        <div className="form-group">
+                                          <input
+                                            type="text"
+                                            {...register("area_name")}
+                                            placeholder="Enter Area name"
+                                            className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
+                                            autoComplete="off"
+                                          />
+                                          <span style={{ color: 'red' }}>{errors.area_name?.message}</span>
+                                        </div>
+                                        {
+                                          isLoading
+                                            ?
+                                            <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" />
+                                            </button>
+
+                                            :
+                                            <>
+                                              <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting}>Submit</button>
+                                              <button type="button" style={{ borderRadius: 25 }} className="btn btn-danger" onClick={() => setIsAddArea(false)}>Close</button>
+                                            </>
+
+                                        }
+
+                                      </form>
+
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-                                <div className="row right_wraper">
-                                  <div className="tags ">
-                                    <span>XXXXX</span>
-                                    <a href="#" className="tag-cloud-link bg_green">Daily</a>
-                                    <a href="#" className="tag-cloud-link">Monthly</a>
+                            </section>
+                          </div>
+                        </div>
+                        :
+                        <div className="grpah_table">
+                          <div className="col-lg-12 box_graph device_name">
+                            <div className="widget_categories right-widget top_heding ">
+                              <h4>{areaName} {devicename} <span /> <i className="icofont icofont-reply-all" /></h4>
+                            </div>
+                          </div>
+                          <div className="col-lg-12 box_graph">
+                            <div className="widget_categories right-widget top_heding">
+                              <div className="tags top_tag">
+                                <a href="#" className="tag-cloud-link ">Control</a>
+                                <a href="#" className="tag-cloud-link ">Diagnostic</a>
+                                <a href="#" className="tag-cloud-link ">A117</a>
+                                <a href="#" className="tag-cloud-link">Trend</a>
+                              </div>
+                            </div>
+                            <div className="tags">
+                              <div className="tag_box">
+                                <span>XXXXX</span>
+                                <a href="#" className="tag-cloud-link ">A101</a>
+                              </div>
+                              <div className="tag_box">
+                                <span>XXXXX</span>
+                                <a href="#" className="tag-cloud-link ">A101</a>
+                              </div>
+                              <div className="tag_box">
+                                <span>XXXXX</span>
+                                <a href="#" className="tag-cloud-link ">A101</a>
+                              </div>
+                              <div className="tag_box">
+                                <span>XXXXX</span>
+                                <a href="#" className="tag-cloud-link ">A101</a>
+                              </div>
+                            </div>
+                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                              <div className="row">
+                                <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                                  <div className="row">
+                                    <div className="tags left_wraper">
+                                      <a href="#" className="tag-cloud-link bg_green">Power</a>
+                                      <a href="#" className="tag-cloud-link ">Energy</a>
+                                    </div>
                                   </div>
-                                  <div className="graph_wraper">
+                                </div>
+                                <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                                  <div className="row right_wraper">
+                                    <div className="tags ">
+                                      <span>XXXXX</span>
+                                      <a href="#" className="tag-cloud-link bg_green">Daily</a>
+                                      <a href="#" className="tag-cloud-link">Monthly</a>
+                                    </div>
+                                    <div className="graph_wraper">
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="tags bottom_tag">
-                            <a href="#" className="tag-cloud-link bg_green">Total</a>
-                            <a href="#" className="tag-cloud-link ">Phase - 1</a>
-                            <a href="#" className="tag-cloud-link ">Phase - 2</a>
-                            <a href="#" className="tag-cloud-link">Phase - 3</a>
+                            <div className="tags bottom_tag">
+                              <a href="#" className="tag-cloud-link bg_green">Total</a>
+                              <a href="#" className="tag-cloud-link ">Phase - 1</a>
+                              <a href="#" className="tag-cloud-link ">Phase - 2</a>
+                              <a href="#" className="tag-cloud-link">Phase - 3</a>
+                            </div>
                           </div>
                         </div>
-                      </div>
                       :
                       isAddArea
-                      ?
-                      <div className="welcome_wraper">
-                      <div className="section-heading text-center">
-                        <section className="login_wraper">
-                          <div className="container">
-                            <div className="row">
-                              <div className="col-lg-12 col-sm-12">
-                                <div className="contact-form2">
-                                  <h4 className="text-uppercase text-center">Add Area</h4>
-                                  <form onSubmit={handleSubmit(onSubmit)}>
-                                    <div className="form-group">
-                                      <select
-                                        {...register("parent_id")}
-                                        className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
-                                      >
-                                        <option value="">---------- Select Category ----------</option>
-                                        {optionTemplate}
-                                      </select>
-                                      <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
+                        ?
+                        <div className="welcome_wraper">
+                          <div className="section-heading text-center">
+                            <section className="login_wraper">
+                              <div className="container">
+                                <div className="row">
+                                  <div className="col-lg-12 col-sm-12">
+                                    <div className="contact-form2">
+                                      <h4 className="text-uppercase text-center">Add Area</h4>
+                                      <form onSubmit={handleSubmit(onSubmit)}>
+                                        <div className="form-group">
+                                          <select
+                                            {...register("parent_id")}
+                                            className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
+                                          >
+                                            <option value="">---------- Select Category ----------</option>
+                                            {optionTemplate}
+                                          </select>
+                                          <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
+                                        </div>
+                                        <div className="form-group">
+                                          <input
+                                            type="text"
+                                            {...register("area_name")}
+                                            placeholder="Enter Area name"
+                                            className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
+                                            autoComplete="off"
+                                          />
+                                          <span style={{ color: 'red' }}>{errors.area_name?.message}</span>
+                                        </div>
+                                        {
+                                          isLoading
+                                            ?
+                                            <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" />
+                                            </button>
+
+                                            :
+                                            <>
+                                              <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting}>Submit</button>
+                                              <button type="button" style={{ borderRadius: 25 }} className="btn btn-danger" onClick={() => setIsAddArea(false)}>Close</button>
+                                            </>
+
+                                        }
+
+                                      </form>
+
                                     </div>
-                                    <div className="form-group">
-                                      <input
-                                        type="text"
-                                        {...register("area_name")}
-                                        placeholder="Enter Area name"
-                                        className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
-                                        autoComplete="off"
-                                      />
-                                      <span style={{ color: 'red' }}>{errors.area_name?.message}</span>
-                                    </div>
-                                    {
-                                      isLoading
-                                        ?
-                                        <button className="btn btn-primary" style={{borderRadius:25}}>Submit...<div className="spinner-border" />
-                                        </button>
-  
-                                        :
-                                        <>
-                                        <button type="submit" style={{borderRadius:25,margin:10}} className="btn btn-primary" disabled={isSubmitting}>Submit</button>
-                                        <button type="button" style={{borderRadius:25}} className="btn btn-danger" onClick={()=>setIsAddArea(false)}>Close</button>
-                                        </>
-                                        
-                                    }
-  
-                                  </form>
-  
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            </section>
                           </div>
-                        </section>
-                      </div>
-                    </div>
-                      :
-                      <div className="welcome_wraper">
-                        <div className="section-heading text-center">
-                          <h2>Welcome</h2>
-                          <p className>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
-                          <div className="seperator" />
                         </div>
-                      </div>
+                        :
+                        <div className="welcome_wraper">
+                          <div className="section-heading text-center">
+                            <h2>Welcome</h2>
+                            <p className>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
+                            <div className="seperator" />
+                          </div>
+                        </div>
                   }
                 </div>
               </div>
