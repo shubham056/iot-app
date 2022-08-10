@@ -14,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
 const Dashboard = () => {
+  const [isAddArea, setIsAddArea] = useState(false);
   const [content, setContent] = useState([]);
   const [treeViewData, setTreeViewData] = useState([]);
   const [isLoading, setisLoading] = useState(false)
