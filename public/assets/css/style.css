@@ -3013,6 +3013,19 @@ select.list-dt:focus {
 }
 .button_in button i {font-size: 14px; color: #fff;}
 
+.navbar-nav li a.active{
+	background: #063767;
+	color: #fff !important;
+	margin-right: 10px;
+	border-radius: 4px;
+}
+
+.navbar-nav li a:hover {
+	background: #0d4984;
+	transition: all 0.3s;
+}
+
+
 
 
 

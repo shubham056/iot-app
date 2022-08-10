@@ -1,10 +1,12 @@
-import React, {useState } from 'react'
+import React, { useState } from 'react'
 import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
-import TreeMenu, { ItemComponent } from "react-simple-tree-menu";
+import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
 import randomcolor from "randomcolor";
 
-import "../../node_modules/react-simple-tree-menu/dist/main.css";
+//import "../../node_modules/react-simple-tree-menu/dist/main.css";
+import "react-simple-tree-menu/dist/main.css";
+
 
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/features/AuthenticationSlice";
@@ -83,6 +85,92 @@ const Dashboard = () => {
 
   ];
 
+  // My JSON Data
+  const locations = [
+    {
+      id: 1,
+      label: "Shubham Kumar",
+      key: "Shubham Kumar",
+      parentId: 26
+    },
+    {
+      id: 2,
+      label: "Device1",
+      key: "Device1",
+      parentId: 3
+    },
+    {
+      id: 3,
+      label: "Hall",
+      key: "Hall",
+      parentId: 1
+    },
+    {
+      id: 4,
+      label: "Bathroom",
+      key: "Bathroom",
+      parentId: 1
+    },
+    {
+      id: 5,
+      label: "WiFi Device",
+      key: "WiFi Device",
+      parentId: 4
+    },
+    {
+      id: 6,
+      label: "Test Area",
+      key: "Test Area",
+      parentId: 4
+    },
+    {
+      id: 7,
+      label: "Router",
+      key: "Router",
+      parentId: 6
+    },
+  ];
+
+  function createTreeView(location) {
+    var tree = [],
+      object = {},
+      parent,
+      child;
+
+    for (var i = 0; i < location.length; i++) {
+
+      parent = location[i];
+
+      object[parent.id] = parent;
+      object[parent.id]["nodes"] = [];
+    }
+
+
+    for (var id in object) {
+      if (object.hasOwnProperty(id)) {
+        child = object[id];
+
+        if (child.parentId && object[child["parentId"]]) {
+          delete child.id
+          //
+          object[child["parentId"]]["nodes"].push(child);
+          delete child.parentId
+        } else {
+          delete child.id
+          delete child.parentId
+
+          tree.push(child);
+        }
+      }
+    }
+
+    return tree;
+  }
+  var root = createTreeView(locations);
+  console.log("dataInArray", dataInArray)
+  console.log(root)
+
+
   return (
     <div>
       <Header />
@@ -94,7 +182,7 @@ const Dashboard = () => {
             <div className="col-lg-4 col-sm-12">
               <div className>
                 <div id="left" className="span3">
-                  <TreeMenu data={dataInArray}>
+                  <TreeMenu data={root}>
                     {({ search, items }) => {
                       return (
                         <>
@@ -103,14 +191,14 @@ const Dashboard = () => {
                             {items.map(props => {
                               const childrenProps = {
                                 ...props,
-                                onClick: () =>{
-                                  const {index, level, hasNodes, label, parent} = props
-                                  console.log(index,level)
-                                  console.log(typeof(index))
-                                  if(index == parseInt(0) && level == parseInt(0)){
+                                onClick: () => {
+                                  const { index, level, hasNodes, label, parent } = props
+                                  console.log(index, level)
+                                  console.log(typeof (index))
+                                  if (index == parseInt(0) && level == parseInt(0)) {
                                     console.log("true")
-                                  }else{
-                                    if(hasNodes == false){
+                                  } else {
+                                    if (hasNodes == false) {
                                       setshowGraph(true)
                                       setDeviceName(label)
                                       let areaName = parent.split("/").pop()
@@ -118,8 +206,8 @@ const Dashboard = () => {
                                     }
                                     console.log("false")
                                   }
-                                } ,
-                                //style: { color: props.color || "black" }
+                                },
+                                style: { color: props.color || "black" }
                               };
 
                               return <ItemComponent {...childrenProps} />;
@@ -130,10 +218,8 @@ const Dashboard = () => {
                     }}
                   </TreeMenu>
 
-                  {/* <button className='btn btn-infobtn btn-secondary'>Add Area</button>
-                  <button className='btn btn-primary'>Add Device</button> */}
-
-
+                  <br />
+                  <button type="button" class="btn btn-primary btn-sm">Add Area</button>
                 </div>
               </div>
             </div>
@@ -141,7 +227,41 @@ const Dashboard = () => {
               <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div className="row">
 
-                  {/* MultiStep Form */}
+                  {/* Add Area Form */}
+
+                  <div className="welcome_wraper">
+                    <div className="section-heading text-center">
+                      <section className="login_wraper">
+                        <div className="container">
+                          <div className="row">
+                            <div className="col-lg-12 col-sm-12">
+                              <div className="contact-form2">
+                                <h4 className="text-uppercase text-center">Add Area</h4>
+                                <form>
+                                  <div className="form-group">
+                                    <label htmlFor="exampleInputEmail1">Select Parent Category</label>
+                                    <select class="form-control" id="sel1">
+                                      <option>1</option>
+                                      <option>2</option>
+                                      <option>3</option>
+                                      <option>4</option>
+                                    </select>
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="exampleInputPassword1">Area</label>
+                                    <input type="text" className="form-control" id="exampleInputPassword1" placeholder="Enter Area name" />
+                                  </div>
+                                  <button type="submit" className="btn btn-primary">Submit</button>
+                                </form>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+
 
                   {/*graph chart*/}
                   {
