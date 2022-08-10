@@ -27,10 +27,40 @@ const ChangePassword = (userId,data) => {
     })
 };
 
+const GetTreeViewCategory = (userId) => {
+    return axios.get(`users/getCategory/${userId}`, { headers: authHeader() });
+};
+const GetTreeViewData = (userId) => {
+    return axios.get(`users/getTreeViewData/${userId}`, { headers: authHeader() });
+};
+
+const AddNewArea = (userId,data) => {
+    return axios({
+        method: "post",
+        url:`users/addArea/${userId}`,
+        data,
+        headers: authHeader()
+    })
+};
+
+const AddRootUser = (userId,data) => {
+    return axios({
+        method: "post",
+        url:`users/addRootUser/${userId}`,
+        data,
+        headers: authHeader()
+    })
+};
+
+
 const userService = {
     getUserProfile,
     updateUserProfile,
     getUserByID,
-    ChangePassword
+    ChangePassword,
+    GetTreeViewCategory,
+    AddNewArea,
+    GetTreeViewData,
+    AddRootUser,
 };
 export default userService;

@@ -10,13 +10,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import UserService from "../services/user.service";
-import { userData } from "../redux/features/AuthenticationSlice";
+
 
 
 const Profile = () => {
-    const users = useSelector(userData);
-    console.log(users)
-    const userID = users.data.profile.id;
+    const { user } = useSelector((state) => state.auth);
+    //console.log(user.data.profile)
+    const userID = user.data.profile.id;
 
     const [content, setContent] = useState("");
     const [isLoading, setisLoading] = useState(false)
@@ -85,9 +85,9 @@ const Profile = () => {
         //             profile: updateUserProfile
         //         }
         //     }
-        
+
         // console.log("updateUserData======",updateUserData)
-        
+
 
         UserService.updateUserProfile(user_id, data)
             .then(() => {
