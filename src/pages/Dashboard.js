@@ -195,9 +195,11 @@ const Dashboard = () => {
     return tree;
   }
   var root = createTreeView(locations);
-  let optionTemplate = Object.values(content).map(v => (
-    <option value={v.id}>{v.label}</option>
+  let optionTemplate = Object.values(content).map((v,i) => (
+    (i== 0)?<option value={v.id}>New Area</option> : <option value={v.id}>{v.label}</option>
   ));
+  console.log(content)
+  
   return (
     <div>
       <Header />
@@ -250,7 +252,7 @@ const Dashboard = () => {
                   </TreeMenu>
 
                   <br />
-                  <button type="button" class="btn btn-info btn-sm" style={{ borderRadius: 25 }} onClick={() => setIsAddArea(true)}>Add Area</button>
+                  <button type="button" class="btn btn-info btn-sm" style={{ borderRadius: 25 }} onClick={() => setIsAddArea(true)}>Add New Area</button>
                 </div>
               </div>
             </div>
@@ -283,7 +285,7 @@ const Dashboard = () => {
                                             {...register("parent_id")}
                                             className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
                                           >
-                                            <option value="">---------- Select Category ----------</option>
+                                            <option value="">---------- Select Area ----------</option>
                                             {optionTemplate}
                                           </select>
                                           <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
@@ -403,7 +405,7 @@ const Dashboard = () => {
                                             {...register("parent_id")}
                                             className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
                                           >
-                                            <option value="">---------- Select Category ----------</option>
+                                            <option value="">---------- Select Area ----------</option>
                                             {optionTemplate}
                                           </select>
                                           <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
