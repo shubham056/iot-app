@@ -38,7 +38,7 @@ const Dashboard = () => {
       callOnce.current = false
       UserService.AddRootUser(userID, { user_name: user.data.profile.first_name + ' ' + user.data.profile.last_name }).then(
         (response) => {
-          console.log("response root user", response.data.data.profile)
+//console.log("response root user", response.data.data.profile)
         },
         (error) => {
           //{ error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
@@ -58,7 +58,7 @@ const Dashboard = () => {
     UserService.GetTreeViewCategory(userID).then(
       (response) => {
         setContent(response.data.data.profile);
-        console.log("response tree view data", response.data.data.profile)
+        //console.log("response tree view data", response.data.data.profile)
       },
       (error) => {
 
@@ -97,11 +97,11 @@ const Dashboard = () => {
 
   let locations = []
   Object.values(treeViewData).map(item => {
-    console.log("first", item)
+    //.log("first", item)
     let newdata = { ...item, key: item.label + item.id };
     locations.push(newdata)
   })
-  console.log(locations)
+  //console.log(locations)
 
   //submit handler
   const onSubmit = formValue => {
@@ -165,7 +165,7 @@ const Dashboard = () => {
   //   },
   // ];
 
-  console.log(isAddArea)
+  //console.log(isAddArea)
 
   function createTreeView(location) {
     var tree = [],
@@ -222,17 +222,20 @@ const Dashboard = () => {
                                 onClick: () => {
                                   const { index, level, hasNodes, label, parent } = props
                                   // console.log(index, level)
+                                  // console.log("hasNode", hasNodes)
                                   // console.log(typeof (index))
                                   if (index == parseInt(0) && level == parseInt(0)) {
                                     console.log("true")
                                   } else {
                                     if (hasNodes == false) {
                                       setshowGraph(true)
+                                      setIsAddArea(false)
                                       setDeviceName(label)
                                       let areaName = parent.split("/").pop()
+                                      //console.log("areaName",areaName)
                                       setAreaName(areaName)
                                     }
-                                    console.log("false")
+                                    console.log("false-------------")
                                   }
                                 },
                                 style: { color: props.color || "black" }
