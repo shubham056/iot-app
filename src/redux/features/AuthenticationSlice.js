@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import storage from 'redux-persist/lib/storage';
 import { setMessage } from "./Message";
 import AuthService from "../../services/auth.service";
 const user = JSON.parse(localStorage.getItem("user"));
+
+
 
 //signup user
 export const register = createAsyncThunk(
@@ -46,8 +49,9 @@ export const login = createAsyncThunk(
 );
 
 //logout user
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const logout = createAsyncThunk("auth/Logout", async () => {
   await AuthService.logout();
+  storage.removeItem('persist:root')
 });
 
 
