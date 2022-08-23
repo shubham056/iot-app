@@ -131,7 +131,7 @@ const Signup = (props) => {
                                         {
                                             isLoading
                                                 ?
-                                                <button style={{ width: "100%" }} className="btn btn-primary">Sign Up...  <div className="spinner-border" />
+                                                <button style={{ width: "100%" }} className="btn btn-primary">Sign Up...  <div className="spinner-border" style={{width:'1rem',height:'1rem'}} />
                                                 </button>
 
                                                 :

@@ -13,8 +13,15 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
+
+
 const Dashboard = () => {
+  const [showWelcomeDiv, setshowWelcomeDiv] = useState(true)
+  const [stepOne, setstepOne] = useState(true)
+  const [stepTwo, setstepTwo] = useState(false)
+  const [stepTwoisLoading, setstepTwoisLoading] = useState(false)
   const [isAddArea, setIsAddArea] = useState(false);
+  const [isAddDevice, setIsAddDevice] = useState(false);
   const [content, setContent] = useState([]);
   const [treeViewData, setTreeViewData] = useState([]);
   const [isLoading, setisLoading] = useState(false)
@@ -28,8 +35,19 @@ const Dashboard = () => {
     parent_id: Yup.string().required('Select a category.'),
     area_name: Yup.string().required('Area name is required.').min(3).max(15),
   });
+  const AddDeviceSchemaStep1 = Yup.object().shape({
+    modal_name: Yup.string().required('Select modal name!'),
+    area_name: Yup.string().required('Select area name!'),
+  });
+  const AddDeviceSchemaStep2 = Yup.object().shape({
+    device_id: Yup.string().required('Device id field is required!'),
+  });
   const formOptions = { resolver: yupResolver(Schema) }
+  const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
+  const adddeviceformOptionsStep2 = { resolver: yupResolver(AddDeviceSchemaStep2) }
   const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, resetField } = useForm(formOptions);
+  const { register: register2, formState: { errors: errors2, isSubmitting: isSubmitting2 }, handleSubmit: handleSubmit2, resetField: resetField2 } = useForm(adddeviceformOptionsStep1);
+  const { register: register3, formState: { errors: errors3, isSubmitting: isSubmitting3 }, handleSubmit: handleSubmit3, resetField: resetField3 } = useForm(adddeviceformOptionsStep2);
 
   const callOnce = useRef(true)
   //add root user node 
@@ -38,7 +56,7 @@ const Dashboard = () => {
       callOnce.current = false
       UserService.AddRootUser(userID, { user_name: user.data.profile.first_name + ' ' + user.data.profile.last_name }).then(
         (response) => {
-//console.log("response root user", response.data.data.profile)
+          //console.log("response root user", response.data.data.profile)
         },
         (error) => {
           //{ error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
@@ -107,6 +125,47 @@ const Dashboard = () => {
   const onSubmit = formValue => {
     //console.log(formValue)
     setisLoading(true)
+    UserService.AddNewArea(userID, formValue)
+      .then(() => {
+        setisLoading(false)
+        ///localStorage.setItem("user", JSON.stringify(updateUserData));
+        toast.success("Area successfully Added.", { toastId: 23453643 })
+        resetField('area_name');
+      })
+      .catch((error) => {
+        setisLoading(false)
+        { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+      });
+  }
+  const onSubmitStepOne = formValue => {
+    console.log(formValue)
+    setstepOne(false)
+    setstepTwo(true)
+    return false
+    setisLoading(true)
+    UserService.AddNewArea(userID, formValue)
+      .then(() => {
+        setisLoading(false)
+        ///localStorage.setItem("user", JSON.stringify(updateUserData));
+        toast.success("Area successfully Added.", { toastId: 23453643 })
+        resetField('area_name');
+      })
+      .catch((error) => {
+        setisLoading(false)
+        { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+      });
+  }
+  const onSubmitSteptwo = formValue => {
+    console.log(formValue)
+    setstepTwoisLoading(true)
+    setTimeout(() => {
+      toast.error("The device id you entered is not recognized.", {
+        toastId: 2345363343
+      })
+      setstepTwoisLoading(false)
+    }, 3000)
+    return false
+
     UserService.AddNewArea(userID, formValue)
       .then(() => {
         setisLoading(false)
@@ -195,11 +254,12 @@ const Dashboard = () => {
     return tree;
   }
   var root = createTreeView(locations);
-  let optionTemplate = Object.values(content).map((v,i) => (
-    (i== 0)?<option value={v.id}>New Area</option> : <option value={v.id}>{v.label}</option>
+  let optionTemplate = Object.values(content).map((v, i) => (
+    (i == 0) ? <option value={v.id}>New Area</option> : <option value={v.id}>{v.label}</option>
   ));
-  console.log(content)
-  
+  //console.log(content)
+
+
   return (
     <div>
       <Header />
@@ -232,6 +292,8 @@ const Dashboard = () => {
                                     if (hasNodes == false) {
                                       setshowGraph(true)
                                       setIsAddArea(false)
+                                      setIsAddDevice(false)
+                                      setshowWelcomeDiv(false)
                                       setDeviceName(label)
                                       let areaName = parent.split("/").pop()
                                       //console.log("areaName",areaName)
@@ -252,7 +314,20 @@ const Dashboard = () => {
                   </TreeMenu>
 
                   <br />
-                  <button type="button" class="btn btn-info btn-sm" style={{ borderRadius: 25 }} onClick={() => setIsAddArea(true)}>Add New Area</button>
+                  <div className='btn-group'>
+                    <button type="button" class="btn-info btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
+                      setIsAddArea(true)
+                      setIsAddDevice(false)
+                      setshowWelcomeDiv(false)
+                    }}>Add New Area</button>
+
+                    <button type="button" class="btn-primary btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
+                      setIsAddDevice(true)
+                      setIsAddArea(false)
+                      setshowGraph(false)
+                      setshowWelcomeDiv(false)
+                    }}>Add New Device</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -260,7 +335,125 @@ const Dashboard = () => {
               <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div className="row">
 
-                  {/* Add Area Form */}
+                  {/* ---------------------- Add new device section ------------------------- */}
+
+                  {/* Step 1 */}
+                  {
+                    isAddDevice
+                      ?
+                      stepOne
+                        ?
+                        <div className="welcome_wraper" id='step1'>
+                          <div className="section-heading text-center">
+                            <section className="login_wraper">
+                              <div className="container">
+                                <div className="row">
+                                  <div className="col-lg-12 col-sm-12">
+                                    <div className="contact-form2">
+                                      <h4 className="text-uppercase text-center">Add Device (Step 1)</h4>
+                                      <form onSubmit={handleSubmit2(onSubmitStepOne)}>
+                                        <div className="form-group">
+                                          <select
+                                            {...register2("modal_name")}
+                                            className={`form-control ${errors2.modal_name ? 'is-invalid' : ''}`}
+                                          >
+                                            <option value="">-------------------- Select Modal  --------------------</option>
+                                            <option value="IPL - 100 V1">IPL - 100 V1</option>
+                                          </select>
+                                          <span style={{ color: 'red' }}>{errors2.modal_name?.message}</span>
+                                        </div>
+                                        <div className="form-group">
+                                          <select
+                                            {...register2("area_name")}
+                                            className={`form-control ${errors2.area_name ? 'is-invalid' : ''}`}
+                                          >
+                                            <option value="">-------------------- Select Area --------------------</option>
+                                            {optionTemplate}
+                                          </select>
+                                          <span style={{ color: 'red' }}>{errors2.area_name?.message}</span>
+                                        </div>
+
+                                        <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting2}>Next</button>
+
+                                      </form>
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </section>
+                          </div>
+                        </div>
+                        :
+                        stepTwo
+                          ?
+                          <div className="welcome_wraper" id='step2'>
+                            <div className="section-heading text-center">
+                              <section className="login_wraper">
+                                <div className="container">
+                                  <div className="row">
+                                    <div className="col-lg-12 col-sm-12">
+                                      <div className="contact-form2">
+                                        <h4 className="text-uppercase text-center">Add Device (Step 2)</h4>
+                                        <form onSubmit={handleSubmit3(onSubmitSteptwo)}>
+                                          <div className="form-group">
+                                            <input
+                                              type="text"
+                                              {...register3("device_id")}
+                                              placeholder="Enter unique device id"
+                                              className={`form-control ${errors3.device_id ? 'is-invalid' : ''}`}
+                                              autoComplete="off"
+                                            />
+                                            <span style={{ color: 'red' }}>{errors3.device_id?.message}</span>
+                                          </div>
+
+                                          <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
+                                            setstepOne(true)
+                                            setstepTwo(false)
+                                          }}>Previous</button>
+                                          {
+                                            stepTwoisLoading
+                                              ?
+                                              <button className="btn btn-primary" style={{ borderRadius: 25 }}>Verifying...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                              </button>
+
+                                              :
+                                              <>
+                                                <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting3}>Next</button>
+                                              </>
+
+                                          }
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </section>
+                            </div>
+                          </div>
+                          :
+                          null
+                      :
+                      null
+                  }
+
+                  {
+                    showWelcomeDiv
+                      ?
+                      <div className="welcome_wraper">
+                        <div className="section-heading text-center">
+                          <h2>Welcome</h2>
+                          <p className>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
+                          <div className="seperator" />
+                        </div>
+                      </div>
+                      :
+                      null
+                  }
+
+
+
+
 
 
 
@@ -303,7 +496,7 @@ const Dashboard = () => {
                                         {
                                           isLoading
                                             ?
-                                            <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" />
+                                            <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
                                             </button>
 
                                             :
@@ -423,7 +616,7 @@ const Dashboard = () => {
                                         {
                                           isLoading
                                             ?
-                                            <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" />
+                                            <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
                                             </button>
 
                                             :
@@ -444,13 +637,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         :
-                        <div className="welcome_wraper">
-                          <div className="section-heading text-center">
-                            <h2>Welcome</h2>
-                            <p className>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
-                            <div className="seperator" />
-                          </div>
-                        </div>
+                        null
                   }
                 </div>
               </div>

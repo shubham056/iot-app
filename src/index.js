@@ -15,7 +15,7 @@ import axios from "axios";
 let persistor = persistStore(store);
 //const TopRightAlertContext = createContext()
 
-axios.defaults.baseURL = "https://iot-admin.herokuapp.com/api/v1/";
+axios.defaults.baseURL = "http://localhost:5000/api/v1/";
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -119,7 +119,7 @@ const ChangePassword = () => {
                                         {
                                             isLoading
                                                 ?
-                                                <button style={{ width: "100%" }} className="btn btn-primary">Update...  <div className="spinner-border" />
+                                                <button style={{ width: "100%" }} className="btn btn-primary">Update...  <div className="spinner-border"  style={{width:'1rem',height:'1rem'}}/>
                                                 </button>
 
                                                 :
