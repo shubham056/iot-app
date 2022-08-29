@@ -158,24 +158,33 @@ const Dashboard = () => {
   const onSubmitSteptwo = formValue => {
     console.log(formValue)
     setstepTwoisLoading(true)
-    setTimeout(() => {
-      toast.error("The device id you entered is not recognized.", {
-        toastId: 2345363343
-      })
-      setstepTwoisLoading(false)
-    }, 3000)
-    return false
+    // setTimeout(() => {
+    //   toast.error("The device id you entered is not recognized.", {
+    //     toastId: 2345363343
+    //   })
+    //   setstepTwoisLoading(false)
+    // }, 3000)
+    // return false
+    const deviceID = formValue.device_id
+    UserService.checkDeviceID(deviceID)
+      .then((res) => {
+        setstepTwoisLoading(false)
+        console.log(res.data.data.error)
+        if(res.data.data.error){
+          //device id not found
+          toast.error("The device id you entered is not recognized.", {toastId: 2345363333343})
+        }else{
+          //1. check device is online or not
+          console.log(res)
 
-    UserService.AddNewArea(userID, formValue)
-      .then(() => {
-        setisLoading(false)
-        ///localStorage.setItem("user", JSON.stringify(updateUserData));
-        toast.success("Area successfully Added.", { toastId: 23453643 })
-        resetField('area_name');
+          //2. check if device is already asign to user or not
+          console.log("device found")
+
+        }
       })
       .catch((error) => {
-        setisLoading(false)
-        { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+        setstepTwoisLoading(false)
+        { error && toast.info(error.response.data.message, { toastId: 3424213 }) }
       });
   }
   // My JSON Data

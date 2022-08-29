@@ -52,6 +52,10 @@ const AddRootUser = (userId,data) => {
     })
 };
 
+const checkDeviceID = (deviceID) => {
+    return axios.get(`users/check_device_id/${deviceID}`, { headers: authHeader() });
+};
+
 
 const userService = {
     getUserProfile,
@@ -62,5 +66,6 @@ const userService = {
     AddNewArea,
     GetTreeViewData,
     AddRootUser,
+    checkDeviceID,
 };
 export default userService;
