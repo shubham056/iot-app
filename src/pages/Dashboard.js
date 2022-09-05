@@ -12,11 +12,11 @@ import UserService from "../services/user.service";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
-
+import Swal from 'sweetalert2'
 
 
 const Dashboard = () => {
-  const [addDeviceBtnText, setAddDeviceBtnText] = useState("Next")
+  const [addDeviceBtnText, setAddDeviceBtnText] = useState("Verify")
   const [showWelcomeDiv, setshowWelcomeDiv] = useState(true)
   const [stepOne, setstepOne] = useState(true)
   const [stepTwo, setstepTwo] = useState(false)
@@ -43,7 +43,7 @@ const Dashboard = () => {
   const AddDeviceSchemaStep2 = Yup.object().shape({
     parent_id: Yup.string().required('Select area name!'),
     device_name: Yup.string().required('Device name field is required!'),
-    device_id: Yup.string().required('Device id field is required!'),
+    device_id: Yup.string().required("Please enter the device ID ( You can find the device ID on the device Label)"),
   });
   const formOptions = { resolver: yupResolver(Schema) }
   const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
@@ -158,8 +158,8 @@ const Dashboard = () => {
         setstepTwoisLoading(false)
         if (res.data.data.error) {
           //device id not found
-          toast.error("The device id you entered is not recognized.", { toastId: 2345363333343 })
-          setAddDeviceBtnText("Next");
+          toast.error("The device ID entered is incorrect. Please re-enter the device ID ", { toastId: 2345363333343 })
+          setAddDeviceBtnText("Retry");
         } else {
           //1. ************************ found a valid device next check device is online/offline *******************
           console.log("call API for check online/offline")
@@ -168,8 +168,8 @@ const Dashboard = () => {
               console.log(result)
               console.log("result----------", result)
               if (result.data.data.error) {
-                toast.error("The device id you entered is not recognized.", { toastId: 2145363333343 })
-                setAddDeviceBtnText("Next");
+                toast.error("The device ID entered is incorrect. Please re-enter the device ID ", { toastId: 2145363333343 })
+                setAddDeviceBtnText("Retry");
               } else {
                 console.log("data==", result.data.data[0].device_status)
                 let deviceStatus = result.data.data[0].device_status; //1=online,o=offline,2=not connected
@@ -177,30 +177,57 @@ const Dashboard = () => {
                   //online
                   Swal.fire({
                     title: 'The device is detected online',
-                    text: "Are you sure to add device?",
+                    text: "To link the device, Select Device-link button. To exit the device link procedure select Exit button ( Please note that if you link the device to this user account, it will be disconnected from any other user account, Are you sure to link device?",
                     icon: 'success',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes'
+                    confirmButtonText: 'Device Link',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
                   }).then((result) => {
                     if (result.isConfirmed) {
-                      //2. ****************************** check for device is already asign to user *************************
-                      console.log("call api for check assign device to user")
-                      UserService.checkAssignDeviceID(deviceID)
-                        .then((response) => {
-                          console.log("assign response", response)
-                          console.log("response.data.error----", response.data.error)
-                          if (response.data.data.error || response.data.error) {
-                            console.log("not assigned")
-                            //Added a device to area
+                      console.log("call api for remove assign device if exists")
+                      //remove associated user device
+                      UserService.removeAssignDeviceID(deviceID)
+                        .then((resultData) => {
+                          console.log("resultData=======", resultData.data)
+                          let timerInterval
+                          Swal.fire({
+                            title: 'Please press the Device link combination buttons at the device Terminal.',
+                            html: 'It will be close in <b></b> seconds.',
+                            icon: 'info',
+                            timer: 60000,
+                            timerProgressBar: true,
+                            showCancelButton: true,
+                            cancelButtonColor: '#d33',
+                            cancelButtonText: "Exit",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                              Swal.showLoading()
+                              timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                  .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                              }, 100)
+                            },
+                            willClose: () => {
+                              clearInterval(timerInterval)
+                            }
+                          })
+                          //check for Link_Cfm value 50 to 125 every second 
+                          setTimeout(()=>{
+                            //Added a new device to area
                             console.log("Call api for add device finally when not assign to any device")
                             UserService.AddNewDevice(userID, formValue)
-                              .then(() => {
-                                setisAddDeviceLoading(true)
+                              .then((resData) => {
+                                console.log(resData.data.data.area.id)
+                                setisAddDeviceLoading(resData.data.data.area.id)
                                 Swal.fire(
-                                  'Added',
-                                  'Device successfully added.',
+                                  'Device-link is completed successfully.',
+                                  '',
                                   'success'
                                 )
                                 toast.success("Device successfully Added.", { toastId: 2345353643 })
@@ -212,73 +239,29 @@ const Dashboard = () => {
                                 setisAddDeviceLoading(false)
                                 { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
                               });
-                          } else {
-                            console.log("assigned")
-                            Swal.fire({
-                              title: 'Are you sure?',
-                              text: "The device currently associated to another user account, if you associate it to the current user it will be disconnected from the other user account.",
-                              icon: 'question',
-                              showCancelButton: true,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Yes'
-                            }).then((result) => {
-                              if (result.isConfirmed) {
-                                console.log("call remove api")
-                                //remove associated user device
-                                UserService.removeAssignDeviceID(deviceID)
-                                  .then((resultData) => {
-                                    console.log("resultData=======", resultData.data.data)
-                                    if (resultData.data.data.error == false) {
-                                      //removed finally add device to area
-                                      console.log("Call api for add device finally")
-                                      console.log(formValue)
-                                      UserService.AddNewDevice(userID, formValue)
-                                        .then(() => {
-                                          setisAddDeviceLoading(true)
-                                          Swal.fire(
-                                            'Added',
-                                            'Device successfully added.',
-                                            'success'
-                                          )
-                                          toast.success("Device successfully Added.", { toastId: 2345353643 })
-                                          resetField('parent_id');
-                                          resetField('device_name');
-                                          resetField('device_id');
-                                        })
-                                        .catch((error) => {
-                                          setisAddDeviceLoading(false)
-                                          { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
-                                        });
-                                    }
+                          },5000)
 
-                                  }).catch((errorData) => {
-                                    console.log(errorData)
-                                  })
+                          
 
-                              }
-                            })
-                          }
-                        }).catch((error) => {
-                          console.log("assign error", error)
+                        }).catch((errorData) => {
+                          console.log("errorData", errorData)
                         })
-
                     }
                   })
 
                 } else if (deviceStatus === 0) {
                   //offline
                   setAddDeviceBtnText("Refresh");
-                  toast.info("The device is not detected online, please make sure the device is connected to the internet", { toastId: 23 })
+                  toast.info("The device is offline. Make sure the device is connected to the network.", { toastId: 23 })
                 } else {
                   //offline and not connected
                   setAddDeviceBtnText("Refresh");
-                  toast.info("The device is not detected online, please make sure the device is connected to the internet", { toastId: 2398765e4 })
+                  toast.info("The device is offline. Make sure the device is connected to the network.", { toastId: 2398765e4 })
                 }
               }
             })
             .catch((errorLog) => {
-              setAddDeviceBtnText("Next");
+              setAddDeviceBtnText("Verify");
               console.log(errorLog)
             })
         }
@@ -286,7 +269,7 @@ const Dashboard = () => {
       .catch((error) => {
         setstepTwoisLoading(false)
         { error && toast.info(error.response.data.message, { toastId: 3424213 }) }
-        setAddDeviceBtnText("Next");
+        setAddDeviceBtnText("Verify");
       });
   }
   // My JSON Data
@@ -394,9 +377,9 @@ const Dashboard = () => {
                                 ...props,
                                 onClick: () => {
                                   const { index, level, hasNodes, label, parent } = props
-                                  // console.log(index, level)
-                                  // console.log("hasNode", hasNodes)
-                                  // console.log(typeof (index))
+                                  console.log(index, level)
+                                  console.log("hasNode", hasNodes)
+                                  console.log(typeof (index))
                                   if (index == parseInt(0) && level == parseInt(0)) {
                                     console.log("true")
                                   } else {
@@ -510,7 +493,7 @@ const Dashboard = () => {
                                             <input
                                               type="text"
                                               {...register3("device_name")}
-                                              placeholder="Enter unique device name"
+                                              placeholder="Please enter device name"
                                               className={`form-control ${errors3.device_name ? 'is-invalid' : ''}`}
                                               autoComplete="off"
                                             />
@@ -521,7 +504,7 @@ const Dashboard = () => {
                                             <input
                                               type="text"
                                               {...register3("device_id")}
-                                              placeholder="Enter unique device id"
+                                              placeholder="Please enter the device ID "
                                               className={`form-control ${errors3.device_id ? 'is-invalid' : ''}`}
                                               autoComplete="off"
                                             />
@@ -531,7 +514,7 @@ const Dashboard = () => {
                                           <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
                                             setstepOne(true)
                                             setstepTwo(false)
-                                          }}>Previous</button>
+                                          }}>Exit</button>
                                           {
                                             stepTwoisLoading
                                               ?
