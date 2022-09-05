@@ -52,9 +52,35 @@ const AddRootUser = (userId,data) => {
     })
 };
 
+//check for valid device id
 const checkDeviceID = (deviceID) => {
     return axios.get(`users/check_device_id/${deviceID}`, { headers: authHeader() });
 };
+//check device status online/offline
+const checkDeviceOnlineStatus = (deviceID) => {
+    return axios.get(`users/check_device_online_ststus/${deviceID}`, { headers: authHeader() });
+};
+//check for already assign device to user
+const checkAssignDeviceID = (deviceID) => {
+    return axios.get(`users/check_asigned_device_id/${deviceID}`, { headers: authHeader() });
+};
+//remove assosiated device
+const removeAssignDeviceID = (deviceID) => {
+    return axios.get(`users/remove_associated_device/${deviceID}`, { headers: authHeader() });
+};
+//Add device to area
+const AddNewDevice = (userId,data) => {
+    return axios({
+        method: "post",
+        url:`users/addDevice/${userId}`,
+        data,
+        headers: authHeader()
+    })
+};
+
+
+
+
 
 
 const userService = {
@@ -67,5 +93,9 @@ const userService = {
     GetTreeViewData,
     AddRootUser,
     checkDeviceID,
+    checkDeviceOnlineStatus,
+    checkAssignDeviceID,
+    removeAssignDeviceID,
+    AddNewDevice,
 };
 export default userService;

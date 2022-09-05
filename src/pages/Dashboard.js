@@ -16,6 +16,7 @@ import * as Yup from 'yup'
 
 
 const Dashboard = () => {
+  const [addDeviceBtnText, setAddDeviceBtnText] = useState("Next")
   const [showWelcomeDiv, setshowWelcomeDiv] = useState(true)
   const [stepOne, setstepOne] = useState(true)
   const [stepTwo, setstepTwo] = useState(false)
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const [content, setContent] = useState([]);
   const [treeViewData, setTreeViewData] = useState([]);
   const [isLoading, setisLoading] = useState(false)
+  const [isAddDeviceLoading, setisAddDeviceLoading] = useState(false)
   const [showGraph, setshowGraph] = useState(false)
   const [areaName, setAreaName] = useState("")
   const [devicename, setDeviceName] = useState("")
@@ -37,9 +39,10 @@ const Dashboard = () => {
   });
   const AddDeviceSchemaStep1 = Yup.object().shape({
     modal_name: Yup.string().required('Select modal name!'),
-    area_name: Yup.string().required('Select area name!'),
   });
   const AddDeviceSchemaStep2 = Yup.object().shape({
+    parent_id: Yup.string().required('Select area name!'),
+    device_name: Yup.string().required('Device name field is required!'),
     device_id: Yup.string().required('Device id field is required!'),
   });
   const formOptions = { resolver: yupResolver(Schema) }
@@ -111,7 +114,7 @@ const Dashboard = () => {
         setTreeViewData(_content);
       }
     );
-  }, [isLoading]);
+  }, [isLoading, isAddDeviceLoading]);
 
   let locations = []
   Object.values(treeViewData).map(item => {
@@ -123,7 +126,8 @@ const Dashboard = () => {
 
   //submit handler
   const onSubmit = formValue => {
-    //console.log(formValue)
+    console.log(formValue)
+    //return false
     setisLoading(true)
     UserService.AddNewArea(userID, formValue)
       .then(() => {
@@ -142,49 +146,147 @@ const Dashboard = () => {
     setstepOne(false)
     setstepTwo(true)
     return false
-    setisLoading(true)
-    UserService.AddNewArea(userID, formValue)
-      .then(() => {
-        setisLoading(false)
-        ///localStorage.setItem("user", JSON.stringify(updateUserData));
-        toast.success("Area successfully Added.", { toastId: 23453643 })
-        resetField('area_name');
-      })
-      .catch((error) => {
-        setisLoading(false)
-        { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
-      });
   }
   const onSubmitSteptwo = formValue => {
     console.log(formValue)
+    //return false
     setstepTwoisLoading(true)
-    // setTimeout(() => {
-    //   toast.error("The device id you entered is not recognized.", {
-    //     toastId: 2345363343
-    //   })
-    //   setstepTwoisLoading(false)
-    // }, 3000)
-    // return false
     const deviceID = formValue.device_id
+    //--------------------------------- Api for check valid device using device ID -------------------------
     UserService.checkDeviceID(deviceID)
       .then((res) => {
         setstepTwoisLoading(false)
-        console.log(res.data.data.error)
-        if(res.data.data.error){
+        if (res.data.data.error) {
           //device id not found
-          toast.error("The device id you entered is not recognized.", {toastId: 2345363333343})
-        }else{
-          //1. check device is online or not
-          console.log(res)
+          toast.error("The device id you entered is not recognized.", { toastId: 2345363333343 })
+          setAddDeviceBtnText("Next");
+        } else {
+          //1. ************************ found a valid device next check device is online/offline *******************
+          console.log("call API for check online/offline")
+          UserService.checkDeviceOnlineStatus(deviceID)
+            .then((result) => {
+              console.log(result)
+              console.log("result----------", result)
+              if (result.data.data.error) {
+                toast.error("The device id you entered is not recognized.", { toastId: 2145363333343 })
+                setAddDeviceBtnText("Next");
+              } else {
+                console.log("data==", result.data.data[0].device_status)
+                let deviceStatus = result.data.data[0].device_status; //1=online,o=offline,2=not connected
+                if (deviceStatus === 1) {
+                  //online
+                  Swal.fire({
+                    title: 'The device is detected online',
+                    text: "Are you sure to add device?",
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      //2. ****************************** check for device is already asign to user *************************
+                      console.log("call api for check assign device to user")
+                      UserService.checkAssignDeviceID(deviceID)
+                        .then((response) => {
+                          console.log("assign response", response)
+                          console.log("response.data.error----", response.data.error)
+                          if (response.data.data.error || response.data.error) {
+                            console.log("not assigned")
+                            //Added a device to area
+                            console.log("Call api for add device finally when not assign to any device")
+                            UserService.AddNewDevice(userID, formValue)
+                              .then(() => {
+                                setisAddDeviceLoading(true)
+                                Swal.fire(
+                                  'Added',
+                                  'Device successfully added.',
+                                  'success'
+                                )
+                                toast.success("Device successfully Added.", { toastId: 2345353643 })
+                                resetField('parent_id');
+                                resetField('device_name');
+                                resetField('device_id');
+                              })
+                              .catch((error) => {
+                                setisAddDeviceLoading(false)
+                                { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+                              });
+                          } else {
+                            console.log("assigned")
+                            Swal.fire({
+                              title: 'Are you sure?',
+                              text: "The device currently associated to another user account, if you associate it to the current user it will be disconnected from the other user account.",
+                              icon: 'question',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Yes'
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                console.log("call remove api")
+                                //remove associated user device
+                                UserService.removeAssignDeviceID(deviceID)
+                                  .then((resultData) => {
+                                    console.log("resultData=======", resultData.data.data)
+                                    if (resultData.data.data.error == false) {
+                                      //removed finally add device to area
+                                      console.log("Call api for add device finally")
+                                      console.log(formValue)
+                                      UserService.AddNewDevice(userID, formValue)
+                                        .then(() => {
+                                          setisAddDeviceLoading(true)
+                                          Swal.fire(
+                                            'Added',
+                                            'Device successfully added.',
+                                            'success'
+                                          )
+                                          toast.success("Device successfully Added.", { toastId: 2345353643 })
+                                          resetField('parent_id');
+                                          resetField('device_name');
+                                          resetField('device_id');
+                                        })
+                                        .catch((error) => {
+                                          setisAddDeviceLoading(false)
+                                          { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+                                        });
+                                    }
 
-          //2. check if device is already asign to user or not
-          console.log("device found")
+                                  }).catch((errorData) => {
+                                    console.log(errorData)
+                                  })
 
+                              }
+                            })
+                          }
+                        }).catch((error) => {
+                          console.log("assign error", error)
+                        })
+
+                    }
+                  })
+
+                } else if (deviceStatus === 0) {
+                  //offline
+                  setAddDeviceBtnText("Refresh");
+                  toast.info("The device is not detected online, please make sure the device is connected to the internet", { toastId: 23 })
+                } else {
+                  //offline and not connected
+                  setAddDeviceBtnText("Refresh");
+                  toast.info("The device is not detected online, please make sure the device is connected to the internet", { toastId: 2398765e4 })
+                }
+              }
+            })
+            .catch((errorLog) => {
+              setAddDeviceBtnText("Next");
+              console.log(errorLog)
+            })
         }
       })
       .catch((error) => {
         setstepTwoisLoading(false)
         { error && toast.info(error.response.data.message, { toastId: 3424213 }) }
+        setAddDeviceBtnText("Next");
       });
   }
   // My JSON Data
@@ -266,7 +368,7 @@ const Dashboard = () => {
   let optionTemplate = Object.values(content).map((v, i) => (
     (i == 0) ? <option value={v.id}>New Area</option> : <option value={v.id}>{v.label}</option>
   ));
-  //console.log(content)
+  console.log(root)
 
 
   return (
@@ -371,17 +473,6 @@ const Dashboard = () => {
                                           </select>
                                           <span style={{ color: 'red' }}>{errors2.modal_name?.message}</span>
                                         </div>
-                                        <div className="form-group">
-                                          <select
-                                            {...register2("area_name")}
-                                            className={`form-control ${errors2.area_name ? 'is-invalid' : ''}`}
-                                          >
-                                            <option value="">-------------------- Select Area --------------------</option>
-                                            {optionTemplate}
-                                          </select>
-                                          <span style={{ color: 'red' }}>{errors2.area_name?.message}</span>
-                                        </div>
-
                                         <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting2}>Next</button>
 
                                       </form>
@@ -406,6 +497,27 @@ const Dashboard = () => {
                                         <h4 className="text-uppercase text-center">Add Device (Step 2)</h4>
                                         <form onSubmit={handleSubmit3(onSubmitSteptwo)}>
                                           <div className="form-group">
+                                            <select
+                                              {...register3("parent_id")}
+                                              className={`form-control ${errors3.parent_id ? 'is-invalid' : ''}`}
+                                            >
+                                              <option value="">-------------------- Select Area --------------------</option>
+                                              {optionTemplate}
+                                            </select>
+                                            <span style={{ color: 'red' }}>{errors3.parent_id?.message}</span>
+                                          </div>
+                                          <div className="form-group">
+                                            <input
+                                              type="text"
+                                              {...register3("device_name")}
+                                              placeholder="Enter unique device name"
+                                              className={`form-control ${errors3.device_name ? 'is-invalid' : ''}`}
+                                              autoComplete="off"
+                                            />
+                                            <span style={{ color: 'red' }}>{errors3.device_name?.message}</span>
+                                          </div>
+
+                                          <div className="form-group">
                                             <input
                                               type="text"
                                               {...register3("device_id")}
@@ -428,7 +540,7 @@ const Dashboard = () => {
 
                                               :
                                               <>
-                                                <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting3}>Next</button>
+                                                <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting3}>{addDeviceBtnText}</button>
                                               </>
 
                                           }
