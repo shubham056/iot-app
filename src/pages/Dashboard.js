@@ -239,7 +239,7 @@ const Dashboard = () => {
                                 setisAddDeviceLoading(false)
                                 { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
                               });
-                          },5000)
+                          },8000)
 
                           
 
