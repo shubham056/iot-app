@@ -21,12 +21,16 @@ const Dashboard = () => {
   const [stepOne, setstepOne] = useState(true)
   const [stepTwo, setstepTwo] = useState(false)
   const [stepTwoisLoading, setstepTwoisLoading] = useState(false)
+  const [forgotisLoading, setforgotisLoading] = useState(false)
   const [isAddArea, setIsAddArea] = useState(false);
   const [isAddDevice, setIsAddDevice] = useState(false);
+  const [isforgotdDevice, setIsForgotDevice] = useState(false);
   const [content, setContent] = useState([]);
+  const [contentDevice, setContentDevice] = useState([]);
   const [treeViewData, setTreeViewData] = useState([]);
   const [isLoading, setisLoading] = useState(false)
   const [isAddDeviceLoading, setisAddDeviceLoading] = useState(false)
+  const [isGetDeviceLoading, setisgetDeviceLoading] = useState(false)
   const [showGraph, setshowGraph] = useState(false)
   const [areaName, setAreaName] = useState("")
   const [devicename, setDeviceName] = useState("")
@@ -45,12 +49,17 @@ const Dashboard = () => {
     device_name: Yup.string().required('Device name field is required!'),
     device_id: Yup.string().required("Please enter the device ID ( You can find the device ID on the device Label)"),
   });
+  const forgotDevice = Yup.object().shape({
+    device_id: Yup.string().required("Please select device name"),
+  });
   const formOptions = { resolver: yupResolver(Schema) }
   const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
   const adddeviceformOptionsStep2 = { resolver: yupResolver(AddDeviceSchemaStep2) }
+  const formOptionforgotDevice = { resolver: yupResolver(forgotDevice) }
   const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, resetField } = useForm(formOptions);
   const { register: register2, formState: { errors: errors2, isSubmitting: isSubmitting2 }, handleSubmit: handleSubmit2, resetField: resetField2 } = useForm(adddeviceformOptionsStep1);
   const { register: register3, formState: { errors: errors3, isSubmitting: isSubmitting3 }, handleSubmit: handleSubmit3, resetField: resetField3 } = useForm(adddeviceformOptionsStep2);
+  const { register: register4, formState: { errors: errors4, isSubmitting: isSubmitting4 }, handleSubmit: handleSubmit4, resetField: resetField4 } = useForm(formOptionforgotDevice);
 
   const callOnce = useRef(true)
   //add root user node 
@@ -94,6 +103,27 @@ const Dashboard = () => {
       }
     );
   }, [isLoading]);
+
+  //fetch category data
+  useEffect(() => {
+    UserService.GetAddedDevices(userID).then(
+      (response) => {
+        setContentDevice(response.data.data.profile);
+        console.log("response device data ---", response.data.data.profile)
+      },
+      (error) => {
+
+        { error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setContentDevice(_content);
+      }
+    );
+  }, [isGetDeviceLoading]);
 
   //fetch tree view data
   useEffect(() => {
@@ -141,6 +171,55 @@ const Dashboard = () => {
         { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
       });
   }
+  const onSubmitForgotDevice = formValue => {
+    console.log(formValue)
+    // return false
+    if (formValue.device_id != undefined) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "To forgot the device!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, forgot it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setforgotisLoading(true)
+          UserService.forgotDeviceID(formValue.device_id)
+            .then((res) => {
+              console.log("forgot device res--", res)
+              if (res.data.data.error == false) {
+                toast.success('Device successfully forgot.', { toastId: 3446467686787 })
+                setContentDevice(res.data.data.updatedId);
+                setforgotisLoading(false)
+                setIsForgotDevice(false)
+                setIsAddDevice(false)
+                setIsAddArea(false)
+                setshowGraph(false)
+                setshowWelcomeDiv(true)
+              } else {
+                toast.error('Internal server error, please try after some time!', { toastId: 234534464676867878 })
+                setforgotisLoading(false)
+
+              }
+
+            })
+            .catch((error) => {
+              setisLoading(false)
+              { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+            });
+          setforgotisLoading(false)
+
+        } else {
+          setforgotisLoading(false)
+        }
+      })
+    } else {
+      toast.info('Please select device name', { toastId: 2345366467686787 })
+    }
+  }
+
   const onSubmitStepOne = formValue => {
     console.log(formValue)
     setstepOne(false)
@@ -188,64 +267,112 @@ const Dashboard = () => {
                     allowEscapeKey: false,
                   }).then((result) => {
                     if (result.isConfirmed) {
-                      console.log("call api for remove assign device if exists")
-                      //remove associated user device
-                      UserService.removeAssignDeviceID(deviceID)
-                        .then((resultData) => {
-                          console.log("resultData=======", resultData.data)
-                          let timerInterval
-                          Swal.fire({
-                            title: 'Please press the Device link combination buttons at the device Terminal.',
-                            html: 'It will be close in <b></b> seconds.',
-                            icon: 'info',
-                            timer: 60000,
-                            timerProgressBar: true,
-                            showCancelButton: true,
-                            cancelButtonColor: '#d33',
-                            cancelButtonText: "Exit",
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            didOpen: () => {
-                              Swal.showLoading()
-                              timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                  .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                              }, 100)
-                            },
-                            willClose: () => {
-                              clearInterval(timerInterval)
-                            }
-                          })
-                          //check for Link_Cfm value 50 to 125 every second 
-                          setTimeout(()=>{
-                            //Added a new device to area
-                            console.log("Call api for add device finally when not assign to any device")
-                            UserService.AddNewDevice(userID, formValue)
-                              .then((resData) => {
-                                console.log(resData.data.data.area.id)
-                                setisAddDeviceLoading(resData.data.data.area.id)
-                                Swal.fire(
-                                  'Device-link is completed successfully.',
-                                  '',
-                                  'success'
-                                )
-                                toast.success("Device successfully Added.", { toastId: 2345353643 })
-                                resetField('parent_id');
-                                resetField('device_name');
-                                resetField('device_id');
+                      console.log('call api for check already added device id for same user')
+                      UserService.checkAlreadyAddedDevice(userID, deviceID)
+                        .then((res) => {
+                          console.log("check already added device id for same user res--", res.data.data.error)
+                          if (res.data.data.error != false) {
+                            //not exists device id 
+                            console.log("not exixts")
+                            console.log("call api for remove assign device if exists")
+                            //remove associated user device
+                            UserService.removeAssignDeviceID(deviceID)
+                              .then((resultData) => {
+                                console.log("resultData=======", resultData.data)
+                                let timerInterval
+                                Swal.fire({
+                                  title: 'Please press the Device link combination buttons at the device Terminal.',
+                                  html: 'It will be close in <b></b> seconds.',
+                                  icon: 'info',
+                                  timer: 90000,
+                                  timerProgressBar: true,
+                                  showCancelButton: true,
+                                  cancelButtonColor: '#d33',
+                                  cancelButtonText: "Exit",
+                                  allowOutsideClick: false,
+                                  allowEscapeKey: false,
+                                  didOpen: () => {
+                                    Swal.showLoading()
+                                    timerInterval = setInterval(() => {
+                                      Swal.getHtmlContainer().querySelector('b')
+                                        .textContent = (Swal.getTimerLeft() / 1000)
+                                          .toFixed(0)
+                                    }, 100)
+                                  },
+                                  willClose: () => {
+                                    Swal.fire(
+                                      'Device Link failed. Please again!.',
+                                      '',
+                                      'error'
+                                    )
+                                    clearInterval(timerInterval)
+                                  }
+                                })
+                                //check for Link_Cfm value 50 to 125 every second 
+                                console.log('device link api call')
+
+                                const interval = setInterval(() => {
+                                  UserService.checkDeviceLinkValue(deviceID)
+                                    .then((linkVal) => {
+                                      console.log("linkVal.data.error----", linkVal.data.error)
+                                      if (linkVal.data.error == false) {
+                                        console.log("linkVal.data.data[0]--------------------------", linkVal.data.data[0])
+                                        let checkLinkVal = linkVal.data.data[0].link_cfm_updated
+                                        let isConnectedDevice = linkVal.data.data[0].is_connected
+                                        if (checkLinkVal == "true") {
+                                          //Added a new device to area
+                                          console.log("Call api for add device finally when not assign to any device")
+                                          UserService.AddNewDevice(userID, formValue)
+                                            .then((resData) => {
+                                              console.log(resData.data.data.area.id)
+                                              setisAddDeviceLoading(resData.data.data.area.id)
+                                              setisgetDeviceLoading(resData.data.data.area.id)
+                                              Swal.fire(
+                                                'Device-link is completed successfully.',
+                                                '',
+                                                'success'
+                                              )
+                                              clearInterval(timerInterval)
+                                              toast.success("Device successfully Added.", { toastId: 2345353643 })
+                                              resetField('parent_id');
+                                              resetField('device_name');
+                                              resetField('device_id');
+                                              clearInterval(interval);
+                                              UserService.UpdateDeviceConState(deviceID, {
+                                                is_connected: 1,
+                                                device_status_for_iot_gateway: 77,
+                                                link_cfm_updated: "false",
+                                              })
+                                                .then((ress) => {
+                                                  console.log("is_connected res--", ress)
+                                                }).catch(err => console.log("is connected err--", err))
+                                            })
+                                            .catch((error) => {
+                                              setisAddDeviceLoading(false)
+                                              { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+                                            });
+                                        }
+                                      }
+
+                                    })
+                                    .catch((linkErr) => {
+                                      console.log(linkErr)
+                                    })
+                                }, 2000)
+
+                              }).catch((errorData) => {
+                                console.log("errorData", errorData)
                               })
-                              .catch((error) => {
-                                setisAddDeviceLoading(false)
-                                { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
-                              });
-                          },8000)
+                          } else {
+                            Swal.fire(
+                              'Device is already connected.',
+                              '',
+                              'warning'
+                            )
+                          }
+                        }).catch((err) => console.log(err))
 
-                          
 
-                        }).catch((errorData) => {
-                          console.log("errorData", errorData)
-                        })
                     }
                   })
 
@@ -351,6 +478,10 @@ const Dashboard = () => {
   let optionTemplate = Object.values(content).map((v, i) => (
     (i == 0) ? <option value={v.id}>New Area</option> : <option value={v.id}>{v.label}</option>
   ));
+
+  let addedDevices = Object.values(contentDevice).map((v, i) => (
+      <option value={v.id}>{v.label}</option>
+  ));
   console.log(root)
 
 
@@ -413,6 +544,7 @@ const Dashboard = () => {
                       setIsAddArea(true)
                       setIsAddDevice(false)
                       setshowWelcomeDiv(false)
+                      setIsForgotDevice(false)
                     }}>Add New Area</button>
 
                     <button type="button" class="btn-primary btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
@@ -420,8 +552,19 @@ const Dashboard = () => {
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
+                      setIsForgotDevice(false)
                     }}>Add New Device</button>
+
+
+
                   </div>
+                  <button type="button" class="btn-primary btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
+                    setIsForgotDevice(true)
+                    setIsAddDevice(false)
+                    setIsAddArea(false)
+                    setshowGraph(false)
+                    setshowWelcomeDiv(false)
+                  }}>Forgot Device</button>
                 </div>
               </div>
             </div>
@@ -429,6 +572,57 @@ const Dashboard = () => {
               <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div className="row">
 
+
+                  {
+                    isforgotdDevice
+                      ?
+                      <div className="welcome_wraper" id='step2'>
+                        <div className="section-heading text-center">
+                          <section className="login_wraper">
+                            <div className="container">
+                              <div className="row">
+                                <div className="col-lg-12 col-sm-12">
+                                  <div className="contact-form2">
+                                    <h4 className="text-uppercase text-center">Forgot Device</h4>
+                                    <form onSubmit={handleSubmit4(onSubmitForgotDevice)}>
+                                      <div className="form-group">
+                                        <select
+                                          {...register4("device_id")}
+                                          className={`form-control ${errors4.device_id ? 'is-invalid' : ''}`}
+                                        >
+                                          <option value="">-------------------- Select Device Name --------------------</option>
+                                          {addedDevices}
+                                        </select>
+                                        <span style={{ color: 'red' }}>{errors4.device_id?.message}</span>
+                                      </div>
+
+                                      {/* <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
+                                            setstepOne(true)
+                                            setstepTwo(false)
+                                          }}>Exit</button> */}
+                                      {
+                                        forgotisLoading
+                                          ?
+                                          <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                          </button>
+
+                                          :
+                                          <>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting3}>Submit</button>
+                                          </>
+
+                                      }
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                      :
+                      null
+                  }
                   {/* ---------------------- Add new device section ------------------------- */}
 
                   {/* Step 1 */}

@@ -30,6 +30,11 @@ const ChangePassword = (userId,data) => {
 const GetTreeViewCategory = (userId) => {
     return axios.get(`users/getCategory/${userId}`, { headers: authHeader() });
 };
+const GetAddedDevices = (userId) => {
+    return axios.get(`users/getAddedDevice/${userId}`, { headers: authHeader() });
+};
+
+
 const GetTreeViewData = (userId) => {
     return axios.get(`users/getTreeViewData/${userId}`, { headers: authHeader() });
 };
@@ -78,9 +83,29 @@ const AddNewDevice = (userId,data) => {
     })
 };
 
+const UpdateDeviceConState = (deviceID,data) => {
+    return axios({
+        method: "post",
+        url:`users/updated_device_link_status/${deviceID}`,
+        data,
+        headers: authHeader()
+    })
+};
 
 
 
+//check device link value 50 or 150
+const checkDeviceLinkValue = (deviceID) => {
+    return axios.get(`users/get_link_device_value/${deviceID}`, { headers: authHeader() });
+};
+
+const checkAlreadyAddedDevice = (userId,deviceID) => {
+    return axios.get(`users/check_already_added_device/${userId}/${deviceID}`, { headers: authHeader() });
+};
+//forgot device id
+const forgotDeviceID = (deviceID) => {
+    return axios.get(`users/forgot_associated_device/${deviceID}`, { headers: authHeader() });
+};
 
 
 const userService = {
@@ -97,5 +122,10 @@ const userService = {
     checkAssignDeviceID,
     removeAssignDeviceID,
     AddNewDevice,
+    checkDeviceLinkValue,
+    UpdateDeviceConState,
+    GetAddedDevices,
+    checkAlreadyAddedDevice,
+    forgotDeviceID,
 };
 export default userService;
