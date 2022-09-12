@@ -319,6 +319,7 @@ const Dashboard = () => {
                                         console.log("linkVal.data.data[0]--------------------------", linkVal.data.data[0])
                                         let checkLinkVal = linkVal.data.data[0].link_cfm_updated
                                         let isConnectedDevice = linkVal.data.data[0].is_connected
+                                        console.log("checkLinkVal-=======",checkLinkVal)
                                         if (checkLinkVal == "true") {
                                           //Added a new device to area
                                           console.log("Call api for add device finally when not assign to any device")
@@ -351,6 +352,8 @@ const Dashboard = () => {
                                               setisAddDeviceLoading(false)
                                               { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
                                             });
+                                        }else{
+                                          console.log("NOOOOOOOOOOOOOOOOO")
                                         }
                                       }
 
