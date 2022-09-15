@@ -192,6 +192,7 @@ const Dashboard = () => {
               if (res.data.data.error == false) {
                 toast.success('Device successfully forgot.', { toastId: 3446467686787 })
                 setContentDevice(res.data.data.updatedId);
+                setisAddDeviceLoading(res.data.data.updatedId)
                 setforgotisLoading(false)
                 setIsForgotDevice(false)
                 setIsAddDevice(false)
