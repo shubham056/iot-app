@@ -106,6 +106,7 @@ const Dashboard = () => {
 
   //fetch category data
   useEffect(() => {
+    console.log("########### call added device id function ##################")
     UserService.GetAddedDevices(userID).then(
       (response) => {
         setContentDevice(response.data.data.profile);
@@ -173,7 +174,7 @@ const Dashboard = () => {
   }
   const onSubmitForgotDevice = formValue => {
     console.log(formValue)
-    // return false
+     //return false
     if (formValue.device_id != undefined) {
       Swal.fire({
         title: 'Are you sure?',
@@ -307,6 +308,7 @@ const Dashboard = () => {
                                       'error'
                                     )
                                     clearInterval(timerInterval)
+                                    clearInterval(interval);
                                   }
                                 })
                                 //check for Link_Cfm value 50 to 125 every second 
@@ -523,6 +525,7 @@ const Dashboard = () => {
                                       setIsAddArea(false)
                                       setIsAddDevice(false)
                                       setshowWelcomeDiv(false)
+                                      setIsForgotDevice(false)
                                       setDeviceName(label)
                                       let areaName = parent.split("/").pop()
                                       //console.log("areaName",areaName)
