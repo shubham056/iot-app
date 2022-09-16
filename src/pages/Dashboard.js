@@ -476,7 +476,7 @@ const Dashboard = () => {
           delete child.parent_id
           tree.push(child);
         }
-      }
+      }   
     }
     return tree;
   }
