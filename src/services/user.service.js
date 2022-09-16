@@ -74,7 +74,7 @@ const removeAssignDeviceID = (deviceID) => {
     return axios.get(`users/remove_associated_device/${deviceID}`, { headers: authHeader() });
 };
 //Add device to area
-const AddNewDevice = (userId,data) => {
+const AddNewDevice = (userId,data) => {  
     return axios({
         method: "post",
         url:`users/addDevice/${userId}`,
