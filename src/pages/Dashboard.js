@@ -201,7 +201,7 @@ const Dashboard = () => {
                 setshowGraph(false)
                 setshowWelcomeDiv(true)
               } else {
-                toast.error('Internal server error, please try after some time!', { toastId: 234534464676867878 })
+                toast.error('Please select a device!', { toastId: 234534464676867878 })
                 setforgotisLoading(false)
 
               }
