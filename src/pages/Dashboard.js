@@ -13,6 +13,22 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
+import { Chart } from "react-google-charts";
+
+export const data = [
+  ["Time", "Power"],
+  ["0:00:00", 1],
+  ["12:00:00", 5],
+  ["0:00:00", 5],
+  ["12:00:00", 5],
+];
+
+export const options = {
+  title: "XXXXXX",
+  curveType: "function",
+  legend: { position: "bottom" },
+};
+
 
 
 const Dashboard = () => {
@@ -150,7 +166,7 @@ const Dashboard = () => {
   let locations = []
   Object.values(treeViewData).map(item => {
     //.log("first", item)
-    let newdata = { ...item, key: item.label + item.id };
+    let newdata = { ...item, key: item.label };
     locations.push(newdata)
   })
   //console.log(locations)
@@ -513,14 +529,16 @@ const Dashboard = () => {
                               const childrenProps = {
                                 ...props,
                                 onClick: () => {
-                                  const { index, level, hasNodes, label, parent } = props
+                                  const { index, level, hasNodes, label, parent, is_type, device_id } = props
                                   console.log(index, level)
                                   console.log("hasNode", hasNodes)
                                   console.log(typeof (index))
                                   if (index == parseInt(0) && level == parseInt(0)) {
                                     console.log("true")
                                   } else {
-                                    if (hasNodes == false) {
+                                    console.log("is type",is_type)
+                                    if (is_type == "device") {
+                                      console.log("device_id",device_id)
                                       setshowGraph(true)
                                       setIsAddArea(false)
                                       setIsAddDevice(false)
@@ -528,7 +546,8 @@ const Dashboard = () => {
                                       setIsForgotDevice(false)
                                       setDeviceName(label)
                                       let areaName = parent.split("/").pop()
-                                      //console.log("areaName",areaName)
+                                      console.log("first",parent)
+                                      console.log("areaName",areaName)
                                       setAreaName(areaName)
                                     }
                                     console.log("false-------------")
@@ -825,7 +844,7 @@ const Dashboard = () => {
                         <div className="grpah_table">
                           <div className="col-lg-12 box_graph device_name">
                             <div className="widget_categories right-widget top_heding ">
-                              <h4>{areaName} {devicename} <span /> <i className="icofont icofont-reply-all" /></h4>
+                              <h4><b>{areaName}</b> - {devicename} <span /> <i className="icofont icofont-reply-all" /></h4>
                             </div>
                           </div>
                           <div className="col-lg-12 box_graph">
@@ -873,6 +892,13 @@ const Dashboard = () => {
                                       <a href="#" className="tag-cloud-link">Monthly</a>
                                     </div>
                                     <div className="graph_wraper">
+                                    <Chart
+                                        chartType="LineChart"
+                                        width="100%"
+                                        height="400px"
+                                        data={data}
+                                        options={options}
+                                      />
                                     </div>
                                   </div>
                                 </div>
