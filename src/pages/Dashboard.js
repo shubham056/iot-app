@@ -1023,7 +1023,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
 
 
-                                          UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T")
+                                          UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T","daily")
                                             .then((res) => {
                                               console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
