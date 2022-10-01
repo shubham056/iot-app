@@ -14,6 +14,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import { Chart } from "react-google-charts";
+import PowerChart from '../components/PowerChart';
+import PowerCharts from '../components/PowerCharts';
+import EnergyChart from '../components/EnergyChart';
+
+
+
 
 export const data = [
   ["Time", "Power"],
@@ -24,10 +30,45 @@ export const data = [
 ];
 
 export const options = {
-  title: "XXXXXX",
+  title: "",
   curveType: "function",
   legend: { position: "bottom" },
 };
+
+export const energyDailyData = [
+  ["Energy", "Energy", { role: "style" }],
+  ["0:00:00", 1, "#d4d104"],
+  ["12:00:00", 12, "#d4d104"],
+  ["00:00:00", 5, "#d4d104"],
+  ["12:00:00", 18, "#d4d104"],
+];
+
+export const energyMonthlyData = [
+  ["Energy", "Energy", { role: "style" }],
+  ["1/03/2022", 1, "#d4d104"],
+  ["1/04/2022", 16, "#d4d104"],
+  ["1/05/2022", 4, "#d4d104"],
+  ["1/06/2022", 2, "#d4d104"],
+  ["1/07/2022", 2, "#d4d104"],
+  ["1/08/2022", 2, "#d4d104"],
+  ["1/09/2022", 2, "#d4d104"],
+  ["1/10/2022", 2, "#d4d104"],
+  ["1/11/2022", 2, "#d4d104"],
+  ["1/12/2022", 2, "#d4d104"],
+  ["1/13/2022", 2, "#d4d104"],
+  ["1/14/2022", 2, "#d4d104"],
+];
+
+
+export const energyOptions = {
+  chart: {
+    title: "",
+    curveType: "function",
+    legend: { position: "bottom" },
+  },
+};
+
+
 
 
 
@@ -50,8 +91,53 @@ const Dashboard = () => {
   const [showGraph, setshowGraph] = useState(false)
   const [areaName, setAreaName] = useState("")
   const [devicename, setDeviceName] = useState("")
+  const [isPower, setisPower] = useState(false)
+  const [isPowerTotal, setisPowerTotal] = useState(false)
+  const [isPowerPhase1, setisPowerPhase1] = useState(false)
+  const [isPowerPhase2, setisPowerPhase2] = useState(false)
+  const [isPowerPhase3, setisPowerPhase3] = useState(false)
+
+  const [isEnergyTotal, setisEnergyTotal] = useState(false)
+  const [isEnergyPhase1, setisEnergyPhase1] = useState(false)
+  const [isEnergyPhase2, setisEnergyPhase2] = useState(false)
+  const [isEnergyPhase3, setisEnergyPhase3] = useState(false)
+
+  const [isEnergy, setisEnergy] = useState(false)
+  const [isEnergyDaily, setisEnergyDaily] = useState(false)
+  const [isEnergyMonthly, setisEnergyMonthly] = useState(false)
+  const [isStaticValue1, setisStaticValue1] = useState('A105')
+  const [isStaticValue2, setisStaticValue2] = useState('A106')
+  const [isStaticValue3, setisStaticValue3] = useState('A107')
+  const [isStaticValue4, setisStaticValue4] = useState('A108')
+
+  const [powerDataFromDB, setpowerDataFromDB] = useState([])
+  const [energyDataFromDB, setenergyDataFromDB] = useState([])
+  const [isDeviceID, setisDeviceID] = useState('')
+
   const { user } = useSelector((state) => state.auth);
   const userID = user.data.profile.id
+
+
+
+
+  let powerApiInterval;
+  if (isPower) {
+    //powerApiInterval = setInterval(() => {
+    //call power api
+    // UserService.GetLinkedDeviceData(isDeviceID)
+    //   .then((res) => {
+    //     console.log("get device data res", res.data.data.deviceData)
+    //     setpowerDataFromDB(res.data.data.deviceData)
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    //}, 50000) //50 sec
+  } else {
+    //clearInterval(powerApiInterval);
+  }
+
+
+
 
   const Schema = Yup.object().shape({
     parent_id: Yup.string().required('Select a category.'),
@@ -146,6 +232,7 @@ const Dashboard = () => {
   useEffect(() => {
     UserService.GetTreeViewData(userID).then(
       (response) => {
+        console.log("tree view data", response.data.data.profile)
         setTreeViewData(response.data.data.profile);
         //console.log("response", response.data.data.profile)
       },
@@ -190,7 +277,7 @@ const Dashboard = () => {
   }
   const onSubmitForgotDevice = formValue => {
     console.log(formValue)
-     //return false
+    //return false
     if (formValue.device_id != undefined) {
       Swal.fire({
         title: 'Are you sure?',
@@ -338,7 +425,7 @@ const Dashboard = () => {
                                         console.log("linkVal.data.data[0]--------------------------", linkVal.data.data[0])
                                         let checkLinkVal = linkVal.data.data[0].link_cfm_updated
                                         let isConnectedDevice = linkVal.data.data[0].is_connected
-                                        console.log("checkLinkVal-=======",checkLinkVal)
+                                        console.log("checkLinkVal-=======", checkLinkVal)
                                         if (checkLinkVal == "true") {
                                           //Added a new device to area
                                           console.log("Call api for add device finally when not assign to any device")
@@ -371,7 +458,7 @@ const Dashboard = () => {
                                               setisAddDeviceLoading(false)
                                               { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
                                             });
-                                        }else{
+                                        } else {
                                           console.log("NOOOOOOOOOOOOOOOOO")
                                         }
                                       }
@@ -492,7 +579,7 @@ const Dashboard = () => {
           delete child.parent_id
           tree.push(child);
         }
-      }   
+      }
     }
     return tree;
   }
@@ -502,7 +589,7 @@ const Dashboard = () => {
   ));
 
   let addedDevices = Object.values(contentDevice).map((v, i) => (
-      <option value={v.id}>{v.label}</option>
+    <option value={v.id}>{v.label}</option>
   ));
   console.log(root)
 
@@ -536,9 +623,21 @@ const Dashboard = () => {
                                   if (index == parseInt(0) && level == parseInt(0)) {
                                     console.log("true")
                                   } else {
-                                    console.log("is type",is_type)
+                                    console.log("is type", is_type)
                                     if (is_type == "device") {
-                                      console.log("device_id",device_id)
+                                      console.log("device_id", device_id)
+                                      setisDeviceID(device_id)
+                                      setisPower(true)
+                                      setisPowerTotal(true)
+                                      setisEnergyPhase1(false)
+                                      setisEnergyPhase2(false)
+                                      setisEnergyPhase3(false)
+                                      setisPowerPhase1(false)
+                                      setisPowerPhase2(false)
+                                      setisPowerPhase3(false)
+                                      setisEnergy(false)
+                                      setisEnergyDaily(false)
+                                      setisEnergyMonthly(false)
                                       setshowGraph(true)
                                       setIsAddArea(false)
                                       setIsAddDevice(false)
@@ -546,9 +645,17 @@ const Dashboard = () => {
                                       setIsForgotDevice(false)
                                       setDeviceName(label)
                                       let areaName = parent.split("/").pop()
-                                      console.log("first",parent)
-                                      console.log("areaName",areaName)
+                                      console.log("first", parent)
+                                      console.log("areaName", areaName)
                                       setAreaName(areaName)
+                                      console.log("call device data api")
+                                      UserService.GetLinkedDeviceData(device_id, "total_power")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          setpowerDataFromDB(res.data.data.deviceData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
                                     }
                                     console.log("false-------------")
                                   }
@@ -859,19 +966,19 @@ const Dashboard = () => {
                             <div className="tags">
                               <div className="tag_box">
                                 <span>XXXXX</span>
-                                <a href="#" className="tag-cloud-link ">A101</a>
+                                <a href="#" className={`tag-cloud-link`}>{isStaticValue1}</a>
                               </div>
                               <div className="tag_box">
                                 <span>XXXXX</span>
-                                <a href="#" className="tag-cloud-link ">A101</a>
+                                <a href="#" className={`tag-cloud-link`}>{isStaticValue2}</a>
                               </div>
                               <div className="tag_box">
                                 <span>XXXXX</span>
-                                <a href="#" className="tag-cloud-link ">A101</a>
+                                <a href="#" className={`tag-cloud-link ${isPowerTotal || isPowerPhase1 || isPowerPhase2 || isPowerPhase3 ? "bg_blue" : null} `}>{isStaticValue3} </a>
                               </div>
                               <div className="tag_box">
                                 <span>XXXXX</span>
-                                <a href="#" className="tag-cloud-link ">A101</a>
+                                <a href="#" className={`tag-cloud-link`}>{isStaticValue4}</a>
                               </div>
                             </div>
                             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
@@ -879,37 +986,416 @@ const Dashboard = () => {
                                 <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12">
                                   <div className="row">
                                     <div className="tags left_wraper">
-                                      <a href="#" className="tag-cloud-link bg_green">Power</a>
-                                      <a href="#" className="tag-cloud-link ">Energy</a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(true)
+                                          setisPowerTotal(true)
+                                          setisPowerPhase1(false)
+                                          setisPowerPhase2(false)
+                                          setisPowerPhase3(false)
+                                          setisEnergy(false)
+                                          setisEnergyDaily(false)
+                                          setisEnergyMonthly(false)
+
+                                          UserService.GetLinkedDeviceData(isDeviceID, "total_power")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setpowerDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+
+                                        }} className={`tag-cloud-link ${isPower ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Power
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyMonthly(false)
+                                          setisEnergyDaily(true)
+                                          setisEnergy(true)
+                                          setisEnergyTotal(true)
+                                          setisEnergyPhase1(false)
+                                          setisEnergyPhase2(false)
+                                          setisEnergyPhase3(false)
+
+
+                                          UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+
+                                        }} className={`tag-cloud-link ${isEnergy ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Energy
+                                      </a>
                                     </div>
                                   </div>
                                 </div>
                                 <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12">
                                   <div className="row right_wraper">
+
                                     <div className="tags ">
                                       <span>XXXXX</span>
-                                      <a href="#" className="tag-cloud-link bg_green">Daily</a>
-                                      <a href="#" className="tag-cloud-link">Monthly</a>
+                                      {
+                                        isEnergy
+                                          ?
+                                          <>
+                                            <a
+                                              onClick={() => {
+                                                setisEnergyDaily(true)
+                                                setisEnergyMonthly(false)
+                                                setisEnergyTotal(true)
+                                                setisEnergyPhase1(false)
+                                                setisEnergyPhase2(false)
+                                                setisEnergyPhase3(false)
+
+                                                UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T","daily")
+                                                .then((res) => {
+                                                  console.log("get device data res", res.data.data.deviceData)
+                                                  setenergyDataFromDB(res.data.data.deviceData)
+                                                }).catch(err => {
+                                                  console.log(err)
+                                                })
+
+                                              }}
+                                              className={`tag-cloud-link ${isEnergyDaily ? "bg_green" : null} `}
+                                              style={{ cursor: 'pointer' }}
+                                            >
+                                              Daily
+                                            </a>
+                                            <a
+                                              onClick={() => {
+                                                setisEnergyMonthly(!isEnergyMonthly)
+                                                setisEnergyDaily(false)
+                                              }}
+                                              className={`tag-cloud-link ${isEnergyMonthly ? "bg_green" : null} `}
+                                              style={{ cursor: 'pointer' }}
+                                            >
+                                              Monthly
+                                            </a>
+                                          </>
+
+                                          :
+                                          null
+                                      }
                                     </div>
+
+
+
+
                                     <div className="graph_wraper">
-                                    <Chart
-                                        chartType="LineChart"
-                                        width="100%"
-                                        height="400px"
-                                        data={data}
-                                        options={options}
-                                      />
+                                      {
+                                        isPower
+                                          ?
+
+                                          // <PowerChart powerData={[
+                                          //   { time: 1556877600, value: 230.12 },
+                                          //   { time: 1556881200, value: 230.24 },
+                                          //   { time: 1556884800, value: 230.63 },
+                                          //   { time: 1556888400, value: 231.35 },
+                                          //   { time: 1556892000, value: 232.24 },
+                                          //   { time: 1556895600, value: 232.52 },
+
+
+                                          // ]} powerDataFromDB={powerDataFromDB} />
+                                          <PowerCharts
+                                            powerDataFromDB={powerDataFromDB}
+                                          />
+
+                                          :
+                                          null
+                                      }
+                                      {
+                                        isEnergyDaily
+                                          ?
+                                          // <Chart
+                                          //   chartType="ColumnChart"
+                                          //   loader={<div>Loading Energy Daily Data...</div>}
+                                          //   width="100%"
+                                          //   height="400px"
+                                          //   data={energyDailyData}
+                                          //   options={energyOptions}
+                                          // />
+                                          <EnergyChart energyDataFromDB={energyDataFromDB} />
+                                          :
+                                          null
+                                      }
+
+                                      {
+                                        isEnergyMonthly
+                                          ?
+                                          <Chart
+                                            chartType="ColumnChart"
+                                            loader={<div>Loading Energy Monthly Data...</div>}
+                                            width="100%"
+                                            height="400px"
+                                            data={energyMonthlyData}
+                                            options={energyOptions}
+                                          />
+                                          :
+                                          null
+                                      }
+
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                            <div className="tags bottom_tag">
-                              <a href="#" className="tag-cloud-link bg_green">Total</a>
-                              <a href="#" className="tag-cloud-link ">Phase - 1</a>
-                              <a href="#" className="tag-cloud-link ">Phase - 2</a>
-                              <a href="#" className="tag-cloud-link">Phase - 3</a>
-                            </div>
+                            {
+                              isPower
+                                ?
+                                <div className="tags bottom_tag">
+                                  <a
+                                    onClick={() => {
+                                      setisPower(true)
+                                      setisPowerTotal(true)
+                                      setisPowerPhase1(false)
+                                      setisPowerPhase2(false)
+                                      setisPowerPhase3(false)
+                                      setisEnergy(false)
+
+                                      setisStaticValue1('A101')
+                                      setisStaticValue2('A102')
+                                      setisStaticValue3('A103')
+                                      setisStaticValue4('A104')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "total_power")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          setpowerDataFromDB(res.data.data.deviceData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Total
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(true)
+                                      setisPowerTotal(false)
+                                      setisPowerPhase1(true)
+                                      setisPowerPhase2(false)
+                                      setisPowerPhase3(false)
+                                      setisEnergy(false)
+                                      setisEnergyTotal(false)
+
+
+                                      setisStaticValue1('A105')
+                                      setisStaticValue2('A106')
+                                      setisStaticValue3('A107')
+                                      setisStaticValue4('A108')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "AP_power_l1")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          setpowerDataFromDB(res.data.data.deviceData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isPowerPhase1 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 1
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(true)
+                                      setisPowerTotal(false)
+                                      setisPowerPhase1(false)
+                                      setisPowerPhase2(true)
+                                      setisPowerPhase3(false)
+                                      setisEnergy(false)
+                                      setisStaticValue1('A109')
+                                      setisStaticValue2('A110')
+                                      setisStaticValue3('A111')
+                                      setisStaticValue4('A112')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "AP_power_l2")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          setpowerDataFromDB(res.data.data.deviceData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isPowerPhase2 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 2
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(true)
+                                      setisPowerTotal(false)
+                                      setisPowerPhase1(false)
+                                      setisPowerPhase2(false)
+                                      setisPowerPhase3(true)
+                                      setisEnergy(false)
+
+                                      setisStaticValue1('A113')
+                                      setisStaticValue2('A114')
+                                      setisStaticValue3('A115')
+                                      setisStaticValue4('A116')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "AP_power_l3")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          setpowerDataFromDB(res.data.data.deviceData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isPowerPhase3 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 3</a>
+                                </div>
+                                :
+                                null
+                            }
+
+                            {
+                              isEnergy
+                                ?
+                                <div className="tags bottom_tag">
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(false)
+                                      setisEnergyPhase2(false)
+                                      setisEnergyPhase3(false)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(true)
+
+                                      setisStaticValue1('A101')
+                                      setisStaticValue2('A102')
+                                      setisStaticValue3('A103')
+                                      setisStaticValue4('A104')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T","daily")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+
+                                    }}
+                                    className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Total e
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(true)
+                                      setisEnergyPhase2(false)
+                                      setisEnergyPhase3(false)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(false)
+
+                                      setisStaticValue1('A105')
+                                      setisStaticValue2('A106')
+                                      setisStaticValue3('A107')
+                                      setisStaticValue4('A108')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L1","daily")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+
+                                    }}
+                                    className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 1e
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(false)
+                                      setisEnergyPhase2(true)
+                                      setisEnergyPhase3(false)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(false)
+
+                                      setisStaticValue1('A109')
+                                      setisStaticValue2('A110')
+                                      setisStaticValue3('A111')
+                                      setisStaticValue4('A112')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L2","daily")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+
+                                    }}
+                                    className={`tag-cloud-link ${isEnergyPhase2 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 2e
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(false)
+                                      setisEnergyPhase2(false)
+                                      setisEnergyPhase3(true)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(false)
+
+                                      setisStaticValue1('A113')
+                                      setisStaticValue2('A114')
+                                      setisStaticValue3('A115')
+                                      setisStaticValue4('A116')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L3","daily")
+                                      .then((res) => {
+                                        console.log("get device data res", res.data.data.deviceData)
+                                        setenergyDataFromDB(res.data.data.deviceData)
+                                      }).catch(err => {
+                                        console.log(err)
+                                      })
+
+                                    }}
+                                    className={`tag-cloud-link ${isEnergyPhase3 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 3e
+                                  </a>
+                                </div>
+                                :
+                                null
+
+                            }
+
                           </div>
                         </div>
                       :

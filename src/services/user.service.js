@@ -39,6 +39,10 @@ const GetTreeViewData = (userId) => {
     return axios.get(`users/getTreeViewData/${userId}`, { headers: authHeader() });
 };
 
+const GetLinkedDeviceData = (deviceID,Type,dataFormat=null) => {
+    return axios.get(`users/getLinkedDeviceData/${deviceID}/${Type}/${dataFormat}`, { headers: authHeader() });
+};
+
 const AddNewArea = (userId,data) => {
     return axios({
         method: "post",
@@ -127,5 +131,6 @@ const userService = {
     GetAddedDevices,
     checkAlreadyAddedDevice,
     forgotDeviceID,
+    GetLinkedDeviceData
 };
 export default userService;

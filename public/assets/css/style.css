@@ -2410,6 +2410,7 @@ background: #fff;
     color: red;
 }
 .tags a.bg_green {background: #92d050; color: #fafe06; border-color: #92d050;}
+.tags a.bg_blue {background: #1e4a75;color: #fff;border-color: #1e4a75;}
 .tags a.bg_green:hover {background: #92d050; color: #fff; border-color: #92d050;}
 
 .tag_box span {margin:5px 0; display: block; color: #c75a18;}
