@@ -35,14 +35,6 @@ export const options = {
   legend: { position: "bottom" },
 };
 
-export const energyDailyData = [
-  ["Energy", "Energy", { role: "style" }],
-  ["0:00:00", 1, "#d4d104"],
-  ["12:00:00", 12, "#d4d104"],
-  ["00:00:00", 5, "#d4d104"],
-  ["12:00:00", 18, "#d4d104"],
-];
-
 export const energyMonthlyData = [
   ["Energy", "Energy", { role: "style" }],
   ["1/03/2022", 1, "#d4d104"],
@@ -58,19 +50,6 @@ export const energyMonthlyData = [
   ["1/13/2022", 2, "#d4d104"],
   ["1/14/2022", 2, "#d4d104"],
 ];
-
-
-export const energyOptions = {
-  chart: {
-    title: "",
-    curveType: "function",
-    legend: { position: "bottom" },
-  },
-};
-
-
-
-
 
 const Dashboard = () => {
   const [addDeviceBtnText, setAddDeviceBtnText] = useState("Verify")
@@ -117,24 +96,21 @@ const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const userID = user.data.profile.id
 
-
-
-
   let powerApiInterval;
-  if (isPower) {
+  //if (isPower) {
     //powerApiInterval = setInterval(() => {
     //call power api
-    // UserService.GetLinkedDeviceData(isDeviceID)
+    // UserService.GetLinkedDeviceData(isDeviceID,"total_power")
     //   .then((res) => {
     //     console.log("get device data res", res.data.data.deviceData)
     //     setpowerDataFromDB(res.data.data.deviceData)
     //   }).catch(err => {
     //     console.log(err)
     //   })
-    //}, 50000) //50 sec
-  } else {
-    //clearInterval(powerApiInterval);
-  }
+    //}, 10000) //50 sec
+  //} else {
+   // clearInterval(powerApiInterval);
+  //}
 
 
 
@@ -275,6 +251,7 @@ const Dashboard = () => {
         { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
       });
   }
+  //forgot device submit
   const onSubmitForgotDevice = formValue => {
     console.log(formValue)
     //return false
@@ -324,7 +301,6 @@ const Dashboard = () => {
       toast.info('Please select device name', { toastId: 2345366467686787 })
     }
   }
-
   const onSubmitStepOne = formValue => {
     console.log(formValue)
     setstepOne(false)
@@ -508,54 +484,6 @@ const Dashboard = () => {
         setAddDeviceBtnText("Verify");
       });
   }
-  // My JSON Data
-  // const locations = [
-  //   {
-  //     id: 1,
-  //     label: "Shubham Kumar",
-  //     key: "Shubham Kumar",
-  //     parent_id: 26
-  //   },
-  //   {
-  //     id: 2,
-  //     label: "Device1",
-  //     key: "Device1",
-  //     parent_id: 3
-  //   },
-  //   {
-  //     id: 3,
-  //     label: "Hall",
-  //     key: "Hall",
-  //     parent_id: 1
-  //   },
-  //   {
-  //     id: 4,
-  //     label: "Bathroom",
-  //     key: "Bathroom",
-  //     parent_id: 1
-  //   },
-  //   {
-  //     id: 5,
-  //     label: "WiFi Device",
-  //     key: "WiFi Device",
-  //     parent_id: 4
-  //   },
-  //   {
-  //     id: 6,
-  //     label: "Test Area",
-  //     key: "Test Area",
-  //     parent_id: 4
-  //   },
-  //   {
-  //     id: 7,
-  //     label: "Router",
-  //     key: "Router",
-  //     parent_id: 6
-  //   },
-  // ];
-
-  //console.log(isAddArea)
-
   function createTreeView(location) {
     var tree = [],
       object = {},
@@ -645,8 +573,6 @@ const Dashboard = () => {
                                       setIsForgotDevice(false)
                                       setDeviceName(label)
                                       let areaName = parent.split("/").pop()
-                                      console.log("first", parent)
-                                      console.log("areaName", areaName)
                                       setAreaName(areaName)
                                       console.log("call device data api")
                                       UserService.GetLinkedDeviceData(device_id, "total_power")
@@ -657,7 +583,6 @@ const Dashboard = () => {
                                           console.log(err)
                                         })
                                     }
-                                    console.log("false-------------")
                                   }
                                 },
                                 style: { color: props.color || "black" }
@@ -688,9 +613,8 @@ const Dashboard = () => {
                       setIsForgotDevice(false)
                     }}>Add New Device</button>
 
-
-
                   </div>
+
                   <button type="button" class="btn-primary btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
                     setIsForgotDevice(true)
                     setIsAddDevice(false)
@@ -704,8 +628,6 @@ const Dashboard = () => {
             <div className="col-lg-8 col-sm-12">
               <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div className="row">
-
-
                   {
                     isforgotdDevice
                       ?
@@ -883,12 +805,6 @@ const Dashboard = () => {
                   }
 
 
-
-
-
-
-
-
                   {/*graph chart*/}
                   {
                     showGraph
@@ -951,7 +867,9 @@ const Dashboard = () => {
                         <div className="grpah_table">
                           <div className="col-lg-12 box_graph device_name">
                             <div className="widget_categories right-widget top_heding ">
-                              <h4><b>{areaName}</b> - {devicename} <span /> <i className="icofont icofont-reply-all" /></h4>
+                              <h4><b>{areaName}</b> - {devicename} 
+                              {/* <span />  */}
+                              <i className="icofont icofont-reply-all" /></h4>
                             </div>
                           </div>
                           <div className="col-lg-12 box_graph">
@@ -996,16 +914,15 @@ const Dashboard = () => {
                                           setisEnergy(false)
                                           setisEnergyDaily(false)
                                           setisEnergyMonthly(false)
-
                                           UserService.GetLinkedDeviceData(isDeviceID, "total_power")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
+                                              //console.log("get device data res", res.data.data.deviceData)
                                               setpowerDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
                                             })
-
-                                        }} className={`tag-cloud-link ${isPower ? "bg_green" : null} `}
+                                        }}
+                                        className={`tag-cloud-link ${isPower ? "bg_green" : null} `}
                                         style={{ cursor: 'pointer' }}
                                       >
                                         Power
@@ -1021,17 +938,24 @@ const Dashboard = () => {
                                           setisEnergyPhase1(false)
                                           setisEnergyPhase2(false)
                                           setisEnergyPhase3(false)
-
-
-                                          UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T","daily")
+                                          UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T", "daily")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
-                                              setenergyDataFromDB(res.data.data.deviceData)
+                                              //console.log("get device data res", res.data.data.deviceData)
+                                              let resData = res.data.data.deviceData
+                                              let myData;
+                                              if (typeof (resData) != "undefined") {
+                                                myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                                myData.unshift(["Energy", "Energy"])
+                                              } else {
+                                                myData = []
+                                              }
+                                              //console.log("myDatata", myData)
+                                              setenergyDataFromDB(myData)
                                             }).catch(err => {
                                               console.log(err)
                                             })
-
-                                        }} className={`tag-cloud-link ${isEnergy ? "bg_green" : null} `}
+                                        }}
+                                        className={`tag-cloud-link ${isEnergy ? "bg_green" : null} `}
                                         style={{ cursor: 'pointer' }}
                                       >
                                         Energy
@@ -1056,15 +980,22 @@ const Dashboard = () => {
                                                 setisEnergyPhase1(false)
                                                 setisEnergyPhase2(false)
                                                 setisEnergyPhase3(false)
-
-                                                UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T","daily")
-                                                .then((res) => {
-                                                  console.log("get device data res", res.data.data.deviceData)
-                                                  setenergyDataFromDB(res.data.data.deviceData)
-                                                }).catch(err => {
-                                                  console.log(err)
-                                                })
-
+                                                UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T", "daily")
+                                                  .then((res) => {
+                                                    //console.log("get device data res", res.data.data.deviceData)
+                                                    let resData = res.data.data.deviceData
+                                                    let myData;
+                                                    if (typeof (resData) != "undefined") {
+                                                      myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                                      myData.unshift(["Energy", "Energy"])
+                                                    } else {
+                                                      myData = []
+                                                    }
+                                                    //console.log("myDatata", myData)
+                                                    setenergyDataFromDB(myData)
+                                                  }).catch(err => {
+                                                    console.log(err)
+                                                  })
                                               }}
                                               className={`tag-cloud-link ${isEnergyDaily ? "bg_green" : null} `}
                                               style={{ cursor: 'pointer' }}
@@ -1073,8 +1004,30 @@ const Dashboard = () => {
                                             </a>
                                             <a
                                               onClick={() => {
-                                                setisEnergyMonthly(!isEnergyMonthly)
+                                                setisEnergyMonthly(true)
                                                 setisEnergyDaily(false)
+                                                setisEnergyTotal(true)
+                                                setisEnergyPhase1(false)
+                                                setisEnergyPhase2(false)
+                                                setisEnergyPhase3(false)
+
+                                                UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T", "monthly")
+                                                  .then((res) => {
+                                                    console.log("get device data res", res.data.data.deviceData)
+                                                    let resData = res.data.data.deviceData
+                                                    let myData;
+                                                    if (typeof (resData) != "undefined") {
+                                                      myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                                      myData.unshift(["Energy", "Energy"])
+                                                    } else {
+                                                      myData = []
+                                                    }
+                                                    console.log("myDatata", myData)
+                                                    setenergyDataFromDB(myData)
+                                                  }).catch(err => {
+                                                    console.log(err)
+                                                  })
+
                                               }}
                                               className={`tag-cloud-link ${isEnergyMonthly ? "bg_green" : null} `}
                                               style={{ cursor: 'pointer' }}
@@ -1095,17 +1048,6 @@ const Dashboard = () => {
                                       {
                                         isPower
                                           ?
-
-                                          // <PowerChart powerData={[
-                                          //   { time: 1556877600, value: 230.12 },
-                                          //   { time: 1556881200, value: 230.24 },
-                                          //   { time: 1556884800, value: 230.63 },
-                                          //   { time: 1556888400, value: 231.35 },
-                                          //   { time: 1556892000, value: 232.24 },
-                                          //   { time: 1556895600, value: 232.52 },
-
-
-                                          // ]} powerDataFromDB={powerDataFromDB} />
                                           <PowerCharts
                                             powerDataFromDB={powerDataFromDB}
                                           />
@@ -1116,15 +1058,15 @@ const Dashboard = () => {
                                       {
                                         isEnergyDaily
                                           ?
-                                          // <Chart
-                                          //   chartType="ColumnChart"
-                                          //   loader={<div>Loading Energy Daily Data...</div>}
-                                          //   width="100%"
-                                          //   height="400px"
-                                          //   data={energyDailyData}
-                                          //   options={energyOptions}
-                                          // />
-                                          <EnergyChart energyDataFromDB={energyDataFromDB} />
+                                          <Chart
+                                            chartType="ColumnChart"
+                                            loader={<div>Loading Energy Daily Data...</div>}
+                                            width="100%"
+                                            height="400px"
+                                            data={energyDataFromDB}
+                                            options={options}
+                                          />
+                                          //<EnergyChart energyDataFromDB={energyDataFromDB} />
                                           :
                                           null
                                       }
@@ -1137,8 +1079,8 @@ const Dashboard = () => {
                                             loader={<div>Loading Energy Monthly Data...</div>}
                                             width="100%"
                                             height="400px"
-                                            data={energyMonthlyData}
-                                            options={energyOptions}
+                                            data={energyDataFromDB}
+                                            options={options}
                                           />
                                           :
                                           null
@@ -1271,7 +1213,7 @@ const Dashboard = () => {
                             }
 
                             {
-                              isEnergy
+                              isEnergyDaily
                                 ?
                                 <div className="tags bottom_tag">
                                   <a
@@ -1289,19 +1231,28 @@ const Dashboard = () => {
                                       setisStaticValue3('A103')
                                       setisStaticValue4('A104')
 
-                                      UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T","daily")
-                                            .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
-                                              setenergyDataFromDB(res.data.data.deviceData)
-                                            }).catch(err => {
-                                              console.log(err)
-                                            })
+                                      UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T", "daily")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
 
                                     }}
                                     className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    Total e
+                                    Total
                                   </a>
                                   <a
                                     onClick={() => {
@@ -1318,19 +1269,28 @@ const Dashboard = () => {
                                       setisStaticValue3('A107')
                                       setisStaticValue4('A108')
 
-                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L1","daily")
-                                            .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
-                                              setenergyDataFromDB(res.data.data.deviceData)
-                                            }).catch(err => {
-                                              console.log(err)
-                                            })
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L1", "daily")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
 
                                     }}
                                     className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    Phase - 1e
+                                    Phase - 1
                                   </a>
                                   <a
                                     onClick={() => {
@@ -1347,19 +1307,28 @@ const Dashboard = () => {
                                       setisStaticValue3('A111')
                                       setisStaticValue4('A112')
 
-                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L2","daily")
-                                            .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
-                                              setenergyDataFromDB(res.data.data.deviceData)
-                                            }).catch(err => {
-                                              console.log(err)
-                                            })
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L2", "daily")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
 
                                     }}
                                     className={`tag-cloud-link ${isEnergyPhase2 ? "bg_green" : null} `}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    Phase - 2e
+                                    Phase - 2
                                   </a>
                                   <a
                                     onClick={() => {
@@ -1376,24 +1345,194 @@ const Dashboard = () => {
                                       setisStaticValue3('A115')
                                       setisStaticValue4('A116')
 
-                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L3","daily")
-                                      .then((res) => {
-                                        console.log("get device data res", res.data.data.deviceData)
-                                        setenergyDataFromDB(res.data.data.deviceData)
-                                      }).catch(err => {
-                                        console.log(err)
-                                      })
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L3", "daily")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
 
                                     }}
                                     className={`tag-cloud-link ${isEnergyPhase3 ? "bg_green" : null} `}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    Phase - 3e
+                                    Phase - 3
                                   </a>
                                 </div>
                                 :
                                 null
 
+                            }
+
+                            {
+                              isEnergyMonthly
+                              ?
+                              <div className="tags bottom_tag">
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(false)
+                                      setisEnergyPhase2(false)
+                                      setisEnergyPhase3(false)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(true)
+
+                                      setisStaticValue1('A101')
+                                      setisStaticValue2('A102')
+                                      setisStaticValue3('A103')
+                                      setisStaticValue4('A104')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T", "monthly")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Total
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(true)
+                                      setisEnergyPhase2(false)
+                                      setisEnergyPhase3(false)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(false)
+
+                                      setisStaticValue1('A105')
+                                      setisStaticValue2('A106')
+                                      setisStaticValue3('A107')
+                                      setisStaticValue4('A108')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L1", "monthly")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 1
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(false)
+                                      setisEnergyPhase2(true)
+                                      setisEnergyPhase3(false)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(false)
+
+                                      setisStaticValue1('A109')
+                                      setisStaticValue2('A110')
+                                      setisStaticValue3('A111')
+                                      setisStaticValue4('A112')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L2", "monthly")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isEnergyPhase2 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 2
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setisPower(false)
+                                      setisPowerTotal(false)
+                                      setisEnergyPhase1(false)
+                                      setisEnergyPhase2(false)
+                                      setisEnergyPhase3(true)
+                                      setisEnergy(true)
+                                      setisEnergyTotal(false)
+
+                                      setisStaticValue1('A113')
+                                      setisStaticValue2('A114')
+                                      setisStaticValue3('A115')
+                                      setisStaticValue4('A116')
+
+                                      UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_L3", "monthly")
+                                        .then((res) => {
+                                          console.log("get device data res", res.data.data.deviceData)
+                                          let resData = res.data.data.deviceData
+                                          let myData;
+                                          if (typeof (resData) != "undefined") {
+                                            myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
+                                            myData.unshift(["Energy", "Energy"])
+                                          } else {
+                                            myData = []
+                                          }
+                                          console.log("myDatata", myData)
+                                          setenergyDataFromDB(myData)
+                                        }).catch(err => {
+                                          console.log(err)
+                                        })
+
+                                    }}
+                                    className={`tag-cloud-link ${isEnergyPhase3 ? "bg_green" : null} `}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    Phase - 3
+                                  </a>
+                                </div>
+                              :
+                              null
                             }
 
                           </div>
