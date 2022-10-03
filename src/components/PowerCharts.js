@@ -29,7 +29,7 @@ export const ChartComponent = props => {
         height: 300,
         timeScale: {
           timeVisible: true,
-          secondsVisible: false,
+          secondsVisible: true,
       }
       });
       chart.timeScale().fitContent();
