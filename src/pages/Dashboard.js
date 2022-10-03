@@ -940,17 +940,18 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
                                           UserService.GetLinkedDeviceData(isDeviceID, "daily_energy_T", "daily")
                                             .then((res) => {
-                                              //console.log("get device data res", res.data.data.deviceData)
+                                              console.log("get device data res", res.data.data.deviceData)
                                               let resData = res.data.data.deviceData
                                               let myData;
                                               if (typeof (resData) != "undefined") {
                                                 myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                                 myData.unshift(["Energy", "Energy"])
                                               } else {
-                                                myData = []
+                                                myData = [["Energy", "Energy"],["00:00:00", 0]]
                                               }
-                                              //console.log("myDatata", myData)
+                                              console.log("myDatata", myData)
                                               setenergyDataFromDB(myData)
+                                              console.log("energyDataFromDB",energyDataFromDB)
                                             }).catch(err => {
                                               console.log(err)
                                             })
@@ -989,7 +990,7 @@ const Dashboard = () => {
                                                       myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                                       myData.unshift(["Energy", "Energy"])
                                                     } else {
-                                                      myData = []
+                                                      myData = [["Energy", "Energy"],["00:00:00", 0]]
                                                     }
                                                     //console.log("myDatata", myData)
                                                     setenergyDataFromDB(myData)
@@ -1020,7 +1021,7 @@ const Dashboard = () => {
                                                       myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                                       myData.unshift(["Energy", "Energy"])
                                                     } else {
-                                                      myData = []
+                                                      myData = [["Energy", "Energy"],["00:00:00", 0]]
                                                     }
                                                     console.log("myDatata", myData)
                                                     setenergyDataFromDB(myData)
@@ -1240,7 +1241,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
@@ -1278,7 +1279,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
@@ -1316,7 +1317,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
@@ -1354,7 +1355,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
@@ -1402,7 +1403,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
@@ -1440,7 +1441,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
@@ -1478,7 +1479,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
@@ -1516,7 +1517,7 @@ const Dashboard = () => {
                                             myData = Object.keys(resData).map((key) => [resData[key].time, resData[key].value]);
                                             myData.unshift(["Energy", "Energy"])
                                           } else {
-                                            myData = []
+                                            myData = [["Energy", "Energy"],["00:00:00", 0]]
                                           }
                                           console.log("myDatata", myData)
                                           setenergyDataFromDB(myData)
