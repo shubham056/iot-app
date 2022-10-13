@@ -6,7 +6,7 @@ export const ChartComponent = props => {
     data,
     chartType,
     colors: {
-      color = "#ffc000ab",
+      color = "#186ba1e0",
       backgroundColor = 'white',
       lineColor = '#ffd044',
       textColor = 'black',
@@ -61,7 +61,7 @@ export const ChartComponent = props => {
       
       chart.timeScale().fitContent();
 
-      const newSeries = chart.addHistogramSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      const newSeries = chart.addHistogramSeries({color, lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
       //const newSeries = chart.addHistogramSeries({ color });
       newSeries.setData(data);
 
@@ -106,7 +106,7 @@ function App(props) {
       data={myData}
       chartType = {chartType}
       colors={{
-        color: "#ffc000ab",
+        color: "#186ba1e0",
         backgroundColor: 'white',
         lineColor: '#2962FF',
         textColor: 'black',
