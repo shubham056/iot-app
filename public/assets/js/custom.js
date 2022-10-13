@@ -62,17 +62,17 @@ $   ('a.page-scroll').on('click', function(event) {
    When document is Scrollig, do
    ========================================================================== */
 	
-	$(window).on('scroll', function() {
-		headerStyle();
-	});
+	// $(window).on('scroll', function() {
+	// 	//headerStyle();
+	// });
 	
 /* ==========================================================================
    When document is loading, do
    ========================================================================== */
 	
-	$(window).on('load', function() {
-		//handlePreloader();
-	});
+	// $(window).on('load', function() {
+	// 	//handlePreloader();
+	// });
     
     
     

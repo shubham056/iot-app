@@ -55,9 +55,9 @@ export const ChartComponent = props => {
   );
 };
 
-const initialData = [
-  { time: '2018-12-22', value: 32.51 },
-];
+// const initialData = [
+//   { time: '2018-12-22', value: 32.51 },
+// ];
 
 function App(props) {
   console.log("app props data", props)

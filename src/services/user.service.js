@@ -43,6 +43,14 @@ const GetLinkedDeviceData = (deviceID,Type,dataFormat=null) => {
     return axios.get(`users/getLinkedDeviceData/${deviceID}/${Type}/${dataFormat}`, { headers: authHeader() });
 };
 
+const GetDeviceGraphData = (deviceID,Type,dataFormat=null) => {
+    return axios.get(`users/GetDeviceGraphData/${deviceID}/${Type}/${dataFormat}`, { headers: authHeader() });
+};
+
+const GetLatestDeviceStatsData = (deviceID,Type,dataFormat=null) => {
+    return axios.get(`users/getLatestDeviceStatsData/${deviceID}`, { headers: authHeader() });
+};
+
 const AddNewArea = (userId,data) => {
     return axios({
         method: "post",
@@ -131,6 +139,8 @@ const userService = {
     GetAddedDevices,
     checkAlreadyAddedDevice,
     forgotDeviceID,
-    GetLinkedDeviceData
+    GetLinkedDeviceData,
+    GetLatestDeviceStatsData,
+    GetDeviceGraphData
 };
 export default userService;
