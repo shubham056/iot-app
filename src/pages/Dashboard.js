@@ -41,7 +41,8 @@ export const energyMonthlyData = [
 ];
 
 
-const SocketServer = "https://localhost:5001/";
+//const SocketServer = "https://localhost:5001/";
+const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
   "force new connection": true,
   "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
