@@ -1122,7 +1122,7 @@ const Dashboard = () => {
                                           setisEnergy(false)
                                           setisEnergyDaily(false)
                                           setisEnergyMonthly(false)
-
+                                          setisActiveRangeSwitch(null)
                                           setisStaticTxtValue1('T-Voltage')
                                           setisStaticTxtValue2('T-Current')
                                           setisStaticTxtValue3('T-Power')
