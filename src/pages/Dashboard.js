@@ -1444,7 +1444,7 @@ const Dashboard = () => {
                                       className={`tag-cloud-link ${isPowerPhase1 ? "bg_green" : null} `}
                                       style={{ cursor: 'pointer' }}
                                     >
-                                      Phase - 1p
+                                      Phase - 1
                                     </a>
                                     <a
                                       onClick={() => {
@@ -1585,7 +1585,7 @@ const Dashboard = () => {
                                     className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    Total e
+                                    Total
                                   </a>
                                   <a
                                     onClick={() => {
@@ -1624,7 +1624,7 @@ const Dashboard = () => {
                                     className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    Phase - 1 e
+                                    Phase - 1
                                   </a>
                                   <a
                                     onClick={() => {
@@ -1791,7 +1791,7 @@ const Dashboard = () => {
                                     className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    Phase - 1 m
+                                    Phase - 1
                                   </a>
                                   <a
                                     onClick={() => {
