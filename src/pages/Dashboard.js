@@ -52,6 +52,7 @@ const connectionOptions = {
 
 const Dashboard = () => {
   //set states start here
+  const [isUpdateData, setisUpdateData] = useState("")
   const [addDeviceBtnText, setAddDeviceBtnText] = useState("Verify")
   const [showWelcomeDiv, setshowWelcomeDiv] = useState(true)
   const [stepOne, setstepOne] = useState(true)
@@ -268,11 +269,18 @@ const Dashboard = () => {
   //const callOnce = useRef(true)
   //add root user node 
   useEffect(() => {
-   
+   console.log("************************call add root use **************************")
       //callOnce.current = false
       UserService.AddRootUser(userID, { user_name: user.data.profile.first_name + ' ' + user.data.profile.last_name }).then(
         (response) => {
-          console.log("response root user", response.data.data.profile)
+          console.log("++++++++++++++++++++++++response root user+++++++++++++++++++++++++", response.data.data)
+          if(response.data.type == 'success'){
+            console.log('added')
+            setisUpdateData(response.data.data.area.id)
+            console.log(response.data.data.area)
+          }else{
+            console.log("added already")
+          }
         },
         (error) => {
           //{ error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
@@ -306,7 +314,7 @@ const Dashboard = () => {
         setContent(_content);
       }
     );
-  }, [isLoading]);
+  }, [isLoading,isUpdateData]);
 
   //fetch category data
   useEffect(() => {
@@ -328,7 +336,7 @@ const Dashboard = () => {
         setContentDevice(_content);
       }
     );
-  }, [isGetDeviceLoading]);
+  }, [isGetDeviceLoading,isUpdateData]);
 
   //fetch tree view data
   useEffect(() => {
@@ -350,7 +358,7 @@ const Dashboard = () => {
         setTreeViewData(_content);
       }
     );
-  }, [isLoading, isAddDeviceLoading]);
+  }, [isLoading, isAddDeviceLoading,isUpdateData]);
 
   let locations = []
   Object.values(treeViewData).map(item => {
