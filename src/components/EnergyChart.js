@@ -23,45 +23,44 @@ export const ChartComponent = props => {
       };
       let chart
       if (chartType == 'monthly') {
-         chart = createChart(chartContainerRef.current, {
+        chart = createChart(chartContainerRef.current, {
           layout: {
             background: { type: ColorType.Solid, color: backgroundColor },
             textColor,
           },
-          width: 500,
-          height: 300,
+          width: 470,
+          height: 310,
           timeScale: {
             // timeVisible: true,
             // secondsVisible: true,
-            fixRightEdge: true,
-            rightOffset: 3,
+            //fixRightEdge: true,
+            rightOffset: 6,
             tickMarkFormatter: (time) => {
-                console.log(time)
-                const date = new Date(time.year, time.month, time.day);
-                return date.getDate() + '/' + date.getMonth() + '/' + (date.getFullYear());
+              console.log(time)
+              const date = new Date(time.year, time.month, time.day);
+              return date.getDate() + '/' + date.getMonth() + '/' + (date.getFullYear());
             },
           }
         });
-      }else{
-         chart = createChart(chartContainerRef.current, {
+      } else {
+        chart = createChart(chartContainerRef.current, {
           layout: {
             background: { type: ColorType.Solid, color: backgroundColor },
             textColor,
           },
-          width: 500,
-          height: 300,
+          width: 470,
+          height: 310,
           timeScale: {
             timeVisible: true,
             secondsVisible: false,
-            fixRightEdge: true,
-            rightOffset: 3,
+            rightOffset: 6,
           }
         });
       }
-      
+
       chart.timeScale().fitContent();
 
-      const newSeries = chart.addHistogramSeries({color, lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      const newSeries = chart.addHistogramSeries({ color, lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
       //const newSeries = chart.addHistogramSeries({ color });
       newSeries.setData(data);
 
@@ -104,7 +103,7 @@ function App(props) {
     <ChartComponent
       {...props}
       data={myData}
-      chartType = {chartType}
+      chartType={chartType}
       colors={{
         color: "#186ba1e0",
         backgroundColor: 'white',

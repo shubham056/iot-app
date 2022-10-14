@@ -25,8 +25,8 @@ export const ChartComponent = props => {
           //background: { type: ColorType.Solid, color: backgroundColor },
           //textColor,
         },
-        width: 500,
-        height: 300,
+        width: 470,
+        height: 290,
         timeScale: {
           timeVisible: true,
           secondsVisible: true,

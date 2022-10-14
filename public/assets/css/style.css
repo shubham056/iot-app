@@ -3064,6 +3064,9 @@ select.list-dt:focus {
 .switcher-active-item:hover {
 	background-color: #9cd461eb;
 }
+.graph_wraper{
+    margin-left: 5px;
+}
 
 
 
