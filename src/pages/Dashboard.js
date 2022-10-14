@@ -282,6 +282,8 @@ const Dashboard = () => {
             console.log(response.data.data.area)
           }else{
             console.log("added already")
+            let randomNumber = Math.random() * 10000
+            setisUpdateData(randomNumber)
           }
         },
         (error) => {
