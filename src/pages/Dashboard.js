@@ -269,8 +269,8 @@ const Dashboard = () => {
   const callOnce = useRef(true)
   //add root user node 
   useEffect(() => {
-    // if (callOnce.current) {
-    //     callOnce.current = false
+    if (callOnce.current) {
+        callOnce.current = false
    console.log("************************call add root use **************************")
       //callOnce.current = false
       UserService.AddRootUser(userID, { user_name: user.data.profile.first_name + ' ' + user.data.profile.last_name }).then(
@@ -296,7 +296,7 @@ const Dashboard = () => {
             error.toString();
         }
       );
-   // }
+    }
 
   }, [user,userID]);
   //fetch category data
@@ -623,6 +623,7 @@ const Dashboard = () => {
       });
   }
   function createTreeView(location) {
+    console.log("location data from root fun", location)
     var tree = [],
       object = {},
       parent,
