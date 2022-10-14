@@ -266,9 +266,11 @@ const Dashboard = () => {
   const { register: register3, formState: { errors: errors3, isSubmitting: isSubmitting3 }, handleSubmit: handleSubmit3, resetField: resetField3 } = useForm(adddeviceformOptionsStep2);
   const { register: register4, formState: { errors: errors4, isSubmitting: isSubmitting4 }, handleSubmit: handleSubmit4, resetField: resetField4 } = useForm(formOptionforgotDevice);
 
-  //const callOnce = useRef(true)
+  const callOnce = useRef(true)
   //add root user node 
   useEffect(() => {
+    if (callOnce.current) {
+        callOnce.current = false
    console.log("************************call add root use **************************")
       //callOnce.current = false
       UserService.AddRootUser(userID, { user_name: user.data.profile.first_name + ' ' + user.data.profile.last_name }).then(
@@ -292,7 +294,7 @@ const Dashboard = () => {
             error.toString();
         }
       );
-    
+    }
 
   }, [user,userID]);
   //fetch category data
