@@ -370,7 +370,7 @@ const Dashboard = () => {
     let newdata = { ...item, key: item.label };
     locations.push(newdata)
   })
-  console.log("++++++++++++++++locations+++++++++++++++++++++",locations )
+ 
 
   //submit handler
   const onSubmit = formValue => {
@@ -649,7 +649,11 @@ const Dashboard = () => {
     }
     return tree;
   }
+  console.log("++++++++++++++++locations+++++++++++++++++++++",locations )
   var root = createTreeView(locations);
+  console.log("__________________Root_________________",root)
+
+
   let optionTemplate = Object.values(content).map((v, i) => (
     (i == 0) ? <option value={v.id}>New Area</option> : <option value={v.id}>{v.label}</option>
   ));
@@ -657,7 +661,7 @@ const Dashboard = () => {
   let addedDevices = Object.values(contentDevice).map((v, i) => (
     <option value={v.id}>{v.label}</option>
   ));
-  console.log("__________________Root_________________",root)
+
 
   //--------------------------  Power Graph Range Switcher Handler ----------------
   const powerGrapghRangeSwitcher = (args) => {
