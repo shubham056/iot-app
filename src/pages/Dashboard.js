@@ -370,7 +370,7 @@ const Dashboard = () => {
     let newdata = { ...item, key: item.label };
     locations.push(newdata)
   })
-  //console.log(locations)
+  console.log("++++++++++++++++locations+++++++++++++++++++++",locations )
 
   //submit handler
   const onSubmit = formValue => {
