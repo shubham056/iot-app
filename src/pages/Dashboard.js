@@ -286,7 +286,7 @@ const Dashboard = () => {
       );
     
 
-  }, []);
+  }, [user,userID]);
   //fetch category data
   useEffect(() => {
     UserService.GetTreeViewCategory(userID).then(
