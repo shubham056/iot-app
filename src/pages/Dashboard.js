@@ -657,7 +657,7 @@ const Dashboard = () => {
   let addedDevices = Object.values(contentDevice).map((v, i) => (
     <option value={v.id}>{v.label}</option>
   ));
-  console.log(root)
+  console.log("__________________Root_________________",root)
 
   //--------------------------  Power Graph Range Switcher Handler ----------------
   const powerGrapghRangeSwitcher = (args) => {
