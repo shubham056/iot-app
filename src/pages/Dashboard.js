@@ -20,29 +20,14 @@ import EnergyChart from '../components/EnergyChart';
 import socketClient from 'socket.io-client';
 import Skeleton from 'react-loading-skeleton';
 
-
-export const data = [
-  ["Time", "Power"],
-  ["0:00:00", 1],
-  ["12:00:00", 5],
-  ["0:00:00", 5],
-  ["12:00:00", 5],
-];
-
 export const options = {
   title: "",
   curveType: "function",
   legend: { position: "bottom" },
 };
 
-export const energyMonthlyData = [
-  ["Energy", "Energy", { role: "style" }],
-  ["1/03/2022", 1, "#d4d104"],
-];
-
-
-const SocketServer = "http://localhost:5001/";
-//const SocketServer = "https://iot.cwsbuild.com/";
+//const SocketServer = "http://localhost:5001/";
+const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
   "force new connection": true,
   "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
@@ -101,7 +86,7 @@ const Dashboard = () => {
   const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
   const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
 
-  const [rootTreeViewData,setRootTreeViewData] = useState([])
+  const [rootTreeViewData, setRootTreeViewData] = useState([])
 
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
   const [energyDataFromDB, setenergyDataFromDB] = useState([])
@@ -136,7 +121,7 @@ const Dashboard = () => {
           if (isPower && isPowerTotal) {
             console.log("power total -------------")
             const { T_voltage, T_current, T_power, T_energy } = data
-          
+
             setisStaticValue1(T_voltage) // T_voltage
             setisStaticValue2(T_current) // T_current
             setisStaticValue3(T_power) // T_Power
@@ -268,17 +253,17 @@ const Dashboard = () => {
   //add root user node 
   useEffect(() => {
     if (callOnce.current) {
-        callOnce.current = false
-   console.log("************************call add root use **************************")
+      callOnce.current = false
+      console.log("************************call add root use **************************")
       //callOnce.current = false
       UserService.AddRootUser(userID, { user_name: user.data.profile.first_name + ' ' + user.data.profile.last_name }).then(
         (response) => {
           console.log("++++++++++++++++++++++++response root user+++++++++++++++++++++++++", response.data.data)
-          if(response.data.type == 'success'){
+          if (response.data.type == 'success') {
             console.log('added')
             setisUpdateData(response.data.data.area.id)
             console.log(response.data.data.area)
-          }else{
+          } else {
             console.log("added already")
             let randomNumber = Math.random() * 10000
             setisUpdateData(randomNumber)
@@ -296,7 +281,7 @@ const Dashboard = () => {
       );
     }
 
-  }, [user,userID]);
+  }, [user, userID]);
   //fetch category data
   useEffect(() => {
     UserService.GetTreeViewCategory(userID).then(
@@ -316,7 +301,7 @@ const Dashboard = () => {
         setContent(_content);
       }
     );
-  }, [isLoading,isUpdateData]);
+  }, [isLoading, isUpdateData]);
 
   //fetch category data
   useEffect(() => {
@@ -338,7 +323,7 @@ const Dashboard = () => {
         setContentDevice(_content);
       }
     );
-  }, [isGetDeviceLoading,isUpdateData]);
+  }, [isGetDeviceLoading, isUpdateData]);
 
   //fetch tree view data
   useEffect(() => {
@@ -360,11 +345,11 @@ const Dashboard = () => {
         setTreeViewData(_content);
       }
     );
-  }, [isLoading, isAddDeviceLoading,isUpdateData]);
+  }, [isLoading, isAddDeviceLoading, isUpdateData]);
 
 
-   //fetch category data
-   useEffect(() => {
+  //fetch category data
+  useEffect(() => {
     console.log("########### call added device id function ##################")
     UserService.GetAddedDevices(userID).then(
       (response) => {
@@ -383,59 +368,59 @@ const Dashboard = () => {
         setContentDevice(_content);
       }
     );
-  }, [isGetDeviceLoading,isUpdateData]);
+  }, [isGetDeviceLoading, isUpdateData]);
 
   //fetch 
-  useEffect(() => {  
+  useEffect(() => {
 
     console.log("Call rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-  let locations = []
-  Object.values(treeViewData).map(item => {
-    //.log("first", item)
-    let newdata = { ...item, key: item.label };
-    locations.push(newdata)
-  })
+    let locations = []
+    Object.values(treeViewData).map(item => {
+      //.log("first", item)
+      let newdata = { ...item, key: item.label };
+      locations.push(newdata)
+    })
 
-  async function createTreeView(location) {
-    console.log("location data from root fun", location)
-    var tree = [],
-      object = {},
-      parent,
-      child;
-    for (var i = 0; i < location.length; i++) {
-      parent = location[i];
-      object[parent.id] = parent;
-      object[parent.id]["nodes"] = [];
-    }
-    for (var id in object) {
-      if (object.hasOwnProperty(id)) {
-        child = object[id];
-        if (child.parent_id && object[child["parent_id"]]) {
-          delete child.id
-          //
-          object[child["parent_id"]]["nodes"].push(child);
-          delete child.parent_id
-        } else {
-          delete child.id
-          delete child.parent_id
-          tree.push(child);
+    async function createTreeView(location) {
+      console.log("location data from root fun", location)
+      var tree = [],
+        object = {},
+        parent,
+        child;
+      for (var i = 0; i < location.length; i++) {
+        parent = location[i];
+        object[parent.id] = parent;
+        object[parent.id]["nodes"] = [];
+      }
+      for (var id in object) {
+        if (object.hasOwnProperty(id)) {
+          child = object[id];
+          if (child.parent_id && object[child["parent_id"]]) {
+            delete child.id
+            //
+            object[child["parent_id"]]["nodes"].push(child);
+            delete child.parent_id
+          } else {
+            delete child.id
+            delete child.parent_id
+            tree.push(child);
+          }
         }
       }
+      return tree;
     }
-    return tree;
-  }
-  console.log("++++++++++++++++locations+++++++++++++++++++++",locations )
-  createTreeView(treeViewData[0]).then(data=>{
-    console.log("sdadasasdasdasdas",data)
-    setRootTreeViewData(data)
-  })
- setRootTreeViewData(createTreeView(locations))
-  console.log("__________________Root_________________", createTreeView(locations))
+    console.log("++++++++++++++++locations+++++++++++++++++++++", locations)
+    createTreeView(treeViewData[0]).then(data => {
+      console.log("sdadasasdasdasdas", data)
+      setRootTreeViewData(data)
+    })
+    setRootTreeViewData(createTreeView(locations))
+    console.log("__________________Root_________________", createTreeView(locations))
 
 
   }, [treeViewData]);
- 
-  
+
+
 
   //submit handler
   const onSubmit = formValue => {
@@ -687,7 +672,7 @@ const Dashboard = () => {
         setAddDeviceBtnText("Verify");
       });
   }
-  
+
 
 
   let optionTemplate = Object.values(content).map((v, i) => (
@@ -1341,18 +1326,13 @@ const Dashboard = () => {
                                       }
                                     </div>
 
-
-
-
                                     <div className="graph_wraper">
                                       {
                                         isPower
                                           ?
-                                      
                                           <PowerCharts
                                             powerDataFromDB={powerDataFromDB}
                                           />
-                                        
                                           :
                                           null
                                       }
