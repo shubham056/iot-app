@@ -66,6 +66,7 @@ const Portal = () => {
             })
             .catch((error) => {
                 setisLoading(false)
+                dispatch(clearMessage());
             });
     }
 
@@ -81,6 +82,7 @@ const Portal = () => {
             })
             .catch(() => {
                 setisLoading(false)
+                dispatch(clearMessage());
             });
     }
 

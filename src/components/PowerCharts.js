@@ -30,11 +30,14 @@ export const ChartComponent = props => {
         timeScale: {
           timeVisible: true,
           secondsVisible: true,
+          minBarSpacing:12,
+          rightBarStaysOnScroll: true,
+          //borderColor: "#2B2B43"
       }
       });
      chart.timeScale().fitContent();
 
-      const newSeries = chart.addLineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      const newSeries = chart.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
        newSeries.setData(data);
 
        window.addEventListener('resize', handleResize);
