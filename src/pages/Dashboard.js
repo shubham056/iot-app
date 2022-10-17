@@ -1348,11 +1348,11 @@ const Dashboard = () => {
                                       {
                                         isPower
                                           ?
+                                      
+                                          <PowerCharts
+                                            powerDataFromDB={powerDataFromDB}
+                                          />
                                         
-                                          console.log('graph calllll',isPower)
-                                         
-                                          
-
                                           :
                                           null
                                       }
