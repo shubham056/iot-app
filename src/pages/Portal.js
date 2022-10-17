@@ -25,6 +25,7 @@ const Portal = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        console.log("-------call clear msg-----------")
         dispatch(clearMessage());
     }, [dispatch]);
 
@@ -61,6 +62,7 @@ const Portal = () => {
             .unwrap()
             .then(() => {
                 setisLoading(false)
+                dispatch(clearMessage());
             })
             .catch((error) => {
                 setisLoading(false)
@@ -74,9 +76,8 @@ const Portal = () => {
             .unwrap()
             .then(() => {
                 setisLoading(false)
-                // setTimeout(() => {
-                //     navigate("/login", { replace: true });
-                //  }, 3100);
+                setswitchForm(true)
+                dispatch(clearMessage());
             })
             .catch(() => {
                 setisLoading(false)
