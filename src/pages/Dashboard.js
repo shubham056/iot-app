@@ -41,8 +41,8 @@ export const energyMonthlyData = [
 ];
 
 
-//const SocketServer = "https://localhost:5001/";
-const SocketServer = "https://iot.cwsbuild.com/";
+const SocketServer = "http://localhost:5001/";
+//const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
   "force new connection": true,
   "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
@@ -101,6 +101,8 @@ const Dashboard = () => {
   const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
   const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
 
+  const [rootTreeViewData,setRootTreeViewData] = useState([])
+
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
   const [energyDataFromDB, setenergyDataFromDB] = useState([])
   const [isDeviceID, setisDeviceID] = useState('')
@@ -132,13 +134,9 @@ const Dashboard = () => {
 
 
           if (isPower && isPowerTotal) {
-            console.log("power total")
+            console.log("power total -------------")
             const { T_voltage, T_current, T_power, T_energy } = data
-            // setisStaticTxtValue1('T-Voltage')
-            // setisStaticTxtValue2('T-Current')
-            // setisStaticTxtValue3('T-Power')
-            // setisStaticTxtValue4('T-Energy')
-            // setisGraphLabelTxt('Total Power')
+          
             setisStaticValue1(T_voltage) // T_voltage
             setisStaticValue2(T_current) // T_current
             setisStaticValue3(T_power) // T_Power
@@ -364,13 +362,80 @@ const Dashboard = () => {
     );
   }, [isLoading, isAddDeviceLoading,isUpdateData]);
 
+
+   //fetch category data
+   useEffect(() => {
+    console.log("########### call added device id function ##################")
+    UserService.GetAddedDevices(userID).then(
+      (response) => {
+        setContentDevice(response.data.data.profile);
+        console.log("response device data ---", response.data.data.profile)
+      },
+      (error) => {
+
+        { error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setContentDevice(_content);
+      }
+    );
+  }, [isGetDeviceLoading,isUpdateData]);
+
+  //fetch 
+  useEffect(() => {  
+
+    console.log("Call rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
   let locations = []
   Object.values(treeViewData).map(item => {
     //.log("first", item)
     let newdata = { ...item, key: item.label };
     locations.push(newdata)
   })
+
+  async function createTreeView(location) {
+    console.log("location data from root fun", location)
+    var tree = [],
+      object = {},
+      parent,
+      child;
+    for (var i = 0; i < location.length; i++) {
+      parent = location[i];
+      object[parent.id] = parent;
+      object[parent.id]["nodes"] = [];
+    }
+    for (var id in object) {
+      if (object.hasOwnProperty(id)) {
+        child = object[id];
+        if (child.parent_id && object[child["parent_id"]]) {
+          delete child.id
+          //
+          object[child["parent_id"]]["nodes"].push(child);
+          delete child.parent_id
+        } else {
+          delete child.id
+          delete child.parent_id
+          tree.push(child);
+        }
+      }
+    }
+    return tree;
+  }
+  console.log("++++++++++++++++locations+++++++++++++++++++++",locations )
+  createTreeView(treeViewData[0]).then(data=>{
+    console.log("sdadasasdasdasdas",data)
+    setRootTreeViewData(data)
+  })
+ setRootTreeViewData(createTreeView(locations))
+  console.log("__________________Root_________________", createTreeView(locations))
+
+
+  }, [treeViewData]);
  
+  
 
   //submit handler
   const onSubmit = formValue => {
@@ -622,37 +687,7 @@ const Dashboard = () => {
         setAddDeviceBtnText("Verify");
       });
   }
-  function createTreeView(location) {
-    console.log("location data from root fun", location)
-    var tree = [],
-      object = {},
-      parent,
-      child;
-    for (var i = 0; i < location.length; i++) {
-      parent = location[i];
-      object[parent.id] = parent;
-      object[parent.id]["nodes"] = [];
-    }
-    for (var id in object) {
-      if (object.hasOwnProperty(id)) {
-        child = object[id];
-        if (child.parent_id && object[child["parent_id"]]) {
-          delete child.id
-          //
-          object[child["parent_id"]]["nodes"].push(child);
-          delete child.parent_id
-        } else {
-          delete child.id
-          delete child.parent_id
-          tree.push(child);
-        }
-      }
-    }
-    return tree;
-  }
-  console.log("++++++++++++++++locations+++++++++++++++++++++",locations )
-  var root = createTreeView(locations);
-  console.log("__________________Root_________________",root)
+  
 
 
   let optionTemplate = Object.values(content).map((v, i) => (
@@ -724,7 +759,7 @@ const Dashboard = () => {
             <div className="col-lg-4 col-sm-12">
               <div className>
                 <div id="left" className="span3">
-                  <TreeMenu data={root}>
+                  <TreeMenu data={rootTreeViewData}>
                     {({ search, items, resetOpenNodes }) => {
                       return (
                         <>
@@ -1313,9 +1348,10 @@ const Dashboard = () => {
                                       {
                                         isPower
                                           ?
-                                          <PowerCharts
-                                            powerDataFromDB={powerDataFromDB}
-                                          />
+                                        
+                                          console.log('graph calllll',isPower)
+                                         
+                                          
 
                                           :
                                           null
@@ -1323,14 +1359,6 @@ const Dashboard = () => {
                                       {
                                         isEnergyDaily
                                           ?
-                                          // <Chart
-                                          //   chartType="ColumnChart"
-                                          //   loader={<div>Loading Energy Daily Data...</div>}
-                                          //   width="100%"
-                                          //   height="400px"
-                                          //   data={energyDataFromDB}
-                                          //   options={options}
-                                          // />
                                           <EnergyChart energyDataFromDB={energyDataFromDB} chartType="daily" />
                                           :
                                           null

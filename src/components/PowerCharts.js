@@ -32,7 +32,7 @@ export const ChartComponent = props => {
           secondsVisible: true,
       }
       });
-      chart.timeScale().fitContent();
+     chart.timeScale().fitContent();
 
       const newSeries = chart.addLineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
        newSeries.setData(data);
