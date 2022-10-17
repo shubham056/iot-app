@@ -34,7 +34,7 @@ export const ChartComponent = props => {
             // timeVisible: true,
             // secondsVisible: true,
             //fixRightEdge: true,
-            rightOffset: 6,
+            //rightOffset: 1,
             tickMarkFormatter: (time) => {
               console.log(time)
               const date = new Date(time.year, time.month, time.day);
@@ -53,7 +53,7 @@ export const ChartComponent = props => {
           timeScale: {
             timeVisible: true,
             secondsVisible: false,
-            rightOffset: 6,
+            //rightOffset: 6,
           }
         });
       }
