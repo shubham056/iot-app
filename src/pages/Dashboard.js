@@ -113,7 +113,7 @@ const Dashboard = () => {
         // console.log("isPowerPhase1", isPowerPhase1)
         // console.log("isPowerPhase2", isPowerPhase2)
         // console.log("isPowerPhase3", isPowerPhase3)
-        console.log('power graph with device id', isDeviceID)
+        console.log('power graph with device id', isDeviceID,data)
         if (isDeviceID == data.device_id) {
           console.log("data from socket server", data)
 
@@ -814,14 +814,23 @@ const Dashboard = () => {
                                       //get latest stats for total voltage, current, power and energy
                                       setisGraphStatsLoading(true)
                                       UserService.GetLatestDeviceStatsData(device_id).then((res) => {
-                                        const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
                                         setTimeout(() => {
                                           setisGraphStatsLoading(false)
                                         }, 1000)
-                                        setisStaticValue1(T_voltage)
-                                        setisStaticValue2(T_current)
-                                        setisStaticValue3(T_power)
-                                        setisStaticValue4(T_energy)
+                                        if (res.data.data.error) {
+                                          setisStaticValue1("0.00")
+                                          setisStaticValue2("0.00")
+                                          setisStaticValue3("0.00")
+                                          setisStaticValue4("0.00")
+                                        } else {
+                                          const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+
+                                          setisStaticValue1(T_voltage)
+                                          setisStaticValue2(T_current)
+                                          setisStaticValue3(T_power)
+                                          setisStaticValue4(T_energy)
+                                        }
+
                                       }).catch(err => {
                                         console.log(err)
                                         setisGraphStatsLoading(false)
