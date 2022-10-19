@@ -35,6 +35,8 @@ export const ChartComponent = props => {
             // secondsVisible: true,
             //fixRightEdge: true,
             //rightOffset: 1,
+            rightOffset: 5,
+            minBarSpacing: 3,
             tickMarkFormatter: (time) => {
               console.log(time)
               const date = new Date(time.year, time.month, time.day);
@@ -53,14 +55,15 @@ export const ChartComponent = props => {
           timeScale: {
             timeVisible: true,
             secondsVisible: false,
-            //rightOffset: 6,
+            rightOffset: 5,
+            minBarSpacing: 3
           }
         });
       }
 
       chart.timeScale().fitContent();
 
-      const newSeries = chart.addHistogramSeries({ color, lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      const newSeries = chart.addHistogramSeries({  lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
       //const newSeries = chart.addHistogramSeries({ color });
       newSeries.setData(data);
 

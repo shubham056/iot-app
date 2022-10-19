@@ -37,7 +37,7 @@ export const ChartComponent = props => {
       });
      chart.timeScale().fitContent();
 
-      const newSeries = chart.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      const newSeries = chart.addBaselineSeries({  lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
        newSeries.setData(data);
 
        window.addEventListener('resize', handleResize);
