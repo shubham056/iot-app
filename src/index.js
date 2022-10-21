@@ -24,15 +24,15 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <ClearBrowserCacheBoundary auto={true} fallback='Loading.....' duration={60000}>
   <React.StrictMode>
-    <ClearBrowserCacheBoundary auto fallback='Loading' duration={60000}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <App />
         </PersistGate>
       </Provider>
-      </ClearBrowserCacheBoundary>
   </React.StrictMode>
+  </ClearBrowserCacheBoundary>
 );
 
 // If you want to start measuring performance in your app, pass a function
