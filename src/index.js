@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import { ClearBrowserCacheBoundary } from 'react-clear-browser-cache';
 
 
 import { Provider } from 'react-redux';
@@ -15,20 +16,22 @@ import axios from "axios";
 let persistor = persistStore(store);
 //const TopRightAlertContext = createContext()
 
-//axios.defaults.baseURL = "http://localhost:5001/api/v1/";
+axios.defaults.baseURL = "http://localhost:5001/api/v1/";
 //axios.defaults.baseURL = "https://agile-industries-mxm8t.ondigitalocean.app/api/v1/";
 //axios.defaults.baseURL = "https://iot-admin.herokuapp.com/api/v1/";   
-axios.defaults.baseURL = "https://iot.cwsbuild.com/api/v1/";   // live 
+//axios.defaults.baseURL = "https://iot.cwsbuild.com/api/v1/";   // live 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <ClearBrowserCacheBoundary auto fallback='Loading' duration={60000}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <App />
         </PersistGate>
       </Provider>
+      </ClearBrowserCacheBoundary>
   </React.StrictMode>
 );
 
