@@ -3068,6 +3068,14 @@ select.list-dt:focus {
     margin-left: 5px;
 }
 
+.btn-group > button {
+    padding: 10px!important;
+    margin: 0;
+    width: 48%!important;
+    border-radius: 50px;
+    font-size: 11px;
+}
+
 
 
 

@@ -47,8 +47,10 @@ const Dashboard = () => {
   const [isAddArea, setIsAddArea] = useState(false);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isforgotdDevice, setIsForgotDevice] = useState(false);
+  const [isDeleteArea, setIsDeleteArea] = useState(false);
   const [content, setContent] = useState([]);
   const [contentDevice, setContentDevice] = useState([]);
+  const [contentArea, setContentArea] = useState([]);
   const [treeViewData, setTreeViewData] = useState([]);
   const [isLoading, setisLoading] = useState(false)
   const [isAddDeviceLoading, setisAddDeviceLoading] = useState(false)
@@ -113,7 +115,7 @@ const Dashboard = () => {
         // console.log("isPowerPhase1", isPowerPhase1)
         // console.log("isPowerPhase2", isPowerPhase2)
         // console.log("isPowerPhase3", isPowerPhase3)
-        console.log('power graph with device id', isDeviceID,data)
+        console.log('power graph with device id', isDeviceID, data)
         if (isDeviceID == data.device_id) {
           console.log("data from socket server", data)
 
@@ -215,7 +217,7 @@ const Dashboard = () => {
   //socket 
   // const io = socketClient(SocketServer, connectionOptions);
   // console.log("socket", io)
-  // io.on('connect', () => {
+  // io.on('connect', () => {/[[[hh]]]
   //   console.log(`I'm connected with socket id ${io.id} from the back-end`);
 
   //   let userIds = { "user_id": userID, "device_id": isDeviceID };
@@ -303,16 +305,14 @@ const Dashboard = () => {
     );
   }, [isLoading, isUpdateData]);
 
-  //fetch category data
+  //fetch device id data
   useEffect(() => {
-    console.log("########### call added device id function ##################")
     UserService.GetAddedDevices(userID).then(
       (response) => {
         setContentDevice(response.data.data.profile);
-        console.log("response device data ---", response.data.data.profile)
+        //console.log("response device data ---", response.data.data.profile)
       },
       (error) => {
-
         { error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
         const _content =
           (error.response &&
@@ -321,6 +321,26 @@ const Dashboard = () => {
           error.message ||
           error.toString();
         setContentDevice(_content);
+      }
+    );
+  }, [isGetDeviceLoading, isUpdateData]);
+
+  //fetch area name data
+  useEffect(() => {
+    UserService.GetAddedAreas(userID).then(
+      (response) => {
+        setContentArea(response.data.data.profile);
+        //console.log("response device data ---", response.data.data.profile)
+      },
+      (error) => {
+        { error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          setContentArea(_content);
       }
     );
   }, [isGetDeviceLoading, isUpdateData]);
@@ -373,7 +393,6 @@ const Dashboard = () => {
   //fetch 
   useEffect(() => {
 
-    console.log("Call rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
     let locations = []
     Object.values(treeViewData).map(item => {
       //.log("first", item)
@@ -739,9 +758,9 @@ const Dashboard = () => {
       {/* MAin Navigation END    */}
 
       <section className="main-slider">
-        <div className="container">
+        <div className="container-fluid">
           <div className="row">
-            <div className="col-lg-4 col-sm-12">
+            <div className="col-lg-3 col-sm-12">
               <div className>
                 <div id="left" className="span3">
                   <TreeMenu data={rootTreeViewData}>
@@ -851,34 +870,42 @@ const Dashboard = () => {
 
                   <br />
                   <div className='btn-group'>
-                    <button type="button" class="btn-info btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
-                      setIsAddArea(true)
-                      setIsAddDevice(false)
-                      setshowWelcomeDiv(false)
-                      setIsForgotDevice(false)
-                    }}>Add New Area</button>
-
-                    <button type="button" class="btn-primary btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
+                  <button type="button" class="btn-info btn-sm" onClick={() => {
                       setIsAddDevice(true)
+                      setIsDeleteArea(false)
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
-                    }}>Add New Device</button>
-
+                    }}>Add Device</button>
+                    <button type="button" class="btn-primary btn-sm" onClick={() => {
+                      setIsForgotDevice(true)
+                      setIsDeleteArea(false)
+                      setIsAddDevice(false)
+                      setIsAddArea(false)
+                      setshowGraph(false)
+                      setshowWelcomeDiv(false)
+                    }}>Forgot Device</button>
+                    <button type="button" class="btn-primary btn-sm" onClick={() => {
+                      setIsAddArea(true)
+                      setIsDeleteArea(false)
+                      setIsAddDevice(false)
+                      setshowWelcomeDiv(false)
+                      setIsForgotDevice(false)
+                    }}>Add New Area</button>
+                    <button type="button" class="btn-info btn-sm" onClick={() => {
+                      setIsDeleteArea(true)
+                      setIsForgotDevice(false)
+                      setIsAddDevice(false)
+                      setIsAddArea(false)
+                      setshowGraph(false)
+                      setshowWelcomeDiv(false)
+                    }}>Delete Area</button>
                   </div>
-
-                  <button type="button" class="btn-primary btn-sm" style={{ borderRadius: 30, margin: 5, padding: 20, }} onClick={() => {
-                    setIsForgotDevice(true)
-                    setIsAddDevice(false)
-                    setIsAddArea(false)
-                    setshowGraph(false)
-                    setshowWelcomeDiv(false)
-                  }}>Forgot Device</button>
                 </div>
               </div>
             </div>
-            <div className="col-lg-8 col-sm-12">
+            <div className="col-lg-9 col-sm-12">
               <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div className="row">
                   {
@@ -899,6 +926,56 @@ const Dashboard = () => {
                                           className={`form-control ${errors4.device_id ? 'is-invalid' : ''}`}
                                         >
                                           <option value="">-------------------- Select Device Name --------------------</option>
+                                          {addedDevices}
+                                        </select>
+                                        <span style={{ color: 'red' }}>{errors4.device_id?.message}</span>
+                                      </div>
+
+                                      {/* <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
+                                            setstepOne(true)
+                                            setstepTwo(false)
+                                          }}>Exit</button> */}
+                                      {
+                                        forgotisLoading
+                                          ?
+                                          <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                          </button>
+
+                                          :
+                                          <>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting3}>Submit</button>
+                                          </>
+
+                                      }
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                      :
+                      null
+                  }
+                  {
+                    isDeleteArea
+                      ?
+                      <div className="welcome_wraper" id='step2'>
+                        <div className="section-heading text-center">
+                          <section className="login_wraper">
+                            <div className="container">
+                              <div className="row">
+                                <div className="col-lg-12 col-sm-12">
+                                  <div className="contact-form2">
+                                    <h4 className="text-uppercase text-center">Delete Area</h4>
+                                    <form onSubmit={handleSubmit4(onSubmitForgotDevice)}>
+                                      <div className="form-group">
+                                        <select
+                                          {...register4("device_id")}
+                                          className={`form-control ${errors4.device_id ? 'is-invalid' : ''}`}
+                                        >
+                                          <option value="">-------------------- Select Area Name --------------------</option>
                                           {addedDevices}
                                         </select>
                                         <span style={{ color: 'red' }}>{errors4.device_id?.message}</span>

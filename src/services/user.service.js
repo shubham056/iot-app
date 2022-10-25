@@ -33,6 +33,9 @@ const GetTreeViewCategory = (userId) => {
 const GetAddedDevices = (userId) => {
     return axios.get(`users/getAddedDevice/${userId}`, { headers: authHeader() });
 };
+const GetAddedAreas = (userId) => {
+    return axios.get(`users/getAddedArea/${userId}`, { headers: authHeader() });
+};
 
 
 const GetTreeViewData = (userId) => {
@@ -137,6 +140,7 @@ const userService = {
     checkDeviceLinkValue,
     UpdateDeviceConState,
     GetAddedDevices,
+    GetAddedAreas,
     checkAlreadyAddedDevice,
     forgotDeviceID,
     GetLinkedDeviceData,
