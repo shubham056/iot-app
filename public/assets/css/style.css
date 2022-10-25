@@ -3074,14 +3074,22 @@ select.list-dt:focus {
     width: 30% !important;
     border-radius: 50px !important;
     font-size: 11px !important;
+    margin-right: 5px !important;
 }
 
 .btn-group, .btn-group-vertical {
     display: flex !important;
     align-items: center !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     flex-wrap: wrap !important;
 }
+
+#left > div.btn-group > button:nth-child(4){
+    margin-top: 8px!important
+    }
+nav.navbar.navbar-expand-lg > .container-fluid {
+        padding: 0!important;
+    }    
 
 
 

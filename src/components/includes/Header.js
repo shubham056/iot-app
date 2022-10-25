@@ -16,7 +16,7 @@ export const Header = () => {
         <header>
 
             <nav className="navbar navbar-expand-lg">
-                <div className="container">
+                <div className="container-fluid">
                     <Link className="navbar-brand" to="/">
                         <img src="assets/images/logo.jpg" alt="logo" className="img-fluid logo" />
                     </Link>
