@@ -893,14 +893,14 @@ const Dashboard = () => {
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
                     }}>Add New Area</button>
-                    <button type="button" class="btn-info btn-sm" onClick={() => {
+                    {/* <button type="button" class="btn-info btn-sm" onClick={() => {
                       setIsDeleteArea(true)
                       setIsForgotDevice(false)
                       setIsAddDevice(false)
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}>Delete Area</button>
+                    }}>Delete Area</button> */}
                   </div>
                 </div>
               </div>
@@ -1126,7 +1126,7 @@ const Dashboard = () => {
                       <div className="welcome_wraper">
                         <div className="section-heading text-center">
                           <h2>Welcome</h2>
-                          <p className>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
+                          <p className>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
                           <div className="seperator" />
                         </div>
                       </div>
@@ -1232,7 +1232,7 @@ const Dashboard = () => {
                             </div>
                             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                               <div className="row">
-                                <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                                <div className="col-xl-2 col-lg-4 col-md-4 col-sm-12">
                                   <div className="row">
                                     <div className="tags left_wraper">
                                       <a
@@ -1318,7 +1318,7 @@ const Dashboard = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                                <div className="col-xl-10 col-lg-8 col-md-8 col-sm-12">
                                   <div className="row right_wraper">
 
                                     <div className="tags ">

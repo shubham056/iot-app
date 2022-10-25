@@ -2339,7 +2339,7 @@ background: #fff;
     float: none;
 }
 .login_wraper div.contact-form2 {
-    width: 500px;
+    width: 615px;
     margin: 0 auto;
 }
 .login_wraper a.btn.btn-primary {
@@ -2441,7 +2441,7 @@ border-color: #7aaedd; }
     background: #9dc3e6;
 color: #fcff00;
 border-color: #7aaedd;
-    width: 35%;
+    width: 20%;
 }
 .top_heding i {float: right}
 .top_heding i {
@@ -2703,6 +2703,7 @@ header {
 }
 .tags {
     display: flex;
+    justify-content: right;
 }
 .tags.left_wraper a {
     width: 100%;
@@ -3087,11 +3088,13 @@ select.list-dt:focus {
 #left > div.btn-group > button:nth-child(4){
     margin-top: 8px!important
     }
-nav.navbar.navbar-expand-lg > .container-fluid {
+    nav.navbar.navbar-expand-lg > .container-fluid {
         padding: 0!important;
     }    
 
-
+    .login_wraper > .container, .row {
+        justify-content: center;
+    }
 
 
 
