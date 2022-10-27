@@ -3096,6 +3096,17 @@ select.list-dt:focus {
         justify-content: center;
     }
 
+    .graph_wraper{
+        margin-left: 5px;
+        width: 100%!important;
+    }
+    .tv-lightweight-charts > table {
+        width: 100%!important;
+    }
+    .tv-lightweight-charts {
+        width: 100%!important;
+    }
+
 
 
 
