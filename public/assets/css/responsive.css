@@ -33,12 +33,27 @@
 @media (min-width: 576px) {}
 
 /*// Small devices (landscape phones, 576px and up)*/
-
+@media (min-width: 991px) and (max-width: 1199px) {
+    .btn-group > button {
+        width: 46% !important;
+    }
+    .btn-group button:last-child {
+        margin-top: 5px!important;
+    }
+}
 @media (min-width: 768px) and (max-width: 991px) {
     .mt100p {
         margin-top: 100px;
     }
-
+    .support-info li span {
+        font-size: 13px;
+    }
+    .btn-group > button {
+        width: 20% !important;
+    }
+    .btn-group, .btn-group-vertical {
+        justify-content: center!important;
+    }
 }
 
 /* Medium devices (tablets, 768px and up)*/
@@ -194,6 +209,18 @@
     .trans-nav {
         padding: 20px 20px;
     }
+    .support-info li {
+        width: 100%;
+    }
+    .btn-group > button {
+        width: 20%!important;
+    }
+    .btn-group, .btn-group-vertical {
+        justify-content: center!important;
+    }
+    .login_wraper div.contact-form2 {
+        width: 100%;
+    }
 }
 
 /* Custom, iPhone Retina */
@@ -284,6 +311,18 @@
     .header-white .navbar-nav .nav-link {
         color: #222;
     }
-
+    .support-info li {
+        width: 100%;
+    }
+    .login_wraper div.contact-form2 {
+        width: 100%;
+    }
+    .contact-form2 {
+        padding: 15px;
+        border: 1px solid#eee;
+    }
+    .footer-color .footer-logo p, .footer-color .footer-btm p {
+        text-align: center;
+    }
 
 }

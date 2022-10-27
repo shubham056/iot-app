@@ -27,12 +27,12 @@ const About = () => {
         <section id="about2" className="bg-light">
           <div className="container">
             <div className="row">
-              <div className="col-lg-6 col-sm-6">
+              <div className="col-lg-6 col-sm-12 mt-5">
                 <div className="about-img-2">
                   <img src="assets/images/about/combination-chart.png" alt className="img-fluid" />
                 </div>
               </div>
-              <div className="col-lg-6 col-sm-6">
+              <div className="col-lg-6 col-sm-12 mt-4">
                 <div className="about-feature">
                   <h2>About Us</h2>
                   <p>Corporis facilis officia, excepturi dignissimos, vitae aut fugiat maiores est blanditiis distinctio, reiciendis voluptatibus labore cum nobis, iure debitis id. Quaerat.</p>
@@ -45,10 +45,10 @@ const About = () => {
         </section>
         {/* ABOUT STYLES2  */}
         {/* ABOUT STYLES  */}
-        <section id="about" className="pt0">
+        <section id="about" className="pt0 mt-4">
           <div className="container">
             <div className="row">
-              <div className="col-lg-6 col-sm-6">
+              <div className="col-lg-6 col-sm-12">
                 <ul className="about-list">
                   <li>
                     <div className="about-icon">
@@ -76,7 +76,7 @@ const About = () => {
                   </li>
                 </ul>
               </div>
-              <div className="col-lg-3 col-sm-3">
+              <div className="col-lg-3 col-sm-6">
                 <div className="row">
                   <div className="col-lg-12">
                     <div className="about-img">
@@ -90,7 +90,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-3 col-sm-3">
+              <div className="col-lg-3 col-sm-6">
                 <div className="row">
                   <div className="col-lg-12">
                     <div className="about-img">

@@ -35,6 +35,8 @@ html,
 body {
     height: 100%;
     min-height: 100%;
+    overflow-x: hidden;
+    height: auto;
 }
 
 body {
@@ -1369,8 +1371,11 @@ section {
 .about-img img {
     border-radius: 15px;
     border: 5px solid#eee;
+    width: 100%;
 }
-
+.about-img-2 img {
+    width: 100%;
+}
 .read-more {
     font-size: 14px;
     color: #28a745;
@@ -2475,7 +2480,7 @@ border-color: #7aaedd;
     right: 0;
     top: 42px;
     position: absolute;
-    left: inherit;
+    left: 0;
     background: #1e4a75;
     color: #fff;
     padding: 0;
@@ -3067,10 +3072,16 @@ select.list-dt:focus {
 }
 .graph_wraper{
     margin-left: 5px;
+    width: 100%!important;
 }
-
+.tv-lightweight-charts > table {
+    width: 100%!important;
+}
+.tv-lightweight-charts {
+    width: 100%!important;
+}
 .btn-group > button {
-    padding: 10px!important;
+    padding: 5px!important;
     margin: 0 !important;
     width: 30% !important;
     border-radius: 50px !important;
@@ -3094,17 +3105,6 @@ select.list-dt:focus {
 
     .login_wraper > .container, .row {
         justify-content: center;
-    }
-
-    .graph_wraper{
-        margin-left: 5px;
-        width: 100%!important;
-    }
-    .tv-lightweight-charts > table {
-        width: 100%!important;
-    }
-    .tv-lightweight-charts {
-        width: 100%!important;
     }
 
 
