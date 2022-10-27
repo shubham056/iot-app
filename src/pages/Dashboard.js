@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [stepTwo, setstepTwo] = useState(false)
   const [stepTwoisLoading, setstepTwoisLoading] = useState(false)
   const [forgotisLoading, setforgotisLoading] = useState(false)
+  const [deleteAreaisLoading, setdeleteAreaisLoading] = useState(false)
   const [isAddArea, setIsAddArea] = useState(false);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isforgotdDevice, setIsForgotDevice] = useState(false);
@@ -242,14 +243,19 @@ const Dashboard = () => {
   const forgotDevice = Yup.object().shape({
     device_id: Yup.string().required("Please select device name"),
   });
+  const deleteArea = Yup.object().shape({
+    area_id: Yup.string().required("Please select area name"),
+  });
   const formOptions = { resolver: yupResolver(Schema) }
   const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
   const adddeviceformOptionsStep2 = { resolver: yupResolver(AddDeviceSchemaStep2) }
   const formOptionforgotDevice = { resolver: yupResolver(forgotDevice) }
+  const formOptiondeleteArea = { resolver: yupResolver(deleteArea) }
   const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, resetField } = useForm(formOptions);
   const { register: register2, formState: { errors: errors2, isSubmitting: isSubmitting2 }, handleSubmit: handleSubmit2, resetField: resetField2 } = useForm(adddeviceformOptionsStep1);
   const { register: register3, formState: { errors: errors3, isSubmitting: isSubmitting3 }, handleSubmit: handleSubmit3, resetField: resetField3 } = useForm(adddeviceformOptionsStep2);
   const { register: register4, formState: { errors: errors4, isSubmitting: isSubmitting4 }, handleSubmit: handleSubmit4, resetField: resetField4 } = useForm(formOptionforgotDevice);
+  const { register: register5, formState: { errors: errors5, isSubmitting: isSubmitting5 }, handleSubmit: handleSubmit5, resetField: resetField5 } = useForm(formOptiondeleteArea);
 
   const callOnce = useRef(true)
   //add root user node 
@@ -340,10 +346,10 @@ const Dashboard = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          setContentArea(_content);
+        setContentArea(_content);
       }
     );
-  }, [isGetDeviceLoading, isUpdateData]);
+  }, [isLoading, isAddDeviceLoading, isUpdateData, isGetDeviceLoading]);
 
   //fetch tree view data
   useEffect(() => {
@@ -365,7 +371,7 @@ const Dashboard = () => {
         setTreeViewData(_content);
       }
     );
-  }, [isLoading, isAddDeviceLoading, isUpdateData]);
+  }, [isLoading, isAddDeviceLoading, isUpdateData, isGetDeviceLoading]);
 
 
   //fetch category data
@@ -502,6 +508,81 @@ const Dashboard = () => {
 
         } else {
           setforgotisLoading(false)
+        }
+      })
+    } else {
+      toast.info('Please select device name', { toastId: 2345366467686787 })
+    }
+  }
+  //delete area submit
+  const onSubmitDeleteArea = formValue => {
+    console.log(formValue)
+    //return false
+    if (formValue.area_id != undefined) {
+      Swal.fire({
+        title: 'Are you sure ?',
+        text: "want to delete this area!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setdeleteAreaisLoading(true)
+          UserService.deleteAreaName(formValue.area_id, userID)
+            .then((res) => {
+              console.log("Delete area API res--", res)
+
+              if (res.data.data.error == false) {
+                toast.success('Area successfully deleted!', { toastId: 4464676867878 })
+                setisUpdateData(res.data.data.updatedId)
+                setdeleteAreaisLoading(false)
+              } else if(res.data.data.error == "not_found"){
+                toast.error('Refresh page and then select a area!', { toastId: 4488676867878 })
+                setisUpdateData(res.data.data.updatedId)
+                setdeleteAreaisLoading(false)
+              }else {
+                Swal.fire({
+                  title: 'Are you want to sure ?',
+                  text: res.data.data.msg,
+                  icon: 'question',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, Delete it!'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    setdeleteAreaisLoading(true)
+                    //delete all area and devices in it
+                    UserService.deleteAllAreasandDevices(res.data.data.ids)
+                      .then((res) => {
+                        console.log("ressss", res)
+                        toast.success('Area successfully deleted!', { toastId: 4564676867878 })
+                        setisUpdateData(res.data.data.updatedId)
+                        setdeleteAreaisLoading(false)
+                      }).catch(err => {
+                        console.log(err)
+                        setdeleteAreaisLoading(false)
+                      })
+                  } else {
+                    setdeleteAreaisLoading(false)
+                  }
+                })
+                setdeleteAreaisLoading(false)
+
+              }
+
+            })
+            .catch((error) => {
+              setisLoading(false)
+              console.log(error)
+              { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+            });
+          setdeleteAreaisLoading(false)
+
+        } else {
+          setdeleteAreaisLoading(false)
         }
       })
     } else {
@@ -702,6 +783,12 @@ const Dashboard = () => {
     <option value={v.id}>{v.label}</option>
   ));
 
+  let addedAreas = Object.values(contentArea).map((v, i) => (
+    <option value={v.id}>{v.label}</option>
+  ));
+
+
+
 
   //--------------------------  Power Graph Range Switcher Handler ----------------
   const powerGrapghRangeSwitcher = (args) => {
@@ -801,6 +888,7 @@ const Dashboard = () => {
                                       setIsAddDevice(false)
                                       setshowWelcomeDiv(false)
                                       setIsForgotDevice(false)
+                                      setIsDeleteArea(false)
                                       setDeviceName(label)
                                       setisActiveRangeSwitch(null)
 
@@ -870,7 +958,7 @@ const Dashboard = () => {
 
                   <br />
                   <div className='btn-group'>
-                  <button type="button" class="btn-info btn-sm" onClick={() => {
+                    <button type="button" class="btn-primary btn-sm" onClick={() => {
                       setIsAddDevice(true)
                       setIsDeleteArea(false)
                       setIsAddArea(false)
@@ -878,14 +966,14 @@ const Dashboard = () => {
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
                     }}>Add Device</button>
-                    <button type="button" class="btn-primary btn-sm" onClick={() => {
+                    <button type="button" class="btn-danger btn-sm" onClick={() => {
                       setIsForgotDevice(true)
                       setIsDeleteArea(false)
                       setIsAddDevice(false)
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}>Forgot Device</button>
+                    }}>Delete Device</button>
                     <button type="button" class="btn-primary btn-sm" onClick={() => {
                       setIsAddArea(true)
                       setIsDeleteArea(false)
@@ -893,14 +981,14 @@ const Dashboard = () => {
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
                     }}>Add New Area</button>
-                    {/* <button type="button" class="btn-info btn-sm" onClick={() => {
+                    <button type="button" class="btn-danger btn-sm" onClick={() => {
                       setIsDeleteArea(true)
                       setIsForgotDevice(false)
                       setIsAddDevice(false)
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}>Delete Area</button> */}
+                    }}>Delete Area</button>
                   </div>
                 </div>
               </div>
@@ -922,10 +1010,10 @@ const Dashboard = () => {
                                     <form onSubmit={handleSubmit4(onSubmitForgotDevice)}>
                                       <div className="form-group">
                                         <select
-                                          {...register4("device_id")}
+                                          {...register5("device_id")}
                                           className={`form-control ${errors4.device_id ? 'is-invalid' : ''}`}
                                         >
-                                          <option value="">-------------------- Select Device Name --------------------</option>
+                                          <option value="">--------------------------- Select Device Name ---------------------------</option>
                                           {addedDevices}
                                         </select>
                                         <span style={{ color: 'red' }}>{errors4.device_id?.message}</span>
@@ -940,12 +1028,10 @@ const Dashboard = () => {
                                           ?
                                           <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
                                           </button>
-
                                           :
                                           <>
-                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting3}>Submit</button>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting4}>Submit</button>
                                           </>
-
                                       }
                                     </form>
                                   </div>
@@ -969,16 +1055,16 @@ const Dashboard = () => {
                                 <div className="col-lg-12 col-sm-12">
                                   <div className="contact-form2">
                                     <h4 className="text-uppercase text-center">Delete Area</h4>
-                                    <form onSubmit={handleSubmit4(onSubmitForgotDevice)}>
+                                    <form onSubmit={handleSubmit5(onSubmitDeleteArea)}>
                                       <div className="form-group">
                                         <select
-                                          {...register4("device_id")}
-                                          className={`form-control ${errors4.device_id ? 'is-invalid' : ''}`}
+                                          {...register5("area_id")}
+                                          className={`form-control ${errors5.area_id ? 'is-invalid' : ''}`}
                                         >
-                                          <option value="">-------------------- Select Area Name --------------------</option>
-                                          {addedDevices}
+                                          <option value="">--------------------------- Select Area Name ---------------------------</option>
+                                          {addedAreas}
                                         </select>
-                                        <span style={{ color: 'red' }}>{errors4.device_id?.message}</span>
+                                        <span style={{ color: 'red' }}>{errors5.area_id?.message}</span>
                                       </div>
 
                                       {/* <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
@@ -986,14 +1072,14 @@ const Dashboard = () => {
                                             setstepTwo(false)
                                           }}>Exit</button> */}
                                       {
-                                        forgotisLoading
+                                        deleteAreaisLoading
                                           ?
                                           <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
                                           </button>
 
                                           :
                                           <>
-                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting3}>Submit</button>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting5}>Submit</button>
                                           </>
 
                                       }
@@ -1030,7 +1116,7 @@ const Dashboard = () => {
                                             {...register2("modal_name")}
                                             className={`form-control ${errors2.modal_name ? 'is-invalid' : ''}`}
                                           >
-                                            <option value="">-------------------- Select Modal  --------------------</option>
+                                            <option value="">--------------------------- Select Modal  ---------------------------</option>
                                             <option value="IPL - 100 V1">IPL - 100 V1</option>
                                           </select>
                                           <span style={{ color: 'red' }}>{errors2.modal_name?.message}</span>
@@ -1063,7 +1149,7 @@ const Dashboard = () => {
                                               {...register3("parent_id")}
                                               className={`form-control ${errors3.parent_id ? 'is-invalid' : ''}`}
                                             >
-                                              <option value="">-------------------- Select Area --------------------</option>
+                                              <option value="">--------------------------- Select Area ---------------------------</option>
                                               {optionTemplate}
                                             </select>
                                             <span style={{ color: 'red' }}>{errors3.parent_id?.message}</span>
@@ -1155,7 +1241,7 @@ const Dashboard = () => {
                                             {...register("parent_id")}
                                             className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
                                           >
-                                            <option value="">---------- Select Area ----------</option>
+                                            <option value="">--------------------------- Select Area ---------------------------</option>
                                             {optionTemplate}
                                           </select>
                                           <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
@@ -2006,7 +2092,7 @@ const Dashboard = () => {
                                             {...register("parent_id")}
                                             className={`form-control ${errors.parent_id ? 'is-invalid' : ''}`}
                                           >
-                                            <option value="">---------- Select Area ----------</option>
+                                            <option value="">--------------------------- Select Area ---------------------------</option>
                                             {optionTemplate}
                                           </select>
                                           <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>

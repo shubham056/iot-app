@@ -121,6 +121,16 @@ const checkAlreadyAddedDevice = (userId,deviceID) => {
 const forgotDeviceID = (deviceID) => {
     return axios.get(`users/forgot_associated_device/${deviceID}`, { headers: authHeader() });
 };
+//delete area name
+const deleteAreaName = (areaID,userID) => {
+    return axios.get(`users/delete_area_name/${areaID}/${userID}`, { headers: authHeader() });
+};
+
+//delete area name
+const deleteAllAreasandDevices = (ids) => {
+    return axios.get(`users/delete_areas_and_devices/${ids}`, { headers: authHeader() });
+};
+
 
 
 const userService = {
@@ -145,6 +155,8 @@ const userService = {
     forgotDeviceID,
     GetLinkedDeviceData,
     GetLatestDeviceStatsData,
-    GetDeviceGraphData
+    GetDeviceGraphData,
+    deleteAreaName,
+    deleteAllAreasandDevices
 };
 export default userService;
