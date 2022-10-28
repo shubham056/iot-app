@@ -125,8 +125,15 @@ const forgotDeviceID = (deviceID) => {
 const deleteAreaName = (areaID,userID) => {
     return axios.get(`users/delete_area_name/${areaID}/${userID}`, { headers: authHeader() });
 };
-
-//delete area name
+//edit area name
+const editAreaName = (areaID,editedAreaName) => {
+    return axios.get(`users/edit_area_name/${areaID}/${editedAreaName}`, { headers: authHeader() });
+};
+//edit device name
+const editDeviceName = (deviceID,editedDeviceName) => {
+    return axios.get(`users/edit_device_name/${deviceID}/${editedDeviceName}`, { headers: authHeader() });
+};
+//delete multiple area name
 const deleteAllAreasandDevices = (ids) => {
     return axios.get(`users/delete_areas_and_devices/${ids}`, { headers: authHeader() });
 };
@@ -157,6 +164,8 @@ const userService = {
     GetLatestDeviceStatsData,
     GetDeviceGraphData,
     deleteAreaName,
-    deleteAllAreasandDevices
+    deleteAllAreasandDevices,
+    editAreaName,
+    editDeviceName,
 };
 export default userService;

@@ -45,10 +45,13 @@ const Dashboard = () => {
   const [stepTwoisLoading, setstepTwoisLoading] = useState(false)
   const [forgotisLoading, setforgotisLoading] = useState(false)
   const [deleteAreaisLoading, setdeleteAreaisLoading] = useState(false)
+  const [renameAreaisLoading, setrenameAreaisLoading] = useState(false)
   const [isAddArea, setIsAddArea] = useState(false);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isforgotdDevice, setIsForgotDevice] = useState(false);
   const [isDeleteArea, setIsDeleteArea] = useState(false);
+  const [isRenameArea, setIsRenameArea] = useState(false);
+  const [isRenameDevice, setIsRenameDevice] = useState(false);
   const [content, setContent] = useState([]);
   const [contentDevice, setContentDevice] = useState([]);
   const [contentArea, setContentArea] = useState([]);
@@ -246,16 +249,28 @@ const Dashboard = () => {
   const deleteArea = Yup.object().shape({
     area_id: Yup.string().required("Please select area name"),
   });
+  const renameArea = Yup.object().shape({
+    area_id: Yup.string().required("Please select area name"),
+    area_name: Yup.string().required('Area name is required!')
+  });
+  const renameDevice = Yup.object().shape({
+    device_id: Yup.string().required("Please select device name"),
+    device_name: Yup.string().required("Device name is required!"),
+  });
   const formOptions = { resolver: yupResolver(Schema) }
   const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
   const adddeviceformOptionsStep2 = { resolver: yupResolver(AddDeviceSchemaStep2) }
   const formOptionforgotDevice = { resolver: yupResolver(forgotDevice) }
   const formOptiondeleteArea = { resolver: yupResolver(deleteArea) }
+  const formOptionRenameArea = { resolver: yupResolver(renameArea) }
+  const formOptionRenameDevice = { resolver: yupResolver(renameDevice) }
   const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, resetField } = useForm(formOptions);
   const { register: register2, formState: { errors: errors2, isSubmitting: isSubmitting2 }, handleSubmit: handleSubmit2, resetField: resetField2 } = useForm(adddeviceformOptionsStep1);
   const { register: register3, formState: { errors: errors3, isSubmitting: isSubmitting3 }, handleSubmit: handleSubmit3, resetField: resetField3 } = useForm(adddeviceformOptionsStep2);
   const { register: register4, formState: { errors: errors4, isSubmitting: isSubmitting4 }, handleSubmit: handleSubmit4, resetField: resetField4 } = useForm(formOptionforgotDevice);
   const { register: register5, formState: { errors: errors5, isSubmitting: isSubmitting5 }, handleSubmit: handleSubmit5, resetField: resetField5 } = useForm(formOptiondeleteArea);
+  const { register: register6, formState: { errors: errors6, isSubmitting: isSubmitting6 }, handleSubmit: handleSubmit6, resetField: resetField6 } = useForm(formOptionRenameArea);
+  const { register: register7, formState: { errors: errors7, isSubmitting: isSubmitting7 }, handleSubmit: handleSubmit7, resetField: resetField7 } = useForm(formOptionRenameDevice);
 
   const callOnce = useRef(true)
   //add root user node 
@@ -538,11 +553,162 @@ const Dashboard = () => {
                 toast.success('Area successfully deleted!', { toastId: 4464676867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
-              } else if(res.data.data.error == "not_found"){
+              } else if (res.data.data.error == "not_found") {
                 toast.error('Refresh page and then select a area!', { toastId: 4488676867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
-              }else {
+              } else {
+                Swal.fire({
+                  title: 'Are you want to sure ?',
+                  text: res.data.data.msg,
+                  icon: 'question',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, Delete it!'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    setdeleteAreaisLoading(true)
+                    //delete all area and devices in it
+                    UserService.deleteAllAreasandDevices(res.data.data.ids)
+                      .then((res) => {
+                        console.log("ressss", res)
+                        toast.success('Area successfully deleted!', { toastId: 4564676867878 })
+                        setisUpdateData(res.data.data.updatedId)
+                        setdeleteAreaisLoading(false)
+                      }).catch(err => {
+                        console.log(err)
+                        setdeleteAreaisLoading(false)
+                      })
+                  } else {
+                    setdeleteAreaisLoading(false)
+                  }
+                })
+                setdeleteAreaisLoading(false)
+
+              }
+
+            })
+            .catch((error) => {
+              setisLoading(false)
+              console.log(error)
+              { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+            });
+          setdeleteAreaisLoading(false)
+
+        } else {
+          setdeleteAreaisLoading(false)
+        }
+      })
+    } else {
+      toast.info('Please select device name', { toastId: 2345366467686787 })
+    }
+  }
+  //rename area
+  const onSubmitRenameArea = formValue => {
+    console.log(formValue)
+    //return false
+    const {area_id, area_name} = formValue
+    if (area_id != undefined && area_name != undefined) {
+      Swal.fire({
+        title: 'Are you sure ?',
+        text: "want to rename this area!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Rename it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setrenameAreaisLoading(true)
+          UserService.editAreaName(area_id, area_name)
+            .then((res) => {
+              console.log("Rename area API res--", res)
+              if (res.data.data.error == false) {
+                toast.success('Area successfully renamed!', { toastId: 4494676867878 })
+                setisUpdateData(res.data.data.updatedId)
+                setrenameAreaisLoading(false)
+              } 
+              // if (res.data.data.error == "not_found") {
+              //   toast.error('Refresh page and then select a area!', { toastId: 4488676867878 })
+              //   setisUpdateData(res.data.data.updatedId)
+              //   setrenameAreaisLoading(false)
+              // } else {
+              //   Swal.fire({
+              //     title: 'Are you want to sure ?',
+              //     text: res.data.data.msg,
+              //     icon: 'question',
+              //     showCancelButton: true,
+              //     confirmButtonColor: '#3085d6',
+              //     cancelButtonColor: '#d33',
+              //     confirmButtonText: 'Yes, Delete it!'
+              //   }).then((result) => {
+              //     if (result.isConfirmed) {
+              //       setrenameAreaisLoading(true)
+              //       //delete all area and devices in it
+              //       UserService.deleteAllAreasandDevices(res.data.data.ids)
+              //         .then((res) => {
+              //           console.log("ressss", res)
+              //           toast.success('Area successfully deleted!', { toastId: 4564676867878 })
+              //           setisUpdateData(res.data.data.updatedId)
+              //           setrenameAreaisLoading(false)
+              //         }).catch(err => {
+              //           console.log(err)
+              //           setrenameAreaisLoading(false)
+              //         })
+              //     } else {
+              //       setrenameAreaisLoading(false)
+              //     }
+              //   })
+              //   setrenameAreaisLoading(false)
+
+              // }
+
+            })
+            .catch((error) => {
+              setisLoading(false)
+              console.log(error)
+              { error && toast.info(error.response.data.message, { toastId: 234736467686787 }) }
+            });
+          setrenameAreaisLoading(false)
+
+        } else {
+          setrenameAreaisLoading(false)
+        }
+      })
+    } else {
+      toast.info('Please select device name', { toastId: 2345366467686787 })
+    }
+  }
+  //rename device
+  const onSubmitRenameDevice = formValue => {
+    console.log(formValue)
+    return false
+    if (formValue.area_id != undefined) {
+      Swal.fire({
+        title: 'Are you sure ?',
+        text: "want to delete this area!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setdeleteAreaisLoading(true)
+          UserService.deleteAreaName(formValue.area_id, userID)
+            .then((res) => {
+              console.log("Delete area API res--", res)
+
+              if (res.data.data.error == false) {
+                toast.success('Area successfully deleted!', { toastId: 4464676867878 })
+                setisUpdateData(res.data.data.updatedId)
+                setdeleteAreaisLoading(false)
+              } else if (res.data.data.error == "not_found") {
+                toast.error('Refresh page and then select a area!', { toastId: 4488676867878 })
+                setisUpdateData(res.data.data.updatedId)
+                setdeleteAreaisLoading(false)
+              } else {
                 Swal.fire({
                   title: 'Are you want to sure ?',
                   text: res.data.data.msg,
@@ -884,6 +1050,8 @@ const Dashboard = () => {
                                       setisEnergyDaily(false)
                                       setisEnergyMonthly(false)
                                       setshowGraph(true)
+                                      setIsRenameDevice(false)
+                                      setIsRenameArea(false)
                                       setIsAddArea(false)
                                       setIsAddDevice(false)
                                       setshowWelcomeDiv(false)
@@ -958,37 +1126,77 @@ const Dashboard = () => {
 
                   <br />
                   <div className='btn-group'>
-                    <button type="button" class="btn-primary btn-sm" onClick={() => {
+                    <button type="button" class="btn-success btn-sm" onClick={() => {
                       setIsAddDevice(true)
+                      setIsRenameArea(false)
+                      setIsRenameDevice(false)
                       setIsDeleteArea(false)
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
-                    }}>Add Device</button>
+                    }}> <i className="icofont icofont-ui-add" /> Add Device</button>
+                    <button type="button" class="btn-success btn-sm" onClick={() => {
+                      setIsAddArea(true)
+                      setIsRenameArea(false)
+                      setIsRenameDevice(false)
+                      setIsDeleteArea(false)
+                      setIsAddDevice(false)
+                      setshowWelcomeDiv(false)
+                      setIsForgotDevice(false)
+                    }}> <i className="icofont icofont-ui-add" /> Add New Area</button>
+                     <button type="button" class="btn-primary btn-sm" onClick={() => {
+                      setIsRenameArea(true)
+                      setIsRenameDevice(false)
+                      setIsDeleteArea(false)
+                      setIsForgotDevice(false)
+                      setIsAddDevice(false)
+                      setIsAddArea(false)
+                      setshowGraph(false)
+                      setshowWelcomeDiv(false)
+                    }}> <i className="icofont icofont-ui-edit" /> Rename Areas</button>
                     <button type="button" class="btn-danger btn-sm" onClick={() => {
                       setIsForgotDevice(true)
+                      setIsRenameArea(false)
+                      setIsRenameDevice(false)
                       setIsDeleteArea(false)
                       setIsAddDevice(false)
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}>Delete Device</button>
-                    <button type="button" class="btn-primary btn-sm" onClick={() => {
-                      setIsAddArea(true)
-                      setIsDeleteArea(false)
-                      setIsAddDevice(false)
-                      setshowWelcomeDiv(false)
-                      setIsForgotDevice(false)
-                    }}>Add New Area</button>
+                    }}> <i className="icofont icofont-ui-delete" /> Delete Devices</button>
                     <button type="button" class="btn-danger btn-sm" onClick={() => {
                       setIsDeleteArea(true)
+                      setIsRenameArea(false)
+                      setIsRenameDevice(false)
                       setIsForgotDevice(false)
                       setIsAddDevice(false)
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}>Delete Area</button>
+                    }}> <i className="icofont icofont-ui-delete" /> Delete Areas</button>
+                    <button type="button" class="btn-primary btn-sm" onClick={() => {
+                      setIsRenameDevice(true)
+                      setIsRenameArea(false)
+                      setIsDeleteArea(false)
+                      setIsForgotDevice(false)
+                      setIsAddDevice(false)
+                      setIsAddArea(false)
+                      setshowGraph(false)
+                      setshowWelcomeDiv(false)
+                    }}> <i className="icofont icofont-ui-edit" /> Rename Device</button>
+                    <button type="button" class="btn-info btn-sm" 
+                    // onClick={() => {
+                    //   setIsRenameDevice(true)
+                    //   setIsRenameArea(false)
+                    //   setIsDeleteArea(false)
+                    //   setIsForgotDevice(false)
+                    //   setIsAddDevice(false)
+                    //   setIsAddArea(false)
+                    //   setshowGraph(false)
+                    //   setshowWelcomeDiv(false)
+                    // }}
+                    >Move Devices</button>
                   </div>
                 </div>
               </div>
@@ -1016,13 +1224,8 @@ const Dashboard = () => {
                                           <option value="">--------------------------- Select Device Name ---------------------------</option>
                                           {addedDevices}
                                         </select>
-                                        <span style={{ color: 'red' }}>{errors4.device_id?.message}</span>
+                                        <span style={{ color: 'red',float: 'left' }}>{errors4.device_id?.message}</span>
                                       </div>
-
-                                      {/* <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
-                                            setstepOne(true)
-                                            setstepTwo(false)
-                                          }}>Exit</button> */}
                                       {
                                         forgotisLoading
                                           ?
@@ -1064,13 +1267,8 @@ const Dashboard = () => {
                                           <option value="">--------------------------- Select Area Name ---------------------------</option>
                                           {addedAreas}
                                         </select>
-                                        <span style={{ color: 'red' }}>{errors5.area_id?.message}</span>
+                                        <span style={{ color: 'red',float: 'left' }}>{errors5.area_id?.message}</span>
                                       </div>
-
-                                      {/* <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
-                                            setstepOne(true)
-                                            setstepTwo(false)
-                                          }}>Exit</button> */}
                                       {
                                         deleteAreaisLoading
                                           ?
@@ -1080,6 +1278,116 @@ const Dashboard = () => {
                                           :
                                           <>
                                             <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting5}>Submit</button>
+                                          </>
+
+                                      }
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                      :
+                      null
+                  }
+                  {
+                    isRenameArea
+                      ?
+                      <div className="welcome_wraper" id='step2'>
+                        <div className="section-heading text-center">
+                          <section className="login_wraper">
+                            <div className="container">
+                              <div className="row">
+                                <div className="col-lg-12 col-sm-12">
+                                  <div className="contact-form2">
+                                    <h4 className="text-uppercase text-center">Rename Area</h4>
+                                    <form onSubmit={handleSubmit6(onSubmitRenameArea)}>
+                                      <div className="form-group">
+                                        <select
+                                          {...register6("area_id")}
+                                          className={`form-control ${errors6.area_id ? 'is-invalid' : ''}`}
+                                        >
+                                          <option value="">--------------------------- Select Area Name ---------------------------</option>
+                                          {addedAreas}
+                                        </select>
+                                        <span style={{ color: 'red',float: 'left' }}>{errors6.area_id?.message}</span>
+                                      </div>
+                                      <div className="form-group">
+                                        <input
+                                          type="text"
+                                          {...register6("area_name")}
+                                          placeholder="Enter area name"
+                                          className={`form-control ${errors6.area_name ? 'is-invalid' : ''}`}
+                                          autoComplete="off"
+                                        />
+                                        <span style={{ color: 'red',float: 'left' }}>{errors6.area_name?.message}</span>
+                                      </div>
+                                      {
+                                        renameAreaisLoading
+                                          ?
+                                          <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                          </button>
+
+                                          :
+                                          <>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting6}>Submit</button>
+                                          </>
+
+                                      }
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                      :
+                      null
+                  }
+                  {
+                    isRenameDevice
+                      ?
+                      <div className="welcome_wraper" id='step2'>
+                        <div className="section-heading text-center">
+                          <section className="login_wraper">
+                            <div className="container">
+                              <div className="row">
+                                <div className="col-lg-12 col-sm-12">
+                                  <div className="contact-form2">
+                                    <h4 className="text-uppercase text-center">Rename Device</h4>
+                                    <form onSubmit={handleSubmit7(onSubmitRenameDevice)}>
+                                      <div className="form-group">
+                                        <select
+                                          {...register7("device_id")}
+                                          className={`form-control ${errors7.device_id ? 'is-invalid' : ''}`}
+                                        >
+                                          <option value="">--------------------------- Select Device Name ---------------------------</option>
+                                          {addedDevices}
+                                        </select>
+                                        <span style={{ color: 'red',float: 'left' }}>{errors7.device_id?.message}</span>
+                                      </div>
+                                      <div className="form-group">
+                                        <input
+                                          type="text"
+                                          {...register7("device_name")}
+                                          placeholder="Enter device name"
+                                          className={`form-control ${errors7.device_name ? 'is-invalid' : ''}`}
+                                          autoComplete="off"
+                                        />
+                                        <span style={{ color: 'red',float: 'left' }}>{errors7.device_name?.message}</span>
+                                      </div>
+                                      {
+                                        deleteAreaisLoading
+                                          ?
+                                          <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                          </button>
+
+                                          :
+                                          <>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting7}>Submit</button>
                                           </>
 
                                       }
@@ -1119,7 +1427,7 @@ const Dashboard = () => {
                                             <option value="">--------------------------- Select Modal  ---------------------------</option>
                                             <option value="IPL - 100 V1">IPL - 100 V1</option>
                                           </select>
-                                          <span style={{ color: 'red' }}>{errors2.modal_name?.message}</span>
+                                          <span style={{ color: 'red',float: 'left' }}>{errors2.modal_name?.message}</span>
                                         </div>
                                         <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting2}>Next</button>
 
@@ -1152,7 +1460,7 @@ const Dashboard = () => {
                                               <option value="">--------------------------- Select Area ---------------------------</option>
                                               {optionTemplate}
                                             </select>
-                                            <span style={{ color: 'red' }}>{errors3.parent_id?.message}</span>
+                                            <span style={{ color: 'red',float: 'left' }}>{errors3.parent_id?.message}</span>
                                           </div>
                                           <div className="form-group">
                                             <input
@@ -1162,7 +1470,7 @@ const Dashboard = () => {
                                               className={`form-control ${errors3.device_name ? 'is-invalid' : ''}`}
                                               autoComplete="off"
                                             />
-                                            <span style={{ color: 'red' }}>{errors3.device_name?.message}</span>
+                                            <span style={{ color: 'red',float: 'left' }}>{errors3.device_name?.message}</span>
                                           </div>
 
                                           <div className="form-group">
@@ -1173,7 +1481,7 @@ const Dashboard = () => {
                                               className={`form-control ${errors3.device_id ? 'is-invalid' : ''}`}
                                               autoComplete="off"
                                             />
-                                            <span style={{ color: 'red' }}>{errors3.device_id?.message}</span>
+                                            <span style={{ color: 'red',float: 'left' }}>{errors3.device_id?.message}</span>
                                           </div>
 
                                           <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
@@ -1244,7 +1552,7 @@ const Dashboard = () => {
                                             <option value="">--------------------------- Select Area ---------------------------</option>
                                             {optionTemplate}
                                           </select>
-                                          <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
+                                          <span style={{ color: 'red',float: 'left' }}>{errors.parent_id?.message}</span>
                                         </div>
                                         <div className="form-group">
                                           <input
@@ -1254,7 +1562,7 @@ const Dashboard = () => {
                                             className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
                                             autoComplete="off"
                                           />
-                                          <span style={{ color: 'red' }}>{errors.area_name?.message}</span>
+                                          <span style={{ color: 'red',float: 'left' }}>{errors.area_name?.message}</span>
                                         </div>
                                         {
                                           isLoading
@@ -2095,7 +2403,7 @@ const Dashboard = () => {
                                             <option value="">--------------------------- Select Area ---------------------------</option>
                                             {optionTemplate}
                                           </select>
-                                          <span style={{ color: 'red' }}>{errors.parent_id?.message}</span>
+                                          <span style={{ color: 'red',float: 'left' }}>{errors.parent_id?.message}</span>
                                         </div>
                                         <div className="form-group">
                                           <input
@@ -2105,7 +2413,7 @@ const Dashboard = () => {
                                             className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
                                             autoComplete="off"
                                           />
-                                          <span style={{ color: 'red' }}>{errors.area_name?.message}</span>
+                                          <span style={{ color: 'red',float: 'left' }}>{errors.area_name?.message}</span>
                                         </div>
                                         {
                                           isLoading
