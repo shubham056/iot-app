@@ -1135,7 +1135,7 @@ const Dashboard = () => {
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
-                    }}> <i className="icofont icofont-ui-add" /> Add Device</button>
+                    }}> Add Device</button>
                     <button type="button" class="btn-success btn-sm" onClick={() => {
                       setIsAddArea(true)
                       setIsRenameArea(false)
@@ -1144,7 +1144,7 @@ const Dashboard = () => {
                       setIsAddDevice(false)
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
-                    }}> <i className="icofont icofont-ui-add" /> Add New Area</button>
+                    }}> Add New Area</button>
                      <button type="button" class="btn-primary btn-sm" onClick={() => {
                       setIsRenameArea(true)
                       setIsRenameDevice(false)
@@ -1154,7 +1154,7 @@ const Dashboard = () => {
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}> <i className="icofont icofont-ui-edit" /> Rename Areas</button>
+                    }}> Rename Areas</button>
                     <button type="button" class="btn-danger btn-sm" onClick={() => {
                       setIsForgotDevice(true)
                       setIsRenameArea(false)
@@ -1164,7 +1164,7 @@ const Dashboard = () => {
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}> <i className="icofont icofont-ui-delete" /> Delete Devices</button>
+                    }}> Delete Devices</button>
                     <button type="button" class="btn-danger btn-sm" onClick={() => {
                       setIsDeleteArea(true)
                       setIsRenameArea(false)
@@ -1174,7 +1174,7 @@ const Dashboard = () => {
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}> <i className="icofont icofont-ui-delete" /> Delete Areas</button>
+                    }}> Delete Areas</button>
                     <button type="button" class="btn-primary btn-sm" onClick={() => {
                       setIsRenameDevice(true)
                       setIsRenameArea(false)
@@ -1184,7 +1184,7 @@ const Dashboard = () => {
                       setIsAddArea(false)
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
-                    }}> <i className="icofont icofont-ui-edit" /> Rename Device</button>
+                    }}> Rename Device</button>
                     <button type="button" class="btn-info btn-sm" 
                     // onClick={() => {
                     //   setIsRenameDevice(true)
