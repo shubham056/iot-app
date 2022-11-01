@@ -113,6 +113,7 @@ const Dashboard = () => {
       if (action == "Rename" && is_type == "area") {
         console.log("rename area")
         setIsRenameArea(true)
+        SetIsMoveDevice(false)
         setIsRenameDevice(false)
         setIsDeleteArea(false)
         setIsForgotDevice(false)
@@ -123,6 +124,7 @@ const Dashboard = () => {
       } if (action == "Rename" && is_type == "device") {
         console.log("rename device")
         setIsRenameDevice(true)
+        SetIsMoveDevice(false)
         setIsRenameArea(false)
         setIsDeleteArea(false)
         setIsForgotDevice(false)
@@ -133,6 +135,7 @@ const Dashboard = () => {
       } if (action == "Delete" && is_type == 'area') {
         console.log("Delete area")
         setIsDeleteArea(true)
+        SetIsMoveDevice(false)
         setIsRenameArea(false)
         setIsRenameDevice(false)
         setIsForgotDevice(false)
@@ -144,6 +147,7 @@ const Dashboard = () => {
       } if (action == "Delete" && is_type == 'device') {
         console.log("Delete device")
         setIsForgotDevice(true)
+        SetIsMoveDevice(false)
         setIsRenameArea(false)
         setIsRenameDevice(false)
         setIsDeleteArea(false)
@@ -153,6 +157,15 @@ const Dashboard = () => {
         setshowWelcomeDiv(false)
       } if (action == "Move") {
         console.log("move")
+        SetIsMoveDevice(true)
+        setIsForgotDevice(false)
+        setIsRenameArea(false)
+        setIsRenameDevice(false)
+        setIsDeleteArea(false)
+        setIsAddDevice(false)
+        setIsAddArea(false)
+        setshowGraph(false)
+        setshowWelcomeDiv(false)
       }
       setContextMenu({
         mouseX: null,
@@ -167,7 +180,7 @@ const Dashboard = () => {
         style={{ cursor: "context-menu" }}
       >
 
-        <span
+        <Typography
           onClick={event => {
             console.log(props)
             const { id, is_type, device_id, label } = props
@@ -193,6 +206,7 @@ const Dashboard = () => {
               setshowWelcomeDiv(false)
               setIsForgotDevice(false)
               setIsDeleteArea(false)
+              SetIsMoveDevice(false)
               setDeviceName(label)
               setisActiveRangeSwitch(null)
 
@@ -254,7 +268,7 @@ const Dashboard = () => {
           }}
         >
           {props.label}
-        </span>
+        </Typography>
         {
           props.is_type != 'user'
             ?
@@ -270,7 +284,8 @@ const Dashboard = () => {
             >
               <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
               <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
-              <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem>
+              { props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
+              
             </Menu>
             :
             null
@@ -299,6 +314,7 @@ const Dashboard = () => {
   const [isDeleteArea, setIsDeleteArea] = useState(false);
   const [isRenameArea, setIsRenameArea] = useState(false);
   const [isRenameDevice, setIsRenameDevice] = useState(false);
+  const [isMoveDevice, SetIsMoveDevice] = useState(false);
   const [content, setContent] = useState([]);
   const [contentDevice, setContentDevice] = useState([]);
   const [contentArea, setContentArea] = useState([]);
@@ -505,6 +521,10 @@ const Dashboard = () => {
     device_id: Yup.string().required("Please select device name"),
     device_name: Yup.string().required("Device name is required!"),
   });
+  const moveDevice = Yup.object().shape({
+    device_id: Yup.string().required("Please select device name"),
+    device_name: Yup.string().required("Device name is required!"),
+  });
   const formOptions = { resolver: yupResolver(Schema) }
   const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
   const adddeviceformOptionsStep2 = { resolver: yupResolver(AddDeviceSchemaStep2) }
@@ -512,6 +532,7 @@ const Dashboard = () => {
   const formOptiondeleteArea = { resolver: yupResolver(deleteArea) }
   const formOptionRenameArea = { resolver: yupResolver(renameArea) }
   const formOptionRenameDevice = { resolver: yupResolver(renameDevice) }
+  const formOptionMoveDevice = { resolver: yupResolver(moveDevice) }
   const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, resetField } = useForm(formOptions);
   const { register: register2, formState: { errors: errors2, isSubmitting: isSubmitting2 }, handleSubmit: handleSubmit2, resetField: resetField2 } = useForm(adddeviceformOptionsStep1);
   const { register: register3, formState: { errors: errors3, isSubmitting: isSubmitting3 }, handleSubmit: handleSubmit3, resetField: resetField3 } = useForm(adddeviceformOptionsStep2);
@@ -519,6 +540,7 @@ const Dashboard = () => {
   const { register: register5, formState: { errors: errors5, isSubmitting: isSubmitting5 }, handleSubmit: handleSubmit5, resetField: resetField5 } = useForm(formOptiondeleteArea);
   const { register: register6, formState: { errors: errors6, isSubmitting: isSubmitting6 }, handleSubmit: handleSubmit6, resetField: resetField6 } = useForm(formOptionRenameArea);
   const { register: register7, formState: { errors: errors7, isSubmitting: isSubmitting7 }, handleSubmit: handleSubmit7, resetField: resetField7 } = useForm(formOptionRenameDevice);
+  const { register: register8, formState: { errors: errors8, isSubmitting: isSubmitting8 }, handleSubmit: handleSubmit8, resetField: resetField8 } = useForm(formOptionMoveDevice);
 
   const callOnce = useRef(true)
   //add root user node 
@@ -941,6 +963,51 @@ const Dashboard = () => {
   //rename device
   const onSubmitRenameDevice = formValue => {
     console.log(formValue)
+    //return false
+    if (formValue.device_id != undefined) {
+      Swal.fire({
+        title: 'Are you sure ?',
+        text: "want to rename this device!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Rename it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setdeleteAreaisLoading(true)
+          UserService.editDeviceName(formValue.device_id, formValue.device_name)
+            .then((res) => {
+              console.log("Rename device API res--", res)
+
+              if (res.data.data.error == false) {
+                toast.success('Device successfully deleted!', { toastId: 1464676867878 })
+                setisUpdateData(res.data.data.updatedId)
+                setdeleteAreaisLoading(false)
+              }  else {
+                toast.success('Internal server error, please try after sone time!', { toastId: 1464976867878 })
+                setisUpdateData(res.data.data.updatedId)
+                setdeleteAreaisLoading(false)
+              }
+            })
+            .catch((error) => {
+              setisLoading(false)
+              console.log(error)
+              { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+            });
+          setdeleteAreaisLoading(false)
+
+        } else {
+          setdeleteAreaisLoading(false)
+        }
+      })
+    } else {
+      toast.info('Please select device name', { toastId: 2345366467686787 })
+    }
+  }
+  //move devices
+  const onSubmitMoveDevice = formValue => {
+    console.log(formValue)
     return false
     if (formValue.area_id != undefined) {
       Swal.fire({
@@ -1013,6 +1080,7 @@ const Dashboard = () => {
       toast.info('Please select device name', { toastId: 2345366467686787 })
     }
   }
+
   const onSubmitStepOne = formValue => {
     console.log(formValue)
     setstepOne(false)
@@ -1660,6 +1728,61 @@ const Dashboard = () => {
                                           </>
 
                                       }
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                      :
+                      null
+                  }
+                  {
+                    isMoveDevice
+                      ?
+                      <div className="welcome_wraper" id='step2'>
+                        <div className="section-heading text-center">
+                          <section className="login_wraper">
+                            <div className="container">
+                              <div className="row">
+                                <div className="col-lg-12 col-sm-12">
+                                  <div className="contact-form2">
+                                    <h4 className="text-uppercase text-center">Move Device</h4>
+                                    <form onSubmit={handleSubmit8(onSubmitMoveDevice)}>
+                                      <div className="form-group">
+                                        <select
+                                          {...register7("device_id")}
+                                          className={`form-control ${errors8.device_id ? 'is-invalid' : ''}`}
+                                        >
+                                          <option value="">--------------------------- Select Device Name ---------------------------</option>
+                                          {addedDevices}
+                                        </select>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors8.device_id?.message}</span>
+                                      </div>
+                                      <div className="form-group">
+                                        <input
+                                          type="text"
+                                          {...register7("device_name")}
+                                          placeholder="Enter device name"
+                                          className={`form-control ${errors8.device_name ? 'is-invalid' : ''}`}
+                                          autoComplete="off"
+                                        />
+                                        <span style={{ color: 'red', float: 'left' }}>{errors8.device_name?.message}</span>
+                                      </div>
+                                      {/* {
+                                        deleteAreaisLoading
+                                          ?
+                                          <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                          </button>
+
+                                          :
+                                          <>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting7}>Submit</button>
+                                          </>
+
+                                      } */}
                                     </form>
                                   </div>
                                 </div>
