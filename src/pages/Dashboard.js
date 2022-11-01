@@ -29,7 +29,10 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 import Tooltip from '@mui/material/Tooltip';
 import TreeItem from "@mui/lab/TreeItem";
-
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 
 
 export const options = {
@@ -111,8 +114,8 @@ const Dashboard = () => {
       const { id, label, is_type } = props
       console.log("arg", action)
       setAreaName(label)
-        setRenameDeleteId(id)
-      
+      setRenameDeleteId(id)
+
       if (action == "Rename" && is_type == "area") {
         console.log("rename area")
         setIsRenameArea(true)
@@ -289,8 +292,8 @@ const Dashboard = () => {
             >
               <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
               <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
-              { props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
-              
+              {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
+
             </Menu>
             :
             null
@@ -357,7 +360,7 @@ const Dashboard = () => {
   const [isStaticValue4, setisStaticValue4] = useState('---')
   const [isStaticTemperature, setisStaticTemperature] = useState('---')
 
-  
+
 
   const [isGraphLabelTxt, setisGraphLabelTxt] = useState('Total Power')
   const [isDeviceStatus, setisDeviceStatus] = useState('');
@@ -996,7 +999,7 @@ const Dashboard = () => {
                 toast.success('Device successfully renamed!', { toastId: 1464676867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
-              }  else {
+              } else {
                 toast.success('Internal server error, please try after sone time!', { toastId: 1464976867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
@@ -1354,9 +1357,9 @@ const Dashboard = () => {
             <div className="col-lg-3 col-sm-12">
               <div className>
                 <div id="left" className="span3">
-                <Tooltip title="Right click to edit" placement="left">
-                <HelpOutlineOutlinedIcon className='help-icon'/>
-                </Tooltip>
+                  <Tooltip title="Right click to edit" placement="left">
+                    <HelpOutlineOutlinedIcon className='help-icon' />
+                  </Tooltip>
                   <TreeView
                     aria-label="customized"
                     defaultCollapseIcon={<ExpandMoreIcon />}
@@ -1366,7 +1369,7 @@ const Dashboard = () => {
                   >
                     {renderTree(rootTreeViewData)}
                   </TreeView>
-                  
+
 
                   {/* <TreeMenu data={rootTreeViewData}>
                     {({ search, items, resetOpenNodes }) => {
@@ -1477,10 +1480,50 @@ const Dashboard = () => {
                       );
                     }}
                   </TreeMenu> */}
-
-                  <br />
+                  <br/>
+                  <Stack spacing={2} direction="row">
+                    <Button
+                      variant="contained"
+                      color="success"
+                      style={{
+                        borderRadius: 25,
+                        textTransform: "capitalize"
+                        //backgroundColor: "#21b6ae",
+                      }}
+                      onClick={() => {
+                        setIsAddDevice(true)
+                        setIsRenameArea(false)
+                        setIsRenameDevice(false)
+                        setIsDeleteArea(false)
+                        setIsAddArea(false)
+                        setshowGraph(false)
+                        setshowWelcomeDiv(false)
+                        setIsForgotDevice(false)
+                      }}
+                    >
+                      Add Device
+                    </Button>
+                    <Button variant="contained"
+                      style={{
+                        borderRadius: 25,
+                        backgroundColor: "#21b6ae",
+                        textTransform: "capitalize"
+                      }}
+                      onClick={() => {
+                        setIsAddArea(true)
+                        setIsRenameArea(false)
+                        setIsRenameDevice(false)
+                        setIsDeleteArea(false)
+                        setIsAddDevice(false)
+                        setshowWelcomeDiv(false)
+                        setIsForgotDevice(false)
+                      }}
+                    >
+                      Add New Area
+                    </Button>
+                  </Stack>
                   <div className='btn-group'>
-                    <button type="button" class="btn-info btn-sm" onClick={() => {
+                    {/* <button type="button" class="btn-info btn-sm" onClick={() => {
                       setIsAddDevice(true)
                       setIsRenameArea(false)
                       setIsRenameDevice(false)
@@ -1498,7 +1541,7 @@ const Dashboard = () => {
                       setIsAddDevice(false)
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
-                    }}> Add New Area</button>
+                    }}> Add New Area</button> */}
                     {/* <button type="button" class="btn-primary btn-sm" onClick={() => {
                       setIsRenameArea(true)
                       setIsRenameDevice(false)
@@ -2003,7 +2046,7 @@ const Dashboard = () => {
                               {/* <h4><b>{areaName}</b> - {devicename} */}
                               <h4>{devicename}
                                 <span style={{ background: `${isDeviceStatus}` }} />
-                               </h4>
+                              </h4>
                             </div>
                           </div>
                           <div className="col-lg-12 box_graph">
@@ -2038,7 +2081,96 @@ const Dashboard = () => {
                                 <div className="col-xl-2 col-lg-4 col-md-4 col-sm-12">
                                   <div className="row">
                                     <div className="tags left_wraper">
-                                      <a
+                                      <Stack spacing={2}>
+                                        <Button
+                                          variant="contained"
+                                          color="success"
+                                          size="large"
+                                          endIcon={<TimelineIcon />}
+                                          onClick={() => {
+                                            setisPower(true)
+                                            setisPowerTotal(true)
+                                            setisPowerPhase1(false)
+                                            setisPowerPhase2(false)
+                                            setisPowerPhase3(false)
+                                            setisEnergy(false)
+                                            setisEnergyDaily(false)
+                                            setisEnergyMonthly(false)
+                                            setisActiveRangeSwitch(null)
+                                            setisStaticTxtValue1('T-Voltage')
+                                            setisStaticTxtValue2('T-Current')
+                                            setisStaticTxtValue3('T-Power')
+                                            setisStaticTxtValue4('T-Energy')
+                                            setisGraphLabelTxt('Total Power')
+
+                                            UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
+                                              .then((res) => {
+                                                //console.log("get device data res", res.data.data.deviceData)
+                                                setpowerDataFromDB(res.data.data.deviceData)
+                                              }).catch(err => {
+                                                console.log(err)
+                                              })
+                                            //get latest stats for total voltage, current, power and energy
+                                            UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                              const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                              setisStaticValue1(T_voltage)
+                                              setisStaticValue2(T_current)
+                                              setisStaticValue3(T_power)
+                                              setisStaticValue4(T_energy)
+                                              setisStaticTemperature(temperature) // temperature
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          }}
+                                        >
+                                          Power
+                                        </Button>
+                                        <Button
+                                          variant="contained"
+                                          // color="success"
+                                          size="large"
+                                          endIcon={<ElectricBoltIcon />}
+                                          onClick={() => {
+                                            setisPower(false)
+                                            setisPowerTotal(false)
+                                            setisEnergyMonthly(false)
+                                            setisEnergyDaily(true)
+                                            setisEnergy(true)
+                                            setisEnergyTotal(true)
+                                            setisEnergyPhase1(false)
+                                            setisEnergyPhase2(false)
+                                            setisEnergyPhase3(false)
+                                            setisStaticTxtValue1('T-Voltage')
+                                            setisStaticTxtValue2('T-Current')
+                                            setisStaticTxtValue3('T-Power')
+                                            setisStaticTxtValue4('T-Energy')
+                                            setisGraphLabelTxt('T-Energy-Daily')
+                                            UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "daily")
+                                              .then((res) => {
+                                                console.log("get device data res", res.data.data.deviceData)
+                                                setenergyDataFromDB(res.data.data.deviceData)
+                                                console.log("energyDataFromDB", energyDataFromDB)
+                                              }).catch(err => {
+                                                console.log(err)
+                                              })
+                                            //get latest stats for total voltage, current, power and energy
+                                            UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                              const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                              setisStaticValue1(T_voltage)
+                                              setisStaticValue2(T_current)
+                                              setisStaticValue3(T_power)
+                                              setisStaticValue4(T_energy)
+                                              setisStaticTemperature(temperature) // temperature
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          }}
+                                        >
+                                          Energy
+                                        </Button>
+                                      </Stack>
+
+                                      {/* <a
                                         onClick={() => {
                                           setisPower(true)
                                           setisPowerTotal(true)
@@ -2078,8 +2210,8 @@ const Dashboard = () => {
                                         style={{ cursor: 'pointer' }}
                                       >
                                         Power
-                                      </a>
-                                      <a
+                                      </a> */}
+                                      {/* <a
                                         onClick={() => {
                                           setisPower(false)
                                           setisPowerTotal(false)
@@ -2119,7 +2251,7 @@ const Dashboard = () => {
                                         style={{ cursor: 'pointer' }}
                                       >
                                         Energy
-                                      </a>
+                                      </a> */}
                                     </div>
                                   </div>
                                 </div>
@@ -2745,7 +2877,7 @@ const Dashboard = () => {
                                         })
                                       //get latest stats for total voltage, current, power and energy
                                       UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                        const { T_voltage, T_current, T_power, T_energy, temperature} = res.data.data.deviceData[0]
+                                        const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
                                         setisStaticValue1(T_voltage)
                                         setisStaticValue2(T_current)
                                         setisStaticValue3(T_power)

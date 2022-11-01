@@ -2433,7 +2433,7 @@ background: #fff;
 }
 .top_tag a {
     background: #9dc3e6;
-    color: #fcff00;
+    color: #000000;
     border-color: #7aaedd;
 }
 .bottom_tag a {background: #9dc3e6;
@@ -3117,7 +3117,7 @@ select.list-dt:focus {
     .help-icon{
         float: right;
     }
-
+    
 
 
 
