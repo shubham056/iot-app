@@ -104,9 +104,13 @@ const Dashboard = () => {
       );
     };
 
-    const handleClose = (action, type) => {
+    const handleClose = (action, props) => {
+      const { id, label, is_type } = props
       console.log("arg", action)
-      if (action == "Rename" && type == "area") {
+      setAreaName(label)
+        setRenameDeleteId(id)
+      
+      if (action == "Rename" && is_type == "area") {
         console.log("rename area")
         setIsRenameArea(true)
         setIsRenameDevice(false)
@@ -116,7 +120,7 @@ const Dashboard = () => {
         setIsAddArea(false)
         setshowGraph(false)
         setshowWelcomeDiv(false)
-      } if (action == "Rename" && type == "device") {
+      } if (action == "Rename" && is_type == "device") {
         console.log("rename device")
         setIsRenameDevice(true)
         setIsRenameArea(false)
@@ -126,7 +130,7 @@ const Dashboard = () => {
         setIsAddArea(false)
         setshowGraph(false)
         setshowWelcomeDiv(false)
-      } if (action == "Delete" && type == 'area') {
+      } if (action == "Delete" && is_type == 'area') {
         console.log("Delete area")
         setIsDeleteArea(true)
         setIsRenameArea(false)
@@ -136,7 +140,8 @@ const Dashboard = () => {
         setIsAddArea(false)
         setshowGraph(false)
         setshowWelcomeDiv(false)
-      } if (action == "Delete" && type == 'device') {
+
+      } if (action == "Delete" && is_type == 'device') {
         console.log("Delete device")
         setIsForgotDevice(true)
         setIsRenameArea(false)
@@ -164,7 +169,8 @@ const Dashboard = () => {
 
         <span
           onClick={event => {
-            const { is_type, device_id, label } = props
+            console.log(props)
+            const { id, is_type, device_id, label } = props
             if (is_type == "device") {
               console.log("device_id", device_id)
               setisDeviceID(device_id)
@@ -197,7 +203,7 @@ const Dashboard = () => {
               setisGraphLabelTxt('Total Power')
 
               //let areaName = parent.split("/").pop()
-              setAreaName("areaName")
+
               console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
               io.current.emit("liveStatsData", { device_id: device_id, objectName: "T_power", dataType: null }, (response) => {
                 console.log(response.status); // ok
@@ -241,7 +247,6 @@ const Dashboard = () => {
                 setisGraphStatsLoading(false)
               })
             }
-            console.log(props.id);
             //setActiveItemId(item.id);
             // if you want after click do expand/collapse comment this two line
             event.stopPropagation();
@@ -263,9 +268,9 @@ const Dashboard = () => {
                   : undefined
               }
             >
-              <MenuItem onClick={() => handleClose("Rename", props.is_type)}>Rename {props.label}</MenuItem>
-              <MenuItem onClick={() => handleClose("Delete", props.is_type)}>Delete {props.label}</MenuItem>
-              <MenuItem onClick={() => handleClose("Move", props.is_type)}>Move {props.label}</MenuItem>
+              <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
+              <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
+              <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem>
             </Menu>
             :
             null
@@ -303,6 +308,7 @@ const Dashboard = () => {
   const [isGetDeviceLoading, setisgetDeviceLoading] = useState(false)
   const [showGraph, setshowGraph] = useState(false)
   const [areaName, setAreaName] = useState("")
+  const [renameDeleteId, setRenameDeleteId] = useState("")
   const [devicename, setDeviceName] = useState("")
   const [isPower, setisPower] = useState(false)
   const [isPowerTotal, setisPowerTotal] = useState(false)
@@ -1198,11 +1204,11 @@ const Dashboard = () => {
   ));
 
   let addedDevices = Object.values(contentDevice).map((v, i) => (
-    <option value={v.id}>{v.label}</option>
+    <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
   ));
 
   let addedAreas = Object.values(contentArea).map((v, i) => (
-    <option value={v.id}>{v.label}</option>
+    <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
   ));
 
 
@@ -1269,7 +1275,7 @@ const Dashboard = () => {
               <div className>
                 <div id="left" className="span3">
                   <TreeView
-                    aria-label="rich object"
+                    aria-label="customized"
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpanded={["root"]}
                     defaultExpandIcon={<ChevronRightIcon />}
@@ -1854,7 +1860,8 @@ const Dashboard = () => {
                         <div className="grpah_table">
                           <div className="col-lg-12 box_graph device_name">
                             <div className="widget_categories right-widget top_heding ">
-                              <h4><b>{areaName}</b> - {devicename}
+                              {/* <h4><b>{areaName}</b> - {devicename} */}
+                              <h4>{devicename}
                                 <span style={{ background: `${isDeviceStatus}` }} />
 
                                 <i className="icofont icofont-reply-all" /></h4>
