@@ -981,7 +981,7 @@ const Dashboard = () => {
               console.log("Rename device API res--", res)
 
               if (res.data.data.error == false) {
-                toast.success('Device successfully deleted!', { toastId: 1464676867878 })
+                toast.success('Device successfully renamed!', { toastId: 1464676867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
               }  else {
