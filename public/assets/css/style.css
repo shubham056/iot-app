@@ -3081,11 +3081,11 @@ select.list-dt:focus {
     width: 100%!important;
 }
 .btn-group > button {
-    padding: 5px!important;
+    padding: 10px!important;
     margin: 0 !important;
     width: 30% !important;
     border-radius: 50px !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     margin-right: 5px !important;
 }
 
@@ -3111,6 +3111,11 @@ select.list-dt:focus {
     }
     .MuiTreeView-root{
         color: #332d2d;
+        text-transform: capitalize;
+        margin: 5px !important;
+    }
+    .help-icon{
+        float: right;
     }
 
 
