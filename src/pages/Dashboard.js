@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, MouseEvent } from 'react'
 import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
 import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
@@ -20,11 +20,53 @@ import EnergyChart from '../components/EnergyChart';
 import socketClient from 'socket.io-client';
 import Skeleton from 'react-loading-skeleton';
 
+
+import { Typography, Menu, MenuItem } from "@mui/material";
+import TreeView from "@mui/lab/TreeView";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import TreeItem from "@mui/lab/TreeItem";
+
+
+
 export const options = {
   title: "",
   curveType: "function",
   legend: { position: "bottom" },
 };
+
+
+const dataTreeView =
+{
+  "id": "1",
+  "name": "shubham test",
+  "children": [
+    {
+      "id": "2",
+      "name": "Zone 11",
+      "children": [
+        {
+          "id": "3",
+          "name": "Device 1(D)",
+
+
+
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Zone 2",
+      "children": []
+    },
+    {
+      "id": "5",
+      "name": "Zone 3",
+      "children": []
+    }
+  ]
+}
 
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
@@ -36,6 +78,206 @@ const connectionOptions = {
 };
 
 const Dashboard = () => {
+  const NodeWithContextMenu = (props) => {
+    const [contextMenu, setContextMenu] = React.useState({
+      mouseX: null,
+      mouseY: null,
+    });
+    console.log("2222222222", contextMenu)
+
+    const handleContextMenu = (event) => {
+      console.log("event---------", event)
+      event.preventDefault();
+      setContextMenu(
+        contextMenu.mouseX === null
+          ? {
+            mouseX: event.clientX + 2,
+            mouseY: event.clientY - 6
+          }
+          : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
+          // Other native context menus might behave different.
+          // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
+          {
+            mouseX: null,
+            mouseY: null
+          }
+      );
+    };
+
+    const handleClose = (action, type) => {
+      console.log("arg", action)
+      if (action == "Rename" && type == "area") {
+        console.log("rename area")
+        setIsRenameArea(true)
+        setIsRenameDevice(false)
+        setIsDeleteArea(false)
+        setIsForgotDevice(false)
+        setIsAddDevice(false)
+        setIsAddArea(false)
+        setshowGraph(false)
+        setshowWelcomeDiv(false)
+      } if (action == "Rename" && type == "device") {
+        console.log("rename device")
+        setIsRenameDevice(true)
+        setIsRenameArea(false)
+        setIsDeleteArea(false)
+        setIsForgotDevice(false)
+        setIsAddDevice(false)
+        setIsAddArea(false)
+        setshowGraph(false)
+        setshowWelcomeDiv(false)
+      } if (action == "Delete" && type == 'area') {
+        console.log("Delete area")
+        setIsDeleteArea(true)
+        setIsRenameArea(false)
+        setIsRenameDevice(false)
+        setIsForgotDevice(false)
+        setIsAddDevice(false)
+        setIsAddArea(false)
+        setshowGraph(false)
+        setshowWelcomeDiv(false)
+      } if (action == "Delete" && type == 'device') {
+        console.log("Delete device")
+        setIsForgotDevice(true)
+        setIsRenameArea(false)
+        setIsRenameDevice(false)
+        setIsDeleteArea(false)
+        setIsAddDevice(false)
+        setIsAddArea(false)
+        setshowGraph(false)
+        setshowWelcomeDiv(false)
+      } if (action == "Move") {
+        console.log("move")
+      }
+      setContextMenu({
+        mouseX: null,
+        mouseY: null
+      });
+
+    };
+
+    return (
+      <div
+        onContextMenu={handleContextMenu}
+        style={{ cursor: "context-menu" }}
+      >
+
+        <span
+          onClick={event => {
+            const { is_type, device_id, label } = props
+            if (is_type == "device") {
+              console.log("device_id", device_id)
+              setisDeviceID(device_id)
+              setisPower(true)
+              setisPowerTotal(true)
+              setisEnergyPhase1(false)
+              setisEnergyPhase2(false)
+              setisEnergyPhase3(false)
+              setisPowerPhase1(false)
+              setisPowerPhase2(false)
+              setisPowerPhase3(false)
+              setisEnergy(false)
+              setisEnergyDaily(false)
+              setisEnergyMonthly(false)
+              setshowGraph(true)
+              setIsRenameDevice(false)
+              setIsRenameArea(false)
+              setIsAddArea(false)
+              setIsAddDevice(false)
+              setshowWelcomeDiv(false)
+              setIsForgotDevice(false)
+              setIsDeleteArea(false)
+              setDeviceName(label)
+              setisActiveRangeSwitch(null)
+
+              setisStaticTxtValue1('T-Voltage')
+              setisStaticTxtValue2('T-Current')
+              setisStaticTxtValue3('T-Power')
+              setisStaticTxtValue4('T-Energy')
+              setisGraphLabelTxt('Total Power')
+
+              //let areaName = parent.split("/").pop()
+              setAreaName("areaName")
+              console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
+              io.current.emit("liveStatsData", { device_id: device_id, objectName: "T_power", dataType: null }, (response) => {
+                console.log(response.status); // ok
+              }); // sent to socket server
+              io.current.emit("liveGraphData", { device_id: device_id, objectName: "T_power_A", dataType: null }, (response) => {
+                console.log(response.status); // ok
+              }); // sent to socket server
+              io.current.emit("checkDeviceStatus", { device_id: device_id }, (response) => {
+                console.log(response.status); // ok
+              })
+              UserService.GetLinkedDeviceData(device_id, "T_power_A")
+                .then((res) => {
+                  console.log("get device data res", res.data.data.deviceData)
+                  setpowerDataFromDB(res.data.data.deviceData)
+                }).catch(err => {
+                  console.log(err)
+                })
+
+              //get latest stats for total voltage, current, power and energy
+              setisGraphStatsLoading(true)
+              UserService.GetLatestDeviceStatsData(device_id).then((res) => {
+                setTimeout(() => {
+                  setisGraphStatsLoading(false)
+                }, 1000)
+                if (res.data.data.error) {
+                  setisStaticValue1("0.00")
+                  setisStaticValue2("0.00")
+                  setisStaticValue3("0.00")
+                  setisStaticValue4("0.00")
+                } else {
+                  const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+
+                  setisStaticValue1(T_voltage)
+                  setisStaticValue2(T_current)
+                  setisStaticValue3(T_power)
+                  setisStaticValue4(T_energy)
+                }
+
+              }).catch(err => {
+                console.log(err)
+                setisGraphStatsLoading(false)
+              })
+            }
+            console.log(props.id);
+            //setActiveItemId(item.id);
+            // if you want after click do expand/collapse comment this two line
+            event.stopPropagation();
+            event.preventDefault();
+          }}
+        >
+          {props.label}
+        </span>
+        {
+          props.is_type != 'user'
+            ?
+            <Menu
+              open={contextMenu.mouseX !== null}
+              onClose={handleClose}
+              anchorReference="anchorPosition"
+              anchorPosition={
+                contextMenu.mouseX !== null
+                  ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                  : undefined
+              }
+            >
+              <MenuItem onClick={() => handleClose("Rename", props.is_type)}>Rename {props.label}</MenuItem>
+              <MenuItem onClick={() => handleClose("Delete", props.is_type)}>Delete {props.label}</MenuItem>
+              <MenuItem onClick={() => handleClose("Move", props.is_type)}>Move {props.label}</MenuItem>
+            </Menu>
+            :
+            null
+        }
+
+
+      </div>
+    );
+  };
+
+
+
   //set states start here
   const [isUpdateData, setisUpdateData] = useState("")
   const [addDeviceBtnText, setAddDeviceBtnText] = useState("Verify")
@@ -370,7 +612,7 @@ const Dashboard = () => {
   useEffect(() => {
     UserService.GetTreeViewData(userID).then(
       (response) => {
-        console.log("tree view data", response.data.data.profile)
+        console.log("tree view data0000000000000000000000", response.data.data.profile)
         setTreeViewData(response.data.data.profile);
         //console.log("response", response.data.data.profile)
       },
@@ -413,13 +655,13 @@ const Dashboard = () => {
 
   //fetch 
   useEffect(() => {
-
-    let locations = []
-    Object.values(treeViewData).map(item => {
-      //.log("first", item)
-      let newdata = { ...item, key: item.label };
-      locations.push(newdata)
-    })
+    console.log("trrrrrrrrrrrrrrrrrrrrrrrrr", treeViewData)
+    // let locations = []
+    // Object.values(treeViewData).map(item => {
+    //   //.log("first", item)
+    //   let newdata = { ...item, key: item.label };
+    //   locations.push(newdata)
+    // })
 
     async function createTreeView(location) {
       console.log("location data from root fun", location)
@@ -430,18 +672,18 @@ const Dashboard = () => {
       for (var i = 0; i < location.length; i++) {
         parent = location[i];
         object[parent.id] = parent;
-        object[parent.id]["nodes"] = [];
+        object[parent.id]["children"] = [];
       }
       for (var id in object) {
         if (object.hasOwnProperty(id)) {
           child = object[id];
           if (child.parent_id && object[child["parent_id"]]) {
-            delete child.id
+            //delete child.id
             //
-            object[child["parent_id"]]["nodes"].push(child);
+            object[child["parent_id"]]["children"].push(child);
             delete child.parent_id
           } else {
-            delete child.id
+            //delete child.id
             delete child.parent_id
             tree.push(child);
           }
@@ -449,18 +691,28 @@ const Dashboard = () => {
       }
       return tree;
     }
-    console.log("++++++++++++++++locations+++++++++++++++++++++", locations)
+    //console.log("++++++++++++++++locations+++++++++++++++++++++", locations)
     createTreeView(treeViewData[0]).then(data => {
-      console.log("sdadasasdasdasdas", data)
-      setRootTreeViewData(data)
+      console.log("tree view data *************************88", data[0])
+      setRootTreeViewData(data[0])
     })
-    setRootTreeViewData(createTreeView(locations))
-    console.log("__________________Root_________________", createTreeView(locations))
+    //setRootTreeViewData(createTreeView(locations))
+    //console.log("__________________Root_________________", createTreeView(locations))
 
 
   }, [treeViewData]);
 
-
+  const renderTree = (nodes) => (
+    <TreeItem
+      key={nodes.id}
+      nodeId={nodes.id}
+      label={<NodeWithContextMenu label={nodes.label} id={nodes.id} is_type={nodes.is_type} device_id={nodes.device_id} />}
+    >
+      {Array.isArray(nodes.children)
+        ? nodes.children.map((node) => renderTree(node))
+        : null}
+    </TreeItem>
+  );
 
   //submit handler
   const onSubmit = formValue => {
@@ -608,7 +860,7 @@ const Dashboard = () => {
   const onSubmitRenameArea = formValue => {
     console.log(formValue)
     //return false
-    const {area_id, area_name} = formValue
+    const { area_id, area_name } = formValue
     if (area_id != undefined && area_name != undefined) {
       Swal.fire({
         title: 'Are you sure ?',
@@ -628,7 +880,7 @@ const Dashboard = () => {
                 toast.success('Area successfully renamed!', { toastId: 4494676867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setrenameAreaisLoading(false)
-              } 
+              }
               // if (res.data.data.error == "not_found") {
               //   toast.error('Refresh page and then select a area!', { toastId: 4488676867878 })
               //   setisUpdateData(res.data.data.updatedId)
@@ -1016,13 +1268,24 @@ const Dashboard = () => {
             <div className="col-lg-3 col-sm-12">
               <div className>
                 <div id="left" className="span3">
-                  <TreeMenu data={rootTreeViewData}>
+                  <TreeView
+                    aria-label="rich object"
+                    defaultCollapseIcon={<ExpandMoreIcon />}
+                    defaultExpanded={["root"]}
+                    defaultExpandIcon={<ChevronRightIcon />}
+                    sx={{ height: '100%', flexGrow: 1, maxWidth: 500, overflowY: "auto" }}
+                  >
+                    {renderTree(rootTreeViewData)}
+                  </TreeView>
+
+                  {/* <TreeMenu data={rootTreeViewData}>
                     {({ search, items, resetOpenNodes }) => {
                       return (
                         <>
                           <input onChange={e => search(e.target.value)} placeholder="Search area & device" />
                           <button className="btn-info btn-sm" style={{ margin: 5 }} onClick={resetOpenNodes} >Collapse All</button>
                           <ul className="tree-item-group">
+
                             {items.map(props => {
                               const childrenProps = {
                                 ...props,
@@ -1122,11 +1385,11 @@ const Dashboard = () => {
                         </>
                       );
                     }}
-                  </TreeMenu>
+                  </TreeMenu> */}
 
                   <br />
                   <div className='btn-group'>
-                    <button type="button" class="btn-success btn-sm" onClick={() => {
+                    <button type="button" class="btn-info btn-sm" onClick={() => {
                       setIsAddDevice(true)
                       setIsRenameArea(false)
                       setIsRenameDevice(false)
@@ -1136,7 +1399,7 @@ const Dashboard = () => {
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
                     }}> Add Device</button>
-                    <button type="button" class="btn-success btn-sm" onClick={() => {
+                    <button type="button" class="btn-primary btn-sm" onClick={() => {
                       setIsAddArea(true)
                       setIsRenameArea(false)
                       setIsRenameDevice(false)
@@ -1145,7 +1408,7 @@ const Dashboard = () => {
                       setshowWelcomeDiv(false)
                       setIsForgotDevice(false)
                     }}> Add New Area</button>
-                     <button type="button" class="btn-primary btn-sm" onClick={() => {
+                    {/* <button type="button" class="btn-primary btn-sm" onClick={() => {
                       setIsRenameArea(true)
                       setIsRenameDevice(false)
                       setIsDeleteArea(false)
@@ -1185,7 +1448,7 @@ const Dashboard = () => {
                       setshowGraph(false)
                       setshowWelcomeDiv(false)
                     }}> Rename Device</button>
-                    <button type="button" class="btn-info btn-sm" 
+                    <button type="button" class="btn-info btn-sm"
                     // onClick={() => {
                     //   setIsRenameDevice(true)
                     //   setIsRenameArea(false)
@@ -1196,7 +1459,7 @@ const Dashboard = () => {
                     //   setshowGraph(false)
                     //   setshowWelcomeDiv(false)
                     // }}
-                    >Move Devices</button>
+                    >Move Devices</button> */}
                   </div>
                 </div>
               </div>
@@ -1224,7 +1487,7 @@ const Dashboard = () => {
                                           <option value="">--------------------------- Select Device Name ---------------------------</option>
                                           {addedDevices}
                                         </select>
-                                        <span style={{ color: 'red',float: 'left' }}>{errors4.device_id?.message}</span>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors4.device_id?.message}</span>
                                       </div>
                                       {
                                         forgotisLoading
@@ -1267,7 +1530,7 @@ const Dashboard = () => {
                                           <option value="">--------------------------- Select Area Name ---------------------------</option>
                                           {addedAreas}
                                         </select>
-                                        <span style={{ color: 'red',float: 'left' }}>{errors5.area_id?.message}</span>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors5.area_id?.message}</span>
                                       </div>
                                       {
                                         deleteAreaisLoading
@@ -1312,7 +1575,7 @@ const Dashboard = () => {
                                           <option value="">--------------------------- Select Area Name ---------------------------</option>
                                           {addedAreas}
                                         </select>
-                                        <span style={{ color: 'red',float: 'left' }}>{errors6.area_id?.message}</span>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors6.area_id?.message}</span>
                                       </div>
                                       <div className="form-group">
                                         <input
@@ -1322,7 +1585,7 @@ const Dashboard = () => {
                                           className={`form-control ${errors6.area_name ? 'is-invalid' : ''}`}
                                           autoComplete="off"
                                         />
-                                        <span style={{ color: 'red',float: 'left' }}>{errors6.area_name?.message}</span>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors6.area_name?.message}</span>
                                       </div>
                                       {
                                         renameAreaisLoading
@@ -1367,7 +1630,7 @@ const Dashboard = () => {
                                           <option value="">--------------------------- Select Device Name ---------------------------</option>
                                           {addedDevices}
                                         </select>
-                                        <span style={{ color: 'red',float: 'left' }}>{errors7.device_id?.message}</span>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors7.device_id?.message}</span>
                                       </div>
                                       <div className="form-group">
                                         <input
@@ -1377,7 +1640,7 @@ const Dashboard = () => {
                                           className={`form-control ${errors7.device_name ? 'is-invalid' : ''}`}
                                           autoComplete="off"
                                         />
-                                        <span style={{ color: 'red',float: 'left' }}>{errors7.device_name?.message}</span>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors7.device_name?.message}</span>
                                       </div>
                                       {
                                         deleteAreaisLoading
@@ -1427,7 +1690,7 @@ const Dashboard = () => {
                                             <option value="">--------------------------- Select Modal  ---------------------------</option>
                                             <option value="IPL - 100 V1">IPL - 100 V1</option>
                                           </select>
-                                          <span style={{ color: 'red',float: 'left' }}>{errors2.modal_name?.message}</span>
+                                          <span style={{ color: 'red', float: 'left' }}>{errors2.modal_name?.message}</span>
                                         </div>
                                         <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting2}>Next</button>
 
@@ -1460,7 +1723,7 @@ const Dashboard = () => {
                                               <option value="">--------------------------- Select Area ---------------------------</option>
                                               {optionTemplate}
                                             </select>
-                                            <span style={{ color: 'red',float: 'left' }}>{errors3.parent_id?.message}</span>
+                                            <span style={{ color: 'red', float: 'left' }}>{errors3.parent_id?.message}</span>
                                           </div>
                                           <div className="form-group">
                                             <input
@@ -1470,7 +1733,7 @@ const Dashboard = () => {
                                               className={`form-control ${errors3.device_name ? 'is-invalid' : ''}`}
                                               autoComplete="off"
                                             />
-                                            <span style={{ color: 'red',float: 'left' }}>{errors3.device_name?.message}</span>
+                                            <span style={{ color: 'red', float: 'left' }}>{errors3.device_name?.message}</span>
                                           </div>
 
                                           <div className="form-group">
@@ -1481,7 +1744,7 @@ const Dashboard = () => {
                                               className={`form-control ${errors3.device_id ? 'is-invalid' : ''}`}
                                               autoComplete="off"
                                             />
-                                            <span style={{ color: 'red',float: 'left' }}>{errors3.device_id?.message}</span>
+                                            <span style={{ color: 'red', float: 'left' }}>{errors3.device_id?.message}</span>
                                           </div>
 
                                           <button type="button" style={{ borderRadius: 25, margin: 10 }} className="btn btn-info" onClick={() => {
@@ -1552,7 +1815,7 @@ const Dashboard = () => {
                                             <option value="">--------------------------- Select Area ---------------------------</option>
                                             {optionTemplate}
                                           </select>
-                                          <span style={{ color: 'red',float: 'left' }}>{errors.parent_id?.message}</span>
+                                          <span style={{ color: 'red', float: 'left' }}>{errors.parent_id?.message}</span>
                                         </div>
                                         <div className="form-group">
                                           <input
@@ -1562,7 +1825,7 @@ const Dashboard = () => {
                                             className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
                                             autoComplete="off"
                                           />
-                                          <span style={{ color: 'red',float: 'left' }}>{errors.area_name?.message}</span>
+                                          <span style={{ color: 'red', float: 'left' }}>{errors.area_name?.message}</span>
                                         </div>
                                         {
                                           isLoading
@@ -2403,7 +2666,7 @@ const Dashboard = () => {
                                             <option value="">--------------------------- Select Area ---------------------------</option>
                                             {optionTemplate}
                                           </select>
-                                          <span style={{ color: 'red',float: 'left' }}>{errors.parent_id?.message}</span>
+                                          <span style={{ color: 'red', float: 'left' }}>{errors.parent_id?.message}</span>
                                         </div>
                                         <div className="form-group">
                                           <input
@@ -2413,7 +2676,7 @@ const Dashboard = () => {
                                             className={`form-control ${errors.area_name ? 'is-invalid' : ''}`}
                                             autoComplete="off"
                                           />
-                                          <span style={{ color: 'red',float: 'left' }}>{errors.area_name?.message}</span>
+                                          <span style={{ color: 'red', float: 'left' }}>{errors.area_name?.message}</span>
                                         </div>
                                         {
                                           isLoading
