@@ -1691,7 +1691,8 @@ section {
 -------------------------------*/
 
 .footer-color {
-    background: #063767;
+    /* background: #010101; */
+    background: linear-gradient(90deg, rgb(51, 164, 165) 13%, rgb(37, 96, 126) 40%, rgb(11, 37, 62) 100%);
 }
 
 .footer-menu {
