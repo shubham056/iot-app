@@ -2253,18 +2253,11 @@ const Dashboard = () => {
                                   :
                                   null
                               }
-                                <a href="#" className="tag-cloud-link ">Control</a>
-                                <a href="#" className="tag-cloud-link ">Diagnostic</a>
-                                <a href="#" className="tag-cloud-link "><DeviceThermostat />{isStaticTemperature} ℃</a>
-                                <a href="#" className="tag-cloud-link">Trend</a>
-                              </div>
-
-                              
-
                               {
                                 isEnergyDaily
                                   ?
-                                  <div className="tags bottom_tag">
+                                  <>
+                                  {/* <div className="tags bottom_tag"> */}
                                     <a
                                       onClick={() => {
                                         setisPower(false)
@@ -2425,14 +2418,16 @@ const Dashboard = () => {
                                     >
                                       Phase - 3
                                     </a>
-                                  </div>
+                                  {/* </div> */}
+                                  </>
                                   :
                                   null
                               }
                               {
                                 isEnergyMonthly
                                   ?
-                                  <div className="tags bottom_tag">
+                                  <>
+                                  {/* <div className="tags bottom_tag"> */}
                                     <a
                                       onClick={() => {
                                         setisPower(false)
@@ -2594,10 +2589,20 @@ const Dashboard = () => {
                                     >
                                       Phase - 3
                                     </a>
-                                  </div>
+                                  {/* </div> */}
+                                  </>
                                   :
                                   null
                               }
+                                <a href="#" className="tag-cloud-link ">Control</a>
+                                <a href="#" className="tag-cloud-link ">Diagnostic</a>
+                                <a href="#" className="tag-cloud-link "><DeviceThermostat />{isStaticTemperature} ℃</a>
+                                <a href="#" className="tag-cloud-link">Trend</a>
+                              </div>
+
+                              
+
+                              
                             </div>
                             <div className="tags">
                               <div className="tag_box">
