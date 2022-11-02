@@ -2110,9 +2110,9 @@ section {
 
 
 .tags a:hover {
-    background: #1e4a75;
-    color: #fff;
-    border-color: #1e4a75;
+    /* background: #1e4a75; */
+    /* color: #fff; */
+    /* border-color: #1e4a75; */
 }
 
 /* ------------------------------------
@@ -2412,13 +2412,13 @@ background: #fff;
 .tag_box a {
     width: 90%;
     border-color: #6fa7da;
-    color: red;
+    color: #000000;
 }
 .tags a.bg_green {background: #92d050; color: #fafe06; border-color: #92d050;}
 .tags a.bg_blue {background: #1e4a75;color: #fff;border-color: #1e4a75;}
 .tags a.bg_green:hover {background: #92d050; color: #fff; border-color: #92d050;}
 
-.tag_box span {margin:5px 0; color: #c75a18;}
+.tag_box span {margin:5px 0; color: #000000;}
 .tags.left_wraper {
     padding: 110px 0;
     display: inline-block;
@@ -2432,8 +2432,8 @@ background: #fff;
     color: #c75a18;
 }
 .top_tag a {
-    background: #9dc3e6;
-    color: #000000;
+    background: #1d9b9c;
+    color: #ffffff;
     border-color: #7aaedd;
 }
 .bottom_tag a {background: #9dc3e6;
