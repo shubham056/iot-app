@@ -2053,16 +2053,11 @@ const Dashboard = () => {
                           <div className="col-lg-12 box_graph">
                             <div className="widget_categories right-widget top_heding">
                               <div className="tags top_tag">
-                                <a href="#" className="tag-cloud-link ">Control</a>
-                                <a href="#" className="tag-cloud-link ">Diagnostic</a>
-                                <a href="#" className="tag-cloud-link "><DeviceThermostat />{isStaticTemperature} ℃</a>
-                                <a href="#" className="tag-cloud-link">Trend</a>
-                              </div>
-
                               {
                                 isPower
                                   ?
-                                  <div className="tags bottom_tag">
+                                  <>
+                                  {/* <div className="tags bottom_tag"> */}
                                     <a
                                       onClick={() => {
                                         setisPower(true)
@@ -2253,10 +2248,18 @@ const Dashboard = () => {
                                       style={{ cursor: 'pointer' }}
                                     >
                                       Phase - 3</a>
-                                  </div>
+                                  {/* </div> */}
+                                  </>
                                   :
                                   null
                               }
+                                <a href="#" className="tag-cloud-link ">Control</a>
+                                <a href="#" className="tag-cloud-link ">Diagnostic</a>
+                                <a href="#" className="tag-cloud-link "><DeviceThermostat />{isStaticTemperature} ℃</a>
+                                <a href="#" className="tag-cloud-link">Trend</a>
+                              </div>
+
+                              
 
                               {
                                 isEnergyDaily
