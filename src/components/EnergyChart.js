@@ -10,6 +10,7 @@ export const ChartComponent = props => {
       backgroundColor = 'white',
       lineColor = '#ffd044',
       textColor = 'black',
+      fontSize = 14,
       areaTopColor = '#2962FF',
       areaBottomColor = 'rgba(41, 98, 255, 0.28)',
     },
@@ -27,6 +28,7 @@ export const ChartComponent = props => {
           layout: {
             background: { type: ColorType.Solid, color: backgroundColor },
             textColor,
+            fontSize
           },
           width: 800,
           height: 290,
@@ -49,6 +51,7 @@ export const ChartComponent = props => {
           layout: {
             background: { type: ColorType.Solid, color: backgroundColor },
             textColor,
+            fontSize
           },
           width: 800,
           height: 290,
@@ -75,7 +78,7 @@ export const ChartComponent = props => {
         chart.remove();
       };
     },
-    [data, backgroundColor, color, lineColor, textColor, areaTopColor, areaBottomColor]
+    [data, backgroundColor, color, lineColor, textColor, fontSize, areaTopColor, areaBottomColor]
   );
 
   return (
@@ -112,6 +115,7 @@ function App(props) {
         backgroundColor: 'white',
         lineColor: '#2962FF',
         textColor: 'black',
+        fontSize: 14,
         areaTopColor: '#2962FF',
         areaBottomColor: 'rgba(41, 98, 255, 0.28)',
       }}

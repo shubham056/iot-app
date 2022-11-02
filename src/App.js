@@ -10,6 +10,7 @@ import { ToastContainer, theme } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { ThemeProvider, createTheme  } from '@mui/material/styles';
 //pages
 import Home from "./pages/Home";
 import Login from './pages/Login';
@@ -26,8 +27,20 @@ import NotFound from './pages/NotFound';
 import Portal from './pages/Portal';
 import Profile from './pages/Profile';
 
+const muiTheme = createTheme ({
+  typography: {
+    "fontFamily": `-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif`,
+    "fontSize": 13,
+    "lineHeight": 28,
+    "fontWeightLight": 400,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 400
+   }
+});
+
 function App() {
   return (
+    <ThemeProvider theme={muiTheme}>
     <SkeletonTheme highlightColor='#525252' borderRadius="0.5rem" height={10}>
       <BrowserRouter>
         <Routes>
@@ -61,6 +74,7 @@ function App() {
         />
       </BrowserRouter>
     </SkeletonTheme>
+    </ThemeProvider>
   );
 }
 
