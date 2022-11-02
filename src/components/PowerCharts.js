@@ -32,19 +32,27 @@ export const ChartComponent = props => {
         timeScale: {
           timeVisible: true,
           secondsVisible: true,
-          minBarSpacing:16,
-         // rightBarStaysOnScroll: true,
+          minBarSpacing: 16,
+          // rightBarStaysOnScroll: true,
           //borderColor: "#2B2B43"
-      }
+        }
       });
-    // chart.timeScale().fitContent();
-    let randomValue = Math.floor(Math.random() * (10 - 2 + 1) + 2)
-    chart.timeScale().scrollToPosition(-randomValue, false);
+      // chart.timeScale().fitContent();
+      console.log("dddddddddddddddddddd", data)
+      if (data.length == 1 && data[0].value == 0) {
+        console.log("no0000000000000000000000000000000")
+        chart.timeScale().fitContent();
+      } else {
+        console.log('yyyyyyyyyyyyyyyyyyyyyyyy')
+        let randomValue = Math.floor(Math.random() * (10 - 2 + 1) + 2)
+        chart.timeScale().scrollToPosition(-randomValue, false);
+      }
 
-      const newSeries = chart.addBaselineSeries({  lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
-       newSeries.setData(data);
 
-       window.addEventListener('resize', handleResize);
+      const newSeries = chart.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      newSeries.setData(data);
+
+      window.addEventListener('resize', handleResize);
 
       return () => {
         window.removeEventListener('resize', handleResize);
@@ -70,14 +78,14 @@ function App(props) {
   console.log("app props data", props)
   const { powerDataFromDB } = props
   let myData;
-  if(typeof(powerDataFromDB) != "undefined"){
+  if (typeof (powerDataFromDB) != "undefined") {
     myData = Object.keys(powerDataFromDB).map(key => {
       return powerDataFromDB[key];
     })
-  }else{
+  } else {
     myData = []
   }
- 
+
   console.log("final data", myData)
   return (
     <ChartComponent
