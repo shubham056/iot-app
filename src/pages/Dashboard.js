@@ -1501,7 +1501,8 @@ const Dashboard = () => {
                     >
                       Add Device
                     </Button>
-                    <Button variant="contained"
+                    <Button 
+                      variant="contained"
                       className={`${isAddArea && isActiveBtn ? 'active' : null}`}
                       style={{
                         borderRadius: 25,
@@ -2622,7 +2623,13 @@ const Dashboard = () => {
 
                                         <Button
                                           variant="contained"
-                                          color="success"
+                                          //color="success"
+                                          className={`${isPower ? 'active' : null}`}
+                                          style={{
+                                            borderRadius: 25,
+                                            backgroundColor: "rgb(51, 164, 165)",
+                                            textTransform: "capitalize"
+                                          }}
                                           size="large"
                                           startIcon={<Power />}
                                           onClick={() => {
@@ -2666,6 +2673,12 @@ const Dashboard = () => {
                                         <Button
                                           variant="contained"
                                           // color="success"
+                                          className={`${isEnergy ? 'active' : null}`}
+                                          style={{
+                                            borderRadius: 25,
+                                            backgroundColor: "rgb(51, 164, 165)",
+                                            textTransform: "capitalize"
+                                          }}
                                           size="large"
                                           startIcon={<ElectricBolt />}
                                           onClick={() => {
