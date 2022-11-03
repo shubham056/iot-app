@@ -197,6 +197,7 @@ const Dashboard = () => {
               setisPowerPhase2(false)
               setisPowerPhase3(false)
               setisEnergy(false)
+              setisTemperature(false)
               setisEnergyDaily(false)
               setisEnergyMonthly(false)
               setshowGraph(true)
@@ -331,6 +332,7 @@ const Dashboard = () => {
   const [renameDeleteId, setRenameDeleteId] = useState("")
   const [devicename, setDeviceName] = useState("")
   const [isPower, setisPower] = useState(false)
+  const [isTemperature, setisTemperature] = useState(false)
   const [isPowerTotal, setisPowerTotal] = useState(false)
   const [isPowerPhase1, setisPowerPhase1] = useState(false)
   const [isPowerPhase2, setisPowerPhase2] = useState(false)
@@ -1501,7 +1503,7 @@ const Dashboard = () => {
                     >
                       Add Device
                     </Button>
-                    <Button 
+                    <Button
                       variant="contained"
                       className={`${isAddArea && isActiveBtn ? 'active' : null}`}
                       style={{
@@ -2053,556 +2055,617 @@ const Dashboard = () => {
                           <div className="col-lg-12 box_graph">
                             <div className="widget_categories right-widget top_heding">
                               <div className="tags top_tag">
-                              {
-                                isPower
-                                  ?
-                                  <>
-                                  {/* <div className="tags bottom_tag"> */}
-                                    <a
-                                      onClick={() => {
-                                        setisPower(true)
-                                        setisPowerTotal(true)
-                                        setisPowerPhase1(false)
-                                        setisPowerPhase2(false)
-                                        setisPowerPhase3(false)
-                                        setisEnergy(false)
+                                {
+                                  isPower
+                                    ?
+                                    <>
+                                      {/* <div className="tags bottom_tag"> */}
+                                      <a
+                                        onClick={() => {
+                                          setisPower(true)
+                                          setisPowerTotal(true)
+                                          setisPowerPhase1(false)
+                                          setisPowerPhase2(false)
+                                          setisPowerPhase3(false)
+                                          setisEnergy(false)
+                                          setisTemperature(false)
+                                          setisStaticTxtValue1('T-Voltage')
+                                          setisStaticTxtValue2('T-Current')
+                                          setisStaticTxtValue3('T-Power')
+                                          setisStaticTxtValue4('T-Energy')
+                                          setisGraphLabelTxt('Total Power')
 
-                                        setisStaticTxtValue1('T-Voltage')
-                                        setisStaticTxtValue2('T-Current')
-                                        setisStaticTxtValue3('T-Power')
-                                        setisStaticTxtValue4('T-Energy')
-                                        setisGraphLabelTxt('Total Power')
 
 
+                                          setisActiveRangeSwitch(null)
 
-                                        setisActiveRangeSwitch(null)
-
-                                        UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setpowerDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setpowerDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
-                                        //socket event emit
-                                        io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "T_power_A", dataType: null }, (response) => {
-                                          console.log(response.status); // ok
-                                        }); // sent to socket server
+                                          //socket event emit
+                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "T_power_A", dataType: null }, (response) => {
+                                            console.log(response.status); // ok
+                                          }); // sent to socket server
 
-                                      }}
-                                      className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Total
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(true)
-                                        setisPowerTotal(false)
-                                        setisPowerPhase1(true)
-                                        setisPowerPhase2(false)
-                                        setisPowerPhase3(false)
-                                        setisEnergy(false)
-                                        setisEnergyTotal(false)
+                                        }}
+                                        className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Total
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(true)
+                                          setisPowerTotal(false)
+                                          setisPowerPhase1(true)
+                                          setisPowerPhase2(false)
+                                          setisPowerPhase3(false)
+                                          setisEnergy(false)
+                                          setisEnergyTotal(false)
+                                          setisTemperature(false)
+                                          setisStaticTxtValue1('L1-Voltage')
+                                          setisStaticTxtValue2('L1-Current')
+                                          setisStaticTxtValue3('L1-Power')
+                                          setisStaticTxtValue4('L1-Energy')
+                                          setisGraphLabelTxt('L1 Power')
 
-                                        setisStaticTxtValue1('L1-Voltage')
-                                        setisStaticTxtValue2('L1-Current')
-                                        setisStaticTxtValue3('L1-Power')
-                                        setisStaticTxtValue4('L1-Energy')
-                                        setisGraphLabelTxt('L1 Power')
-
-                                        setisActiveRangeSwitch(null)
+                                          setisActiveRangeSwitch(null)
 
 
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setpowerDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setpowerDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
-                                        //socket event emit
-                                        io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L1_Power_A", dataType: null }, (response) => {
-                                          console.log(response.status); // ok
-                                        }); // sent to socket server
+                                          //socket event emit
+                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L1_Power_A", dataType: null }, (response) => {
+                                            console.log(response.status); // ok
+                                          }); // sent to socket server
 
-                                      }}
-                                      className={`tag-cloud-link ${isPowerPhase1 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 1
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(true)
-                                        setisPowerTotal(false)
-                                        setisPowerPhase1(false)
-                                        setisPowerPhase2(true)
-                                        setisPowerPhase3(false)
-                                        setisEnergy(false)
-
-                                        setisStaticTxtValue1('L2-Voltage')
-                                        setisStaticTxtValue2('L2-Current')
-                                        setisStaticTxtValue3('L2-Power')
-                                        setisStaticTxtValue4('L2-Energy')
-                                        setisGraphLabelTxt('L2 Power')
-                                        setisActiveRangeSwitch(null)
+                                        }}
+                                        className={`tag-cloud-link ${isPowerPhase1 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 1
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(true)
+                                          setisPowerTotal(false)
+                                          setisPowerPhase1(false)
+                                          setisPowerPhase2(true)
+                                          setisPowerPhase3(false)
+                                          setisEnergy(false)
+                                          setisTemperature(false)
+                                          setisStaticTxtValue1('L2-Voltage')
+                                          setisStaticTxtValue2('L2-Current')
+                                          setisStaticTxtValue3('L2-Power')
+                                          setisStaticTxtValue4('L2-Energy')
+                                          setisGraphLabelTxt('L2 Power')
+                                          setisActiveRangeSwitch(null)
 
 
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setpowerDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setpowerDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
-                                        //socket event emit
-                                        io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L2_Power_A", dataType: null }, (response) => {
-                                          console.log(response.status); // ok
-                                        }); // sent to socket server
+                                          //socket event emit
+                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L2_Power_A", dataType: null }, (response) => {
+                                            console.log(response.status); // ok
+                                          }); // sent to socket server
 
-                                      }}
-                                      className={`tag-cloud-link ${isPowerPhase2 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 2
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(true)
-                                        setisPowerTotal(false)
-                                        setisPowerPhase1(false)
-                                        setisPowerPhase2(false)
-                                        setisPowerPhase3(true)
-                                        setisEnergy(false)
-
-                                        setisStaticTxtValue1('L3-Voltage')
-                                        setisStaticTxtValue2('L3-Current')
-                                        setisStaticTxtValue3('L3-Power')
-                                        setisStaticTxtValue4('L3-Energy')
-                                        setisGraphLabelTxt('L3 Power')
-                                        setisActiveRangeSwitch(null)
+                                        }}
+                                        className={`tag-cloud-link ${isPowerPhase2 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 2
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(true)
+                                          setisPowerTotal(false)
+                                          setisPowerPhase1(false)
+                                          setisPowerPhase2(false)
+                                          setisPowerPhase3(true)
+                                          setisEnergy(false)
+                                          setisTemperature(false)
+                                          setisStaticTxtValue1('L3-Voltage')
+                                          setisStaticTxtValue2('L3-Current')
+                                          setisStaticTxtValue3('L3-Power')
+                                          setisStaticTxtValue4('L3-Energy')
+                                          setisGraphLabelTxt('L3 Power')
+                                          setisActiveRangeSwitch(null)
 
 
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setpowerDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setpowerDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
-                                        //socket event emit
-                                        io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L3_Power_A", dataType: null }, (response) => {
-                                          console.log(response.status); // ok
-                                        }); // sent to socket server
+                                          //socket event emit
+                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L3_Power_A", dataType: null }, (response) => {
+                                            console.log(response.status); // ok
+                                          }); // sent to socket server
 
-                                      }}
-                                      className={`tag-cloud-link ${isPowerPhase3 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 3</a>
-                                  {/* </div> */}
-                                  </>
-                                  :
-                                  null
-                              }
-                              {
-                                isEnergyDaily
-                                  ?
-                                  <>
-                                  {/* <div className="tags bottom_tag"> */}
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(false)
-                                        setisEnergyPhase2(false)
-                                        setisEnergyPhase3(false)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(true)
-                                        setisStaticTxtValue1('T-Voltage')
-                                        setisStaticTxtValue2('T-Current')
-                                        setisStaticTxtValue3('T-Power')
-                                        setisStaticTxtValue4('T-Energy')
-                                        setisGraphLabelTxt('T-Energy-Daily')
+                                        }}
+                                        className={`tag-cloud-link ${isPowerPhase3 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 3</a>
+                                      {/* </div> */}
+                                    </>
+                                    :
+                                    null
+                                }
+                                {
+                                  isEnergyDaily
+                                    ?
+                                    <>
+                                      {/* <div className="tags bottom_tag"> */}
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(false)
+                                          setisEnergyPhase2(false)
+                                          setisEnergyPhase3(false)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(true)
+                                          setisStaticTxtValue1('T-Voltage')
+                                          setisStaticTxtValue2('T-Current')
+                                          setisStaticTxtValue3('T-Power')
+                                          setisStaticTxtValue4('T-Energy')
+                                          setisGraphLabelTxt('T-Energy-Daily')
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "daily")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "daily")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Total
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(true)
-                                        setisEnergyPhase2(false)
-                                        setisEnergyPhase3(false)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(false)
-                                        setisStaticTxtValue1('L1-Voltage')
-                                        setisStaticTxtValue2('L1-Current')
-                                        setisStaticTxtValue3('L1-Power')
-                                        setisStaticTxtValue4('L1-Energy')
-                                        setisGraphLabelTxt('L1-Energy-Daily')
+                                        }}
+                                        className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Total
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(true)
+                                          setisEnergyPhase2(false)
+                                          setisEnergyPhase3(false)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(false)
+                                          setisStaticTxtValue1('L1-Voltage')
+                                          setisStaticTxtValue2('L1-Current')
+                                          setisStaticTxtValue3('L1-Power')
+                                          setisStaticTxtValue4('L1-Energy')
+                                          setisGraphLabelTxt('L1-Energy-Daily')
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L1_Energy_Hr_A", "daily")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L1_Energy_Hr_A", "daily")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 1
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(false)
-                                        setisEnergyPhase2(true)
-                                        setisEnergyPhase3(false)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(false)
-                                        setisStaticTxtValue1('L2-Voltage')
-                                        setisStaticTxtValue2('L2-Current')
-                                        setisStaticTxtValue3('L2-Power')
-                                        setisStaticTxtValue4('L2-Energy')
-                                        setisGraphLabelTxt('L2-Energy-Daily')
+                                        }}
+                                        className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 1
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(false)
+                                          setisEnergyPhase2(true)
+                                          setisEnergyPhase3(false)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(false)
+                                          setisStaticTxtValue1('L2-Voltage')
+                                          setisStaticTxtValue2('L2-Current')
+                                          setisStaticTxtValue3('L2-Power')
+                                          setisStaticTxtValue4('L2-Energy')
+                                          setisGraphLabelTxt('L2-Energy-Daily')
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L2_Energy_Hr_A", "daily")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L2_Energy_Hr_A", "daily")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isEnergyPhase2 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 2
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(false)
-                                        setisEnergyPhase2(false)
-                                        setisEnergyPhase3(true)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(false)
-                                        setisStaticTxtValue1('L3-Voltage')
-                                        setisStaticTxtValue2('L3-Current')
-                                        setisStaticTxtValue3('L3-Power')
-                                        setisStaticTxtValue4('L3-Energy')
-                                        setisGraphLabelTxt('L3-Energy-Daily')
+                                        }}
+                                        className={`tag-cloud-link ${isEnergyPhase2 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 2
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(false)
+                                          setisEnergyPhase2(false)
+                                          setisEnergyPhase3(true)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(false)
+                                          setisStaticTxtValue1('L3-Voltage')
+                                          setisStaticTxtValue2('L3-Current')
+                                          setisStaticTxtValue3('L3-Power')
+                                          setisStaticTxtValue4('L3-Energy')
+                                          setisGraphLabelTxt('L3-Energy-Daily')
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_Hr_A", "daily")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_Hr_A", "daily")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isEnergyPhase3 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 3
-                                    </a>
-                                  {/* </div> */}
-                                  </>
-                                  :
-                                  null
-                              }
-                              {
-                                isEnergyMonthly
-                                  ?
-                                  <>
-                                  {/* <div className="tags bottom_tag"> */}
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(false)
-                                        setisEnergyPhase2(false)
-                                        setisEnergyPhase3(false)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(true)
-                                        setisStaticTxtValue1('T-Voltage')
-                                        setisStaticTxtValue2('T-Current')
-                                        setisStaticTxtValue3('T-Power')
-                                        setisStaticTxtValue4('T-Energy')
-                                        setisGraphLabelTxt('T-Energy-Monthly')
+                                        }}
+                                        className={`tag-cloud-link ${isEnergyPhase3 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 3
+                                      </a>
+                                      {/* </div> */}
+                                    </>
+                                    :
+                                    null
+                                }
+                                {
+                                  isEnergyMonthly
+                                    ?
+                                    <>
+                                      {/* <div className="tags bottom_tag"> */}
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(false)
+                                          setisEnergyPhase2(false)
+                                          setisEnergyPhase3(false)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(true)
+                                          setisStaticTxtValue1('T-Voltage')
+                                          setisStaticTxtValue2('T-Current')
+                                          setisStaticTxtValue3('T-Power')
+                                          setisStaticTxtValue4('T-Energy')
+                                          setisGraphLabelTxt('T-Energy-Monthly')
 
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_D_A", "monthly")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_D_A", "monthly")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Total
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(true)
-                                        setisEnergyPhase2(false)
-                                        setisEnergyPhase3(false)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(false)
-                                        setisStaticTxtValue1('L1-Voltage')
-                                        setisStaticTxtValue2('L1-Current')
-                                        setisStaticTxtValue3('L1-Power')
-                                        setisStaticTxtValue4('L1-Energy')
-                                        setisGraphLabelTxt('L1-Energy-Monthly')
+                                        }}
+                                        className={`tag-cloud-link ${isPowerTotal || isEnergyTotal ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Total
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(true)
+                                          setisEnergyPhase2(false)
+                                          setisEnergyPhase3(false)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(false)
+                                          setisStaticTxtValue1('L1-Voltage')
+                                          setisStaticTxtValue2('L1-Current')
+                                          setisStaticTxtValue3('L1-Power')
+                                          setisStaticTxtValue4('L1-Energy')
+                                          setisGraphLabelTxt('L1-Energy-Monthly')
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L1_Energy_D_A", "monthly")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L1_Energy_D_A", "monthly")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 1
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(false)
-                                        setisEnergyPhase2(true)
-                                        setisEnergyPhase3(false)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(false)
-                                        setisStaticTxtValue1('L2-Voltage')
-                                        setisStaticTxtValue2('L2-Current')
-                                        setisStaticTxtValue3('L2-Power')
-                                        setisStaticTxtValue4('L2-Energy')
-                                        setisGraphLabelTxt('L2-Energy-Monthly')
+                                        }}
+                                        className={`tag-cloud-link ${isEnergyPhase1 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 1
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(false)
+                                          setisEnergyPhase2(true)
+                                          setisEnergyPhase3(false)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(false)
+                                          setisStaticTxtValue1('L2-Voltage')
+                                          setisStaticTxtValue2('L2-Current')
+                                          setisStaticTxtValue3('L2-Power')
+                                          setisStaticTxtValue4('L2-Energy')
+                                          setisGraphLabelTxt('L2-Energy-Monthly')
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L2_Energy_D_A", "monthly")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L2_Energy_D_A", "monthly")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isEnergyPhase2 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 2
-                                    </a>
-                                    <a
-                                      onClick={() => {
-                                        setisPower(false)
-                                        setisPowerTotal(false)
-                                        setisEnergyPhase1(false)
-                                        setisEnergyPhase2(false)
-                                        setisEnergyPhase3(true)
-                                        setisEnergy(true)
-                                        setisEnergyTotal(false)
-                                        setisStaticTxtValue1('L3-Voltage')
-                                        setisStaticTxtValue2('L3-Current')
-                                        setisStaticTxtValue3('L3-Power')
-                                        setisStaticTxtValue4('L3-Energy')
-                                        setisGraphLabelTxt('L3-Energy-Monthly')
+                                        }}
+                                        className={`tag-cloud-link ${isEnergyPhase2 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 2
+                                      </a>
+                                      <a
+                                        onClick={() => {
+                                          setisPower(false)
+                                          setisPowerTotal(false)
+                                          setisEnergyPhase1(false)
+                                          setisEnergyPhase2(false)
+                                          setisEnergyPhase3(true)
+                                          setisEnergy(true)
+                                          setisTemperature(false)
+                                          setisEnergyTotal(false)
+                                          setisStaticTxtValue1('L3-Voltage')
+                                          setisStaticTxtValue2('L3-Current')
+                                          setisStaticTxtValue3('L3-Power')
+                                          setisStaticTxtValue4('L3-Energy')
+                                          setisGraphLabelTxt('L3-Energy-Monthly')
 
-                                        UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_D_A", "monthly")
-                                          .then((res) => {
-                                            console.log("get device data res", res.data.data.deviceData)
-                                            setenergyDataFromDB(res.data.data.deviceData)
+                                          UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_D_A", "monthly")
+                                            .then((res) => {
+                                              console.log("get device data res", res.data.data.deviceData)
+                                              setenergyDataFromDB(res.data.data.deviceData)
+                                            }).catch(err => {
+                                              console.log(err)
+                                            })
+                                          //get latest stats for total voltage, current, power and energy
+                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                            setisStaticValue1(T_voltage)
+                                            setisStaticValue2(T_current)
+                                            setisStaticValue3(T_power)
+                                            setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
-                                        //get latest stats for total voltage, current, power and energy
-                                        UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                          const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                          setisStaticValue1(T_voltage)
-                                          setisStaticValue2(T_current)
-                                          setisStaticValue3(T_power)
-                                          setisStaticValue4(T_energy)
-                                          setisStaticTemperature(temperature) // temperature
-                                        }).catch(err => {
-                                          console.log(err)
-                                        })
 
-                                      }}
-                                      className={`tag-cloud-link ${isEnergyPhase3 ? "bg_green" : null} `}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      Phase - 3
-                                    </a>
-                                  {/* </div> */}
-                                  </>
-                                  :
-                                  null
-                              }
+                                        }}
+                                        className={`tag-cloud-link ${isEnergyPhase3 ? "bg_green" : null} `}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        Phase - 3
+                                      </a>
+                                      {/* </div> */}
+                                    </>
+                                    :
+                                    null
+                                }
                                 <a href="#" className="tag-cloud-link ">Control</a>
                                 <a href="#" className="tag-cloud-link ">Diagnostic</a>
-                                <a href="#" className="tag-cloud-link "><DeviceThermostat />{isStaticTemperature} ℃</a>
-                                <a href="#" className="tag-cloud-link">Trend</a>
+                                <a href="#" className="tag-cloud-link "><DeviceThermostat />{parseFloat(isStaticTemperature).toFixed(2)} ℃</a>
+                                <a
+                                  onClick={() => {
+                                    setisPower(false)
+                                    setisPowerTotal(true)
+                                    setisEnergyPhase1(false)
+                                    setisEnergyPhase2(false)
+                                    setisEnergyPhase3(false)
+                                    setisPowerPhase1(false)
+                                    setisPowerPhase2(false)
+                                    setisPowerPhase3(false)
+                                    setisEnergy(false)
+                                    setisTemperature(true)
+                                    setisEnergyDaily(false)
+                                    setisEnergyMonthly(false)
+                                    setshowGraph(true)
+                                    setIsRenameDevice(false)
+                                    setIsRenameArea(false)
+                                    setIsAddArea(false)
+                                    setIsAddDevice(false)
+                                    setshowWelcomeDiv(false)
+                                    setIsForgotDevice(false)
+                                    setIsDeleteArea(false)
+                                    SetIsMoveDevice(false)
+                                    //setDeviceName(label)
+                                    setisActiveRangeSwitch(null)
+
+                                    setisStaticTxtValue1('T-Voltage')
+                                    setisStaticTxtValue2('T-Current')
+                                    setisStaticTxtValue3('T-Power')
+                                    setisStaticTxtValue4('T-Energy')
+                                    setisGraphLabelTxt('Total Power')
+
+                                    UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_D_A", "monthly")
+                                      .then((res) => {
+                                        console.log("get device data res", res.data.data.deviceData)
+                                        setenergyDataFromDB(res.data.data.deviceData)
+                                      }).catch(err => {
+                                        console.log(err)
+                                      })
+                                    //get latest stats for total voltage, current, power and energy
+                                    UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                      const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                      setisStaticValue1(T_voltage)
+                                      setisStaticValue2(T_current)
+                                      setisStaticValue3(T_power)
+                                      setisStaticValue4(T_energy)
+                                      setisStaticTemperature(temperature) // temperature
+                                    }).catch(err => {
+                                      console.log(err)
+                                    })
+
+                                  }}
+                                  className={`tag-cloud-link ${isTemperature ? "bg_green" : null} `}
+                                >Trend</a>
                               </div>
 
-                              
 
-                              
+
+
                             </div>
                             <div className="tags">
                               <div className="tag_box">
@@ -2647,6 +2710,7 @@ const Dashboard = () => {
                                             setisPowerPhase2(false)
                                             setisPowerPhase3(false)
                                             setisEnergy(false)
+                                            setisTemperature(false)
                                             setisEnergyDaily(false)
                                             setisEnergyMonthly(false)
                                             setisActiveRangeSwitch(null)
@@ -2695,6 +2759,7 @@ const Dashboard = () => {
                                             setisEnergyMonthly(false)
                                             setisEnergyDaily(true)
                                             setisEnergy(true)
+                                            setisTemperature(false)
                                             setisEnergyTotal(true)
                                             setisEnergyPhase1(false)
                                             setisEnergyPhase2(false)
@@ -2826,6 +2891,7 @@ const Dashboard = () => {
                                             <a
                                               onClick={() => {
                                                 setisEnergyDaily(true)
+                                                setisTemperature(false)
                                                 setisEnergyMonthly(false)
                                                 setisEnergyTotal(true)
                                                 setisEnergyPhase1(false)
@@ -2865,6 +2931,7 @@ const Dashboard = () => {
                                             <a
                                               onClick={() => {
                                                 setisEnergyMonthly(true)
+                                                setisTemperature(false)
                                                 setisEnergyDaily(false)
                                                 setisEnergyTotal(true)
                                                 setisEnergyPhase1(false)
