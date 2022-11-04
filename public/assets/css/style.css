@@ -2597,7 +2597,8 @@ section {
 .tags a.bg_green {
     background: #1e4a75;;
     color: #fff;
-    border-color: #92d050;
+    border-color: #1e4a75;
+    border-radius: 4px;
 }
 
 .tags a.bg_blue {
@@ -2628,13 +2629,15 @@ section {
     display: inline-block;
     text-align: center;
     padding: 5px 10px;
-    color: #c75a18;
+    color: #409c9d;
+    font-weight: bold;
 }
 
 .top_tag a {
     background: #1d9b9c;
     color: #ffffff;
-    border-color: #7aaedd;
+    border-color: #1d9b9c;
+    border-radius: 4px;
 }
 
 .bottom_tag a {
@@ -2652,8 +2655,9 @@ section {
 .right_wraper a {
     background: #33a4a5;
     color: #fff;
-    border-color: #7aaedd;
+    border-color: #33a4a5;
     width: 20%;
+    border-radius: 4px;
 }
 
 .top_heding i {
@@ -3440,3 +3444,4 @@ nav.navbar.navbar-expand-lg>.container-fluid {
 .left_wraper .active{
     background-color: #1e4a75 !important;
 }
+

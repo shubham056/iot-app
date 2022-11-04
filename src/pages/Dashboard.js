@@ -16,58 +16,15 @@ import Swal from 'sweetalert2'
 import { Chart } from "react-google-charts";
 import PowerChart from '../components/PowerChart';
 import PowerCharts from '../components/PowerCharts';
+import TempetureChart from "../components/TempetureChart";
 import EnergyChart from '../components/EnergyChart';
 import socketClient from 'socket.io-client';
 import Skeleton from 'react-loading-skeleton';
-
-
-import { Typography, Menu, MenuItem, Tooltip, Button, Stack } from "@mui/material";
+import { Typography, Menu, MenuItem, Tooltip, Button, Stack, Card, CardContent, CardHeader, Grid } from "@mui/material";
 import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt } from "@mui/icons-material";
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import { Link } from 'react-router-dom';
-
-
-
-
-export const options = {
-  title: "",
-  curveType: "function",
-  legend: { position: "bottom" },
-};
-
-
-const dataTreeView =
-{
-  "id": "1",
-  "name": "shubham test",
-  "children": [
-    {
-      "id": "2",
-      "name": "Zone 11",
-      "children": [
-        {
-          "id": "3",
-          "name": "Device 1(D)",
-
-
-
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "name": "Zone 2",
-      "children": []
-    },
-    {
-      "id": "5",
-      "name": "Zone 3",
-      "children": []
-    }
-  ]
-}
 
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
@@ -368,6 +325,7 @@ const Dashboard = () => {
   const [rootTreeViewData, setRootTreeViewData] = useState([])
 
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
+  const [tempetureDataFromDB, settempetureDataFromDB] = useState([])
   const [energyDataFromDB, setenergyDataFromDB] = useState([])
   const [isDeviceID, setisDeviceID] = useState('')
   const { user } = useSelector((state) => state.auth);
@@ -2604,61 +2562,62 @@ const Dashboard = () => {
                                     :
                                     null
                                 }
-                                <a href="#" className="tag-cloud-link ">Control</a>
-                                <a href="#" className="tag-cloud-link ">Diagnostic</a>
-                                <a href="#" className="tag-cloud-link "><DeviceThermostat />{parseFloat(isStaticTemperature).toFixed(2)} ℃</a>
+                                <a className="tag-cloud-link ">Control</a>
+                                <a className="tag-cloud-link ">Diagnostic</a>
+                                <a className="tag-cloud-link "><DeviceThermostat />{parseFloat(isStaticTemperature).toFixed(2)} ℃</a>
                                 <a
-                                  // onClick={() => {
-                                  //   setisPower(false)
-                                  //   setisPowerTotal(true)
-                                  //   setisEnergyPhase1(false)
-                                  //   setisEnergyPhase2(false)
-                                  //   setisEnergyPhase3(false)
-                                  //   setisPowerPhase1(false)
-                                  //   setisPowerPhase2(false)
-                                  //   setisPowerPhase3(false)
-                                  //   setisEnergy(false)
-                                  //   setisTemperature(true)
-                                  //   setisEnergyDaily(false)
-                                  //   setisEnergyMonthly(false)
-                                  //   setshowGraph(true)
-                                  //   setIsRenameDevice(false)
-                                  //   setIsRenameArea(false)
-                                  //   setIsAddArea(false)
-                                  //   setIsAddDevice(false)
-                                  //   setshowWelcomeDiv(false)
-                                  //   setIsForgotDevice(false)
-                                  //   setIsDeleteArea(false)
-                                  //   SetIsMoveDevice(false)
-                                  //   //setDeviceName(label)
-                                  //   setisActiveRangeSwitch(null)
+                                  onClick={() => {
+                                    setisPower(false)
+                                    setisPowerTotal(false)
+                                    setisEnergyPhase1(false)
+                                    setisEnergyPhase2(false)
+                                    setisEnergyPhase3(false)
+                                    setisPowerPhase1(false)
+                                    setisPowerPhase2(false)
+                                    setisPowerPhase3(false)
+                                    setisEnergy(false)
+                                    setisTemperature(true)
+                                    setisEnergyDaily(false)
+                                    setisEnergyMonthly(false)
+                                    setshowGraph(true)
+                                    setIsRenameDevice(false)
+                                    setIsRenameArea(false)
+                                    setIsAddArea(false)
+                                    setIsAddDevice(false)
+                                    setshowWelcomeDiv(false)
+                                    setIsForgotDevice(false)
+                                    setIsDeleteArea(false)
+                                    SetIsMoveDevice(false)
+                                    //setDeviceName(label)
+                                    setisActiveRangeSwitch(null)
 
-                                  //   setisStaticTxtValue1('T-Voltage')
-                                  //   setisStaticTxtValue2('T-Current')
-                                  //   setisStaticTxtValue3('T-Power')
-                                  //   setisStaticTxtValue4('T-Energy')
-                                  //   setisGraphLabelTxt('Total Power')
+                                    setisStaticTxtValue1('T-Voltage')
+                                    setisStaticTxtValue2('T-Current')
+                                    setisStaticTxtValue3('T-Power')
+                                    setisStaticTxtValue4('T-Energy')
+                                    setisGraphLabelTxt('Temperature in ℃')
 
-                                  //   UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_D_A", "monthly")
-                                  //     .then((res) => {
-                                  //       console.log("get device data res", res.data.data.deviceData)
-                                  //       setenergyDataFromDB(res.data.data.deviceData)
-                                  //     }).catch(err => {
-                                  //       console.log(err)
-                                  //     })
-                                  //   //get latest stats for total voltage, current, power and energy
-                                  //   UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                  //     const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                  //     setisStaticValue1(T_voltage)
-                                  //     setisStaticValue2(T_current)
-                                  //     setisStaticValue3(T_power)
-                                  //     setisStaticValue4(T_energy)
-                                  //     setisStaticTemperature(temperature) // temperature
-                                  //   }).catch(err => {
-                                  //     console.log(err)
-                                  //   })
+                                    UserService.GetLinkedDeviceTemperatureData(isDeviceID, "temperature")
+                                      .then((res) => {
+                                        console.log("get device temperature data res--", res.data.data.deviceData)
+                                        settempetureDataFromDB(res.data.data.deviceData)
+                                      }).catch(err => {
+                                        console.log(err)
+                                      })
+                                    //get latest stats for total voltage, current, power and energy
+                                    UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                      const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                      setisStaticValue1(T_voltage)
+                                      setisStaticValue2(T_current)
+                                      setisStaticValue3(T_power)
+                                      setisStaticValue4(T_energy)
+                                      setisStaticTemperature(temperature) // temperature
+                                    }).catch(err => {
+                                      console.log(err)
+                                    })
 
-                                  // }}
+                                  }}
+                                  style={{ cursor: 'pointer' }}
                                   className={`tag-cloud-link ${isTemperature ? "bg_green" : null} `}
                                 >Trend</a>
                               </div>
@@ -2667,10 +2626,88 @@ const Dashboard = () => {
 
 
                             </div>
-                            <div className="tags">
+                            {/* <Grid container >
+                            
+                            </Grid> */}
+                            <Grid
+                              container
+                              spacing={1}
+                              direction="row"
+                              justify="flex-start"
+                              alignItems="flex-start"
+                            >
+                                <Grid spacing={1} item xs={12} sm={6} md={3}>
+                                  <Card className='' sx={{
+                                    maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
+                                      boxShadow: 5,
+                                    }
+                                  }}>
+                                    <CardContent>
+                                      <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+                                        {isStaticTxtValue1}
+                                      </Typography>
+                                      <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center',fontWeight: 'bold' }}>
+                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : parseFloat(isStaticValue1).toFixed(1)}
+                                      </Typography>
+                                    </CardContent>
+                                  </Card>
+                                </Grid>
+                                <Grid spacing={1} item xs={12} sm={6} md={3}>
+                                  <Card className='' sx={{
+                                    maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
+                                      boxShadow: 5,
+                                    }
+                                  }}>
+                                    <CardContent>
+                                      <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+                                        {isStaticTxtValue2}
+                                      </Typography>
+                                      <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center',fontWeight: 'bold' }}>
+                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : isStaticValue2}
+                                      </Typography>
+                                    </CardContent>
+                                  </Card>
+                                </Grid>
+                                <Grid spacing={1} item xs={12} sm={6} md={3}>
+                                  <Card className='' sx={{
+                                    maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
+                                      boxShadow: 5,
+                                    }
+                                  }}>
+                                    <CardContent>
+                                      <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+                                        {isStaticTxtValue3}
+                                      </Typography>
+                                      <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center',fontWeight: 'bold' }}>
+                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : parseFloat(isStaticValue3).toFixed(1)}
+                                      </Typography>
+                                    </CardContent>
+                                  </Card>
+                                </Grid>
+                                <Grid spacing={1} item xs={12} sm={6} md={3}>
+                                  <Card className='' sx={{
+                                    maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
+                                      boxShadow: 5,
+                                    }
+                                  }}>
+                                    <CardContent>
+                                      <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+                                        {isStaticTxtValue4}
+                                      </Typography>
+                                      <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center',fontWeight: 'bold' }}>
+                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : isStaticValue4}
+                                      </Typography>
+                                    </CardContent>
+                                  </Card>
+                                </Grid>
+                             
+                            </Grid>
+
+
+                            {/* <div className="tags">
                               <div className="tag_box">
                                 <span>{isStaticTxtValue1}</span>
-                                <a href="#" className={`tag-cloud-link`}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : isStaticValue1}</a>
+                                <a href="#" className={`tag-cloud-link`}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : parseFloat(isStaticValue1).toFixed(1)}</a>
                               </div>
                               <div className="tag_box">
                                 <span>{isStaticTxtValue2}</span>
@@ -2678,13 +2715,13 @@ const Dashboard = () => {
                               </div>
                               <div className="tag_box">
                                 <span>{isStaticTxtValue3}</span>
-                                <a href="#" className={`tag-cloud-link `}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : isStaticValue3} </a>
+                                <a href="#" className={`tag-cloud-link `}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : parseFloat(isStaticValue3).toFixed(1)} </a>
                               </div>
                               <div className="tag_box">
                                 <span>{isStaticTxtValue4}</span>
                                 <a href="#" className={`tag-cloud-link`}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : isStaticValue4}</a>
                               </div>
-                            </div>
+                            </div> */}
                             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                               <div className="row">
                                 <div className="col-xl-2 col-lg-4 col-md-4 col-sm-12">
@@ -2694,7 +2731,6 @@ const Dashboard = () => {
 
                                         <Button
                                           variant="contained"
-                                          //color="success"
                                           className={`${isPower ? 'active' : null}`}
                                           style={{
                                             borderRadius: 25,
@@ -2702,7 +2738,6 @@ const Dashboard = () => {
                                             textTransform: "capitalize"
                                           }}
                                           size="large"
-                                          startIcon={<Power />}
                                           onClick={() => {
                                             setisPower(true)
                                             setisPowerTotal(true)
@@ -2744,7 +2779,6 @@ const Dashboard = () => {
                                         </Button>
                                         <Button
                                           variant="contained"
-                                          // color="success"
                                           className={`${isEnergy ? 'active' : null}`}
                                           style={{
                                             borderRadius: 25,
@@ -2752,7 +2786,6 @@ const Dashboard = () => {
                                             textTransform: "capitalize"
                                           }}
                                           size="large"
-                                          startIcon={<ElectricBolt />}
                                           onClick={() => {
                                             setisPower(false)
                                             setisPowerTotal(false)
@@ -2985,6 +3018,15 @@ const Dashboard = () => {
                                           null
                                       }
                                       {
+                                        isTemperature
+                                          ?
+                                          <TempetureChart
+                                            tempetureDataFromDB={tempetureDataFromDB}
+                                          />
+                                          :
+                                          null
+                                      }
+                                      {
                                         isEnergyDaily
                                           ?
                                           <EnergyChart energyDataFromDB={energyDataFromDB} chartType="daily" />
@@ -3021,7 +3063,7 @@ const Dashboard = () => {
                                     <button class={`switcher-item ${isActiveRangeSwitch == "1D" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1D")}>1D</button>
                                     <button class={`switcher-item ${isActiveRangeSwitch == "1W" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1W")}>1W</button>
                                     <button class={`switcher-item ${isActiveRangeSwitch == "1M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1M")}>1M</button>
-                                    <button class={`switcher-item ${isActiveRangeSwitch == "6M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("6M")}>6M</button>
+                                    <button class={`switcher-item ${isActiveRangeSwitch == "6M" || isPowerTotal ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("6M")}>6M</button>
                                   </div>
                                 </>
                                 :
