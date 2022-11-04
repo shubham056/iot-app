@@ -129,6 +129,10 @@ const forgotDeviceID = (deviceID) => {
 const deleteAreaName = (areaID,userID) => {
     return axios.get(`users/delete_area_name/${areaID}/${userID}`, { headers: authHeader() });
 };
+//move device
+const moveDevices = (deviceID,areaID,userID) => {
+    return axios.get(`users/moveDevices/${deviceID}/${areaID}/${userID}`, { headers: authHeader() });
+};
 //edit area name
 const editAreaName = (areaID,editedAreaName) => {
     return axios.get(`users/edit_area_name/${areaID}/${editedAreaName}`, { headers: authHeader() });
@@ -172,5 +176,6 @@ const userService = {
     deleteAllAreasandDevices,
     editAreaName,
     editDeviceName,
+    moveDevices,
 };
 export default userService;

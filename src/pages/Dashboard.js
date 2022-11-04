@@ -494,7 +494,7 @@ const Dashboard = () => {
   });
   const moveDevice = Yup.object().shape({
     device_id: Yup.string().required("Please select device name"),
-    device_name: Yup.string().required("Device name is required!"),
+    area_id: Yup.string().required("Please select area name where you want to move!"),
   });
   const formOptions = { resolver: yupResolver(Schema) }
   const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
@@ -979,59 +979,55 @@ const Dashboard = () => {
   //move devices
   const onSubmitMoveDevice = formValue => {
     console.log(formValue)
-    return false
+    //return false
     if (formValue.area_id != undefined) {
       Swal.fire({
         title: 'Are you sure ?',
-        text: "want to delete this area!",
+        text: "want to move this device!",
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Delete it!'
+        confirmButtonText: 'Yes, Move it!'
       }).then((result) => {
         if (result.isConfirmed) {
           setdeleteAreaisLoading(true)
-          UserService.deleteAreaName(formValue.area_id, userID)
+          UserService.moveDevices(formValue.device_id,formValue.area_id, userID)
             .then((res) => {
-              console.log("Delete area API res--", res)
+              console.log("Move device API res--", res)
 
               if (res.data.data.error == false) {
-                toast.success('Area successfully deleted!', { toastId: 4464676867878 })
+                toast.success('Device successfully moved!', { toastId: 4464676867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
-              } else if (res.data.data.error == "not_found") {
-                toast.error('Refresh page and then select a area!', { toastId: 4488676867878 })
-                setisUpdateData(res.data.data.updatedId)
-                setdeleteAreaisLoading(false)
-              } else {
-                Swal.fire({
-                  title: 'Are you want to sure ?',
-                  text: res.data.data.msg,
-                  icon: 'question',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes, Delete it!'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    setdeleteAreaisLoading(true)
-                    //delete all area and devices in it
-                    UserService.deleteAllAreasandDevices(res.data.data.ids)
-                      .then((res) => {
-                        console.log("ressss", res)
-                        toast.success('Area successfully deleted!', { toastId: 4564676867878 })
-                        setisUpdateData(res.data.data.updatedId)
-                        setdeleteAreaisLoading(false)
-                      }).catch(err => {
-                        console.log(err)
-                        setdeleteAreaisLoading(false)
-                      })
-                  } else {
-                    setdeleteAreaisLoading(false)
-                  }
-                })
-                setdeleteAreaisLoading(false)
+              }  else {
+                // Swal.fire({
+                //   title: 'Are you want to sure ?',
+                //   text: res.data.data.msg,
+                //   icon: 'question',
+                //   showCancelButton: true,
+                //   confirmButtonColor: '#3085d6',
+                //   cancelButtonColor: '#d33',
+                //   confirmButtonText: 'Yes, Delete it!'
+                // }).then((result) => {
+                //   if (result.isConfirmed) {
+                //     setdeleteAreaisLoading(true)
+                //     //delete all area and devices in it
+                //     UserService.deleteAllAreasandDevices(res.data.data.ids)
+                //       .then((res) => {
+                //         console.log("ressss", res)
+                //         toast.success('Area successfully deleted!', { toastId: 4564676867878 })
+                //         setisUpdateData(res.data.data.updatedId)
+                //         setdeleteAreaisLoading(false)
+                //       }).catch(err => {
+                //         console.log(err)
+                //         setdeleteAreaisLoading(false)
+                //       })
+                //   } else {
+                //     setdeleteAreaisLoading(false)
+                //   }
+                // })
+                // setdeleteAreaisLoading(false)
 
               }
 
@@ -1774,7 +1770,7 @@ const Dashboard = () => {
                                     <form onSubmit={handleSubmit8(onSubmitMoveDevice)}>
                                       <div className="form-group">
                                         <select
-                                          {...register7("device_id")}
+                                          {...register8("device_id")}
                                           className={`form-control ${errors8.device_id ? 'is-invalid' : ''}`}
                                         >
                                           <option value="">--------------------------- Select Device Name ---------------------------</option>
@@ -1783,16 +1779,17 @@ const Dashboard = () => {
                                         <span style={{ color: 'red', float: 'left' }}>{errors8.device_id?.message}</span>
                                       </div>
                                       <div className="form-group">
-                                        <input
-                                          type="text"
-                                          {...register7("device_name")}
-                                          placeholder="Enter device name"
-                                          className={`form-control ${errors8.device_name ? 'is-invalid' : ''}`}
-                                          autoComplete="off"
-                                        />
-                                        <span style={{ color: 'red', float: 'left' }}>{errors8.device_name?.message}</span>
+                                        <select
+                                          {...register8("area_id")}
+                                          className={`form-control ${errors8.area_id ? 'is-invalid' : ''}`}
+                                        >
+                                          <option value="">--------------------------- Select Area Name ---------------------------</option>
+                                          {addedAreas}
+                                        </select>
+                                        <span style={{ color: 'red', float: 'left' }}>{errors8.area_id?.message}</span>
                                       </div>
-                                      {/* {
+                                     
+                                      {
                                         deleteAreaisLoading
                                           ?
                                           <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
@@ -1803,7 +1800,7 @@ const Dashboard = () => {
                                             <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting7}>Submit</button>
                                           </>
 
-                                      } */}
+                                      }
                                     </form>
                                   </div>
                                 </div>
