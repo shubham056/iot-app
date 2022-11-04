@@ -46,6 +46,10 @@ const GetLinkedDeviceData = (deviceID,Type,dataFormat=null) => {
     return axios.get(`users/getLinkedDeviceData/${deviceID}/${Type}/${dataFormat}`, { headers: authHeader() });
 };
 
+const GetLinkedDeviceTemperatureData = (deviceID,Type,dataFormat=null) => {
+    return axios.get(`users/getLinkedDeviceTempetrueData/${deviceID}/${Type}/${dataFormat}`, { headers: authHeader() });
+};
+
 const GetDeviceGraphData = (deviceID,Type,dataFormat=null) => {
     return axios.get(`users/GetDeviceGraphData/${deviceID}/${Type}/${dataFormat}`, { headers: authHeader() });
 };
@@ -161,6 +165,7 @@ const userService = {
     checkAlreadyAddedDevice,
     forgotDeviceID,
     GetLinkedDeviceData,
+    GetLinkedDeviceTemperatureData,
     GetLatestDeviceStatsData,
     GetDeviceGraphData,
     deleteAreaName,
