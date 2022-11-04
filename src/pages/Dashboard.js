@@ -2111,7 +2111,7 @@ const Dashboard = () => {
                                         className={`tag-cloud-link ${isPowerPhase1 ? "bg_green" : null} `}
                                         style={{ cursor: 'pointer' }}
                                       >
-                                        Phase - 1 p
+                                        Phase - 1
                                       </a>
                                       <a
                                         onClick={() => {
