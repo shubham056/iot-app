@@ -38,6 +38,8 @@ body {
     min-height: 100%;
     overflow-x: hidden;
     height: auto;
+    padding: 0 !important; 
+    overflow: auto !important;
 }
 
 body {
@@ -2991,8 +2993,8 @@ header {
 }
 
 .widget_categories.right-widget.top_heding {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 7px;
+    margin-bottom: 7px;
 }
 
 .top_tag a:first-child {
@@ -3445,3 +3447,11 @@ nav.navbar.navbar-expand-lg>.container-fluid {
     background-color: #1e4a75 !important;
 }
 
+.switcher .form-group{
+    margin-bottom: 0 !important;
+    padding: 5px !important;
+}
+.MuiCardContent-root {
+    padding-bottom: 15px !important;
+    padding-top: 9px !important;
+}
