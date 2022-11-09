@@ -3,6 +3,7 @@ import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import moment from 'moment-timezone';
 import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
 import randomcolor from "randomcolor";
 //import "../../node_modules/react-simple-tree-menu/dist/main.css";
@@ -25,7 +26,7 @@ import { Typography, Menu, MenuItem, Tooltip, Button, Stack, Card, CardContent, 
 import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt, KeyboardArrowDown } from "@mui/icons-material";
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
-
+const tzone = "Asia/Amman";
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
@@ -36,21 +37,21 @@ const connectionOptions = {
 };
 
 const Dashboard = () => {
-  let today = new Date().toISOString().slice(0, 10)
-  function getDates(startDate, endDate) {
-    const dates = []
-    let currentDate = startDate
-    const addDays = function (days) {
-      const date = new Date(this.valueOf())
-      date.setDate(date.getDate() + days)
-      return date
-    }
-    while (currentDate <= endDate) {
-      dates.push(currentDate.toLocaleDateString("sv-SE"))
-      currentDate = addDays.call(currentDate, 1)
-    }
-    return dates
-  }
+  let today = moment().tz(tzone).format('MM/DD/YY')
+  // function getDates(startDate, endDate) {
+  //   const dates = []
+  //   let currentDate = startDate
+  //   const addDays = function (days) {
+  //     const date = new Date(this.valueOf())
+  //     date.setDate(date.getDate() + days)
+  //     return date
+  //   }
+  //   while (currentDate <= endDate) {
+  //     dates.push(currentDate.toLocaleDateString("sv-SE"))
+  //     currentDate = addDays.call(currentDate, 1)
+  //   }
+  //   return dates
+  // }
 
 
   const NodeWithContextMenu = (props) => {
@@ -277,16 +278,101 @@ const Dashboard = () => {
     );
   };
 
-  const handleEvent = (event, picker) => {
-    console.log(picker.startDate);
-  }
+  const range = {
+    Today: [moment(), moment()],
+    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+    "Last 7 Days": [moment().subtract(6, "days"), moment()],
+    "Last 30 Days": [moment().subtract(29, "days"), moment()],
+    "This Month": [moment().startOf("month"), moment().endOf("month")],
+    "Last Month": [
+      moment()
+        .subtract(1, "month")
+        .startOf("month"),
+      moment()
+        .subtract(1, "month")
+        .endOf("month")
+    ],
+    "Last Year": [
+      moment()
+        .subtract(1, "year")
+        .startOf("year"),
+      moment()
+        .subtract(1, "year")
+        .endOf("year")
+    ]
+  };
   const handleCallback = (start, end, label) => {
-    console.log(start, end, label);
+    console.log("callback -----------", start, end, label);
   }
   const handleApply = (event, picker) => {
-    console.log("event",event)
-    console.log("start Date",picker.startDate._d);
-    console.log("End Date",picker.endDate);
+    setisActiveRangeSwitch(null)
+    //console.log("event",event)
+    console.log("start Date", picker.startDate);
+    console.log("start Date", moment(picker.startDate._d).tz(tzone).format());
+    console.log("End Date", picker.endDate._d.toISOString().split('T')[0]);
+    const format = "daterange";
+
+    let startDateObj = picker.startDate._d;
+    let startDateObjDate = new Date(startDateObj);
+
+    let startDateday = startDateObjDate.getDate();
+    let startDatemonth = startDateObjDate.getMonth() + 1;
+    let startDateyear = startDateObjDate.getFullYear();
+    let startDate = startDateyear + "-" + startDatemonth + "-" + startDateday;
+    console.log("final start date----", startDate)
+
+
+    let endDateObj = picker.endDate._d;
+    let endDateObjDate = new Date(endDateObj);
+
+    let endDateday = endDateObjDate.getDate();
+    let endDatemonth = endDateObjDate.getMonth() + 1;
+    let endDateyear = endDateObjDate.getFullYear();
+    let endDate = endDateyear + "-" + endDatemonth + "-" + endDateday;
+    console.log("final end date----", endDate)
+
+
+    if (isPower && isPowerTotal) {
+      console.log("power total")
+      UserService.GetLinkedDeviceData(isDeviceID, "T_power_A", format, startDate, endDate)
+        .then((res) => {
+          console.log("get device data res", res.data.data.deviceData)
+          setpowerDataFromDB(res.data.data.deviceData)
+        }).catch(err => {
+          console.log(err)
+        })
+
+    } if (isPower && isPowerPhase1) {
+      console.log("power phase 1")
+      UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A", format, startDate, endDate)
+        .then((res) => {
+          console.log("get device data res", res.data.data.deviceData)
+          setpowerDataFromDB(res.data.data.deviceData)
+        }).catch(err => {
+          console.log(err)
+        })
+
+    } if (isPower && isPowerPhase2) {
+      console.log("power phase 2")
+      UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A", format, startDate, endDate)
+        .then((res) => {
+          console.log("get device data res", res.data.data.deviceData)
+          setpowerDataFromDB(res.data.data.deviceData)
+        }).catch(err => {
+          console.log(err)
+        })
+
+    } if (isPower && isPowerPhase3) {
+      console.log("power phase 3")
+      UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A", format, startDate, endDate)
+        .then((res) => {
+          console.log("get device data res", res.data.data.deviceData)
+          setpowerDataFromDB(res.data.data.deviceData)
+        }).catch(err => {
+          console.log(err)
+        })
+
+    }
   }
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -1358,15 +1444,7 @@ const Dashboard = () => {
     <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
   ));
 
-  // if(startDate != null){
-  let startEnadDates = getDates(new Date(isstartDate), new Date())
-  console.log("Date---------------------", startEnadDates)
 
-  let startEnadDatesVal = startEnadDates.map((date, i) => (
-    <option value={date}>{date}</option>
-    //console.log(`Date options -----${ <option value={date}>{date}</option>}`)
-  ));
-  //}
 
 
 
@@ -3170,29 +3248,30 @@ const Dashboard = () => {
                                     <div className="form-group">
                                       {
                                         isstartDate != ''
-                                        ?
-                                        <DateRangePicker
-                                        onEvent={handleEvent}
-                                        onCallback={handleCallback}
-                                        onApply={handleApply}
-                                        initialSettings={{
-                                          startDate: isstartDate,
-                                          endDate: today,
-                                          minDate: isstartDate,
-                                          maxDate: today,
-                                          drops: 'up',
-                                          opens: 'left',
-                                          locale:{
-                                            format: "YYYY/MM/DD"
-                                          }
-                                        }}
-                                      >
-                                        <input type="text" className="form-control" placeholder='Select date range' />
-                                      </DateRangePicker>
-                                        :
-                                        null
+                                          ?
+                                          <DateRangePicker
+                                            onCallback={handleCallback}
+                                            onApply={handleApply}
+                                            initialSettings={{
+                                              startDate: isstartDate,
+                                              endDate: today,
+                                              minDate: isstartDate,
+                                              maxDate: today,
+                                              drops: 'up',
+                                              opens: 'left',
+                                              ranges: range,
+                                              alwaysShowCalendars: true,
+                                              // locale:{
+                                              //   format: "YYYY/MM/DD"
+                                              // }
+                                            }}
+                                          >
+                                            <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, padding: 7 }} />
+                                          </DateRangePicker>
+                                          :
+                                          null
                                       }
-                                      
+
 
 
                                     </div>

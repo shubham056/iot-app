@@ -42,8 +42,8 @@ const GetTreeViewData = (userId) => {
     return axios.get(`users/getTreeViewData/${userId}`, { headers: authHeader() });
 };
 
-const GetLinkedDeviceData = (deviceID,Type,dataFormat=null) => {
-    return axios.get(`users/getLinkedDeviceData/${deviceID}/${Type}/${dataFormat}`, { headers: authHeader() });
+const GetLinkedDeviceData = (deviceID,Type,dataFormat=null,startDate=null,endDate=null) => {
+    return axios.get(`users/getLinkedDeviceData/${deviceID}/${Type}/${dataFormat}/${startDate}/${endDate}`, { headers: authHeader() });
 };
 
 const GetLinkedDeviceTemperatureData = (deviceID,Type,dataFormat=null) => {
