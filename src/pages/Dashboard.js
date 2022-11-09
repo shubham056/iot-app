@@ -37,7 +37,8 @@ const connectionOptions = {
 };
 
 const Dashboard = () => {
-  let today = moment().tz(tzone).format('MM/DD/YY')
+  let today = moment().tz(tzone).format('YY/MM/DD')
+  let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YY/MM/DD')
   // function getDates(startDate, endDate) {
   //   const dates = []
   //   let currentDate = startDate
@@ -211,6 +212,7 @@ const Dashboard = () => {
                   console.log("get device data res------------------", res.data.data.deviceData)
                   setpowerDataFromDB(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
+                 // alert(isstartDate)
 
                 }).catch(err => {
                   console.log(err)
@@ -849,6 +851,12 @@ const Dashboard = () => {
       }
     );
   }, [isGetDeviceLoading, isUpdateData]);
+
+  // start date for date range
+  useEffect(() => {
+    console.log('Count is now: ', isstartDate);
+  }, [isstartDate]);
+
 
   //fetch 
   useEffect(() => {
@@ -3107,23 +3115,24 @@ const Dashboard = () => {
                                       <span>{isGraphLabelTxt}</span>
                                       <span>
                                       {
-                                        isstartDate != ''
+                                        isstartDate
                                           ?
                                           <DateRangePicker
                                             onCallback={handleCallback}
                                             onApply={handleApply}
                                             initialSettings={{
-                                              startDate: isstartDate,
+                                              startDate: pastDate,
                                               endDate: today,
-                                              minDate: isstartDate,
+                                              minDate: pastDate,
                                               maxDate: today,
                                               drops: 'down',
                                               opens: 'left',
+                                              applyButtonClasses: 'btn-info',
                                               ranges: range,
                                               alwaysShowCalendars: true,
-                                              // locale:{
-                                              //   format: "YYYY/MM/DD"
-                                              // }
+                                              locale:{
+                                                format: "YYYY/MM/DD"
+                                              }
                                             }}
                                           >
                                             <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12,padding: 5}} />
