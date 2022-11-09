@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useRef, MouseEvent } from 'react'
+import React, { useState, useEffect, useRef, MouseEvent } from 'react';
 import { Footer } from '../components/includes/Footer'
 import { Header } from '../components/includes/Header'
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
 import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
 import randomcolor from "randomcolor";
 //import "../../node_modules/react-simple-tree-menu/dist/main.css";
 import "react-simple-tree-menu/dist/main.css";
+
 import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
-import { selectUser } from "../redux/features/AuthenticationSlice";
+// import { selectUser } from "../redux/features/AuthenticationSlice";
 import UserService from "../services/user.service";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
-import { Chart } from "react-google-charts";
-import PowerChart from '../components/PowerChart';
 import PowerCharts from '../components/PowerCharts';
 import TempetureChart from "../components/TempetureChart";
 import EnergyChart from '../components/EnergyChart';
@@ -24,7 +25,6 @@ import { Typography, Menu, MenuItem, Tooltip, Button, Stack, Card, CardContent, 
 import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt, KeyboardArrowDown } from "@mui/icons-material";
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
-import { Link } from 'react-router-dom';
 
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
@@ -36,7 +36,7 @@ const connectionOptions = {
 };
 
 const Dashboard = () => {
-
+  let today = new Date().toISOString().slice(0, 10)
   function getDates(startDate, endDate) {
     const dates = []
     let currentDate = startDate
@@ -209,8 +209,7 @@ const Dashboard = () => {
                 .then((res) => {
                   console.log("get device data res------------------", res.data.data.deviceData)
                   setpowerDataFromDB(res.data.data.deviceData)
-                  //setstartDate(res.data.data.deviceData[0].date)
-                  //alert(startDate)
+                  setIsstartDate(res.data.data.deviceData[0].date)
 
                 }).catch(err => {
                   console.log(err)
@@ -278,7 +277,17 @@ const Dashboard = () => {
     );
   };
 
-
+  const handleEvent = (event, picker) => {
+    console.log(picker.startDate);
+  }
+  const handleCallback = (start, end, label) => {
+    console.log(start, end, label);
+  }
+  const handleApply = (event, picker) => {
+    console.log("event",event)
+    console.log("start Date",picker.startDate._d);
+    console.log("End Date",picker.endDate);
+  }
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -359,7 +368,7 @@ const Dashboard = () => {
   };
 
   //set states start here
-  const [startDate, setstartDate] = useState("")
+  const [isstartDate, setIsstartDate] = useState("")
   const [isEnergyTxt, setisEnergyTxt] = useState("Energy")
   const [isUpdateData, setisUpdateData] = useState("")
   const [addDeviceBtnText, setAddDeviceBtnText] = useState("Verify")
@@ -1350,7 +1359,7 @@ const Dashboard = () => {
   ));
 
   // if(startDate != null){
-  let startEnadDates = getDates(new Date(startDate), new Date())
+  let startEnadDates = getDates(new Date(isstartDate), new Date())
   console.log("Date---------------------", startEnadDates)
 
   let startEnadDatesVal = startEnadDates.map((date, i) => (
@@ -2843,7 +2852,7 @@ const Dashboard = () => {
                                     <div className="col-xl-2 col-lg-4 col-md-4 col-sm-12">
                                       <div className="row">
                                         <div className="tags left_wraper">
-                                          <Stack spacing={2} sx={{paddingRight: "10px"}}>
+                                          <Stack spacing={2} sx={{ paddingRight: "10px" }}>
 
                                             <Button
                                               variant="contained"
@@ -2894,34 +2903,34 @@ const Dashboard = () => {
                                               Power
                                             </Button>
                                             <Button
-                                                variant="contained"
-                                                className={`${isEnergy ? 'active' : null}`}
-                                                style={{
-                                                  borderRadius: 25,
-                                                  backgroundColor: "rgb(51, 164, 165)",
-                                                  textTransform: "capitalize"
-                                                }}
-                                                size="large"
-                                                aria-controls={open ? 'basic-menu' : undefined}
-                                                aria-haspopup="true"
-                                                aria-expanded={open ? 'true' : undefined}
-                                                onClick={handleClick}
-                                                endIcon={<KeyboardArrowDown />}
-                                              >
-                                                Energy
-                                              </Button>
-                                              <Menu
-                                                id="basic-menu"
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                // onClose={handleCloseMenu}
-                                                MenuListProps={{
-                                                  'aria-labelledby': 'basic-button',
-                                                }}
-                                              >
-                                                <MenuItem onClick={() => handleCloseMenu('daily')}>Daily</MenuItem>
-                                                <MenuItem onClick={() => handleCloseMenu('monthly')}>Monthly</MenuItem>
-                                              </Menu>
+                                              variant="contained"
+                                              className={`${isEnergy ? 'active' : null}`}
+                                              style={{
+                                                borderRadius: 25,
+                                                backgroundColor: "rgb(51, 164, 165)",
+                                                textTransform: "capitalize"
+                                              }}
+                                              size="large"
+                                              aria-controls={open ? 'basic-menu' : undefined}
+                                              aria-haspopup="true"
+                                              aria-expanded={open ? 'true' : undefined}
+                                              onClick={handleClick}
+                                              endIcon={<KeyboardArrowDown />}
+                                            >
+                                              Energy
+                                            </Button>
+                                            <Menu
+                                              id="basic-menu"
+                                              anchorEl={anchorEl}
+                                              open={open}
+                                              // onClose={handleCloseMenu}
+                                              MenuListProps={{
+                                                'aria-labelledby': 'basic-button',
+                                              }}
+                                            >
+                                              <MenuItem onClick={() => handleCloseMenu('daily')}>Daily</MenuItem>
+                                              <MenuItem onClick={() => handleCloseMenu('monthly')}>Monthly</MenuItem>
+                                            </Menu>
                                           </Stack>
 
                                           {/* <a
@@ -3138,14 +3147,6 @@ const Dashboard = () => {
                                       {
                                         isEnergyMonthly
                                           ?
-                                          // <Chart
-                                          //   chartType="ColumnChart"
-                                          //   loader={<div>Loading Energy Monthly Data...</div>}
-                                          //   width="100%"
-                                          //   height="400px"
-                                          //   data={energyDataFromDB}
-                                          //   options={options}
-                                          // />
                                           <EnergyChart energyDataFromDB={energyDataFromDB} chartType="monthly" />
                                           :
                                           null
@@ -3167,19 +3168,34 @@ const Dashboard = () => {
                                     <button title='6 Month' class={`switcher-item ${isActiveRangeSwitch == "6M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("6M")}>6M</button>
 
                                     <div className="form-group">
-                                      <select className="form-control" id="exampleFormControlSelect1">
-                                        <option>Start Date</option>
-                                        {startEnadDatesVal}
-                                      </select>
-                                    </div>
-                                    <div className="form-group">
-                                      <select className="form-control" id="exampleFormControlSelect1">
-                                        <option>End Date</option>
-                                        {startEnadDatesVal}
-                                      </select>
-                                    </div>
+                                      {
+                                        isstartDate != ''
+                                        ?
+                                        <DateRangePicker
+                                        onEvent={handleEvent}
+                                        onCallback={handleCallback}
+                                        onApply={handleApply}
+                                        initialSettings={{
+                                          startDate: isstartDate,
+                                          endDate: today,
+                                          minDate: isstartDate,
+                                          maxDate: today,
+                                          drops: 'up',
+                                          opens: 'left',
+                                          locale:{
+                                            format: "YYYY/MM/DD"
+                                          }
+                                        }}
+                                      >
+                                        <input type="text" className="form-control" placeholder='Select date range' />
+                                      </DateRangePicker>
+                                        :
+                                        null
+                                      }
+                                      
 
 
+                                    </div>
                                   </div>
 
                                 </>
