@@ -535,6 +535,15 @@ const Dashboard = () => {
         })
         console.log("latest initial date range data ---------",isInitialDateData)
       }
+      if(isstartDate == undefined){
+        setisInitialDateData({
+          ...isInitialDateData,
+          startDate: today,
+          minDate: today,
+        })
+        console.log("latest initial date range data ---------",isInitialDateData)
+      }
+
       
 
       
