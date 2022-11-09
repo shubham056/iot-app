@@ -41,7 +41,7 @@ const Dashboard = () => {
   let today = moment().tz(tzone).format('YYYY/MM/DD')
   let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YYYY/MM/DD')
 
-  
+
 
   const NodeWithContextMenu = (props) => {
     const [contextMenu, setContextMenu] = React.useState({
@@ -191,8 +191,6 @@ const Dashboard = () => {
                   console.log("get device data res------------------", res.data.data.deviceData)
                   setpowerDataFromDB(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
-                  //keyRef.current = Date.now();
-                  // alert(isstartDate)
 
                 }).catch(err => {
                   console.log(err)
@@ -312,7 +310,18 @@ const Dashboard = () => {
     let endDate = endDateyear + "-" + endDatemonth + "-" + endDateday;
     console.log("final end date----", endDate)
 
-
+    //------------- For Temperature --------------------
+    if (isTemperature) {
+      console.log("isTemperature")
+      UserService.GetLinkedDeviceTemperatureData(isDeviceID, "temperature", format, startDate, endDate)
+        .then((res) => {
+          console.log("get device temperature data res--", res.data.data.deviceData)
+          settempetureDataFromDB(res.data.data.deviceData)
+        }).catch(err => {
+          console.log(err)
+        })
+    }
+    //------------- For Power Data and it's Phases ----------
     if (isPower && isPowerTotal) {
       console.log("power total")
       UserService.GetLinkedDeviceData(isDeviceID, "T_power_A", format, startDate, endDate)
@@ -507,7 +516,7 @@ const Dashboard = () => {
   const [isDeviceID, setisDeviceID] = useState('')
   const { user } = useSelector((state) => state.auth);
   const userID = user.data.profile.id
-  const keyRef = useRef(Date.now()); 
+  const keyRef = useRef(Date.now());
   const [isInitialDateData, setisInitialDateData] = useState({
     startDate: pastDate,
     endDate: today,
@@ -523,31 +532,31 @@ const Dashboard = () => {
     }
   })
 
-// start date for date range
+  // start date for date range
   useEffect(() => {
     keyRef.current = Date.now();
-      console.log('isstartDate *****************', isstartDate);
-      if(isstartDate){
-        setisInitialDateData({
-          ...isInitialDateData,
-          startDate: isstartDate,
-          minDate: isstartDate,
-        })
-        console.log("latest initial date range data ---------",isInitialDateData)
-      }
-      if(isstartDate == undefined){
-        setisInitialDateData({
-          ...isInitialDateData,
-          startDate: today,
-          minDate: today,
-        })
-        console.log("latest initial date range data ---------",isInitialDateData)
-      }
+    console.log('isstartDate *****************', isstartDate);
+    if (isstartDate) {
+      setisInitialDateData({
+        ...isInitialDateData,
+        startDate: isstartDate,
+        minDate: isstartDate,
+      })
+      console.log("latest initial date range data ---------", isInitialDateData)
+    }
+    if (isstartDate == undefined) {
+      setisInitialDateData({
+        ...isInitialDateData,
+        startDate: today,
+        minDate: today,
+      })
+      console.log("latest initial date range data ---------", isInitialDateData)
+    }
 
-      
 
-      
-  }, [isstartDate,isInitialDateData.startDate]);
+
+
+  }, [isstartDate, isInitialDateData.startDate]);
 
 
   const io = useRef();
@@ -2818,6 +2827,7 @@ const Dashboard = () => {
                                       .then((res) => {
                                         console.log("get device temperature data res--", res.data.data.deviceData)
                                         settempetureDataFromDB(res.data.data.deviceData)
+                                        setIsstartDate(res.data.data.deviceData[0].date)
                                       }).catch(err => {
                                         console.log(err)
                                       })
@@ -3126,16 +3136,20 @@ const Dashboard = () => {
                                     <div className="tags ">
                                       <span>{isGraphLabelTxt}</span>
                                       <span>
-                                        
+                                        {
+                                          isPower || isTemperature
+                                            ?
                                             <DateRangePicker
-                                              key={keyRef.current} 
+                                              key={keyRef.current}
                                               onCallback={handleCallback}
                                               onApply={handleApply}
                                               initialSettings={isInitialDateData}
                                             >
                                               <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, padding: 5 }} />
                                             </DateRangePicker>
-                                            
+                                            :
+                                            null
+                                        }
                                       </span>
 
                                     </div>

@@ -30,7 +30,7 @@ export const ChartComponent = props => {
             textColor,
             fontSize
           },
-          width: 800,
+          width: 900,
           height: 290,
           timeScale: {
             // timeVisible: true,
@@ -53,7 +53,7 @@ export const ChartComponent = props => {
             textColor,
             fontSize
           },
-          width: 800,
+          width: 900,
           height: 290,
           timeScale: {
             timeVisible: true,
@@ -87,10 +87,6 @@ export const ChartComponent = props => {
     />
   );
 };
-
-// const initialData = [
-//   { time: '2018-12-22', value: 32.51 },
-// ];
 
 function App(props) {
   console.log("app props data", props)
