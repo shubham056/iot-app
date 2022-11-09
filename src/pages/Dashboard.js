@@ -3105,94 +3105,34 @@ const Dashboard = () => {
 
                                     <div className="tags ">
                                       <span>{isGraphLabelTxt}</span>
+                                      <span>
                                       {
-                                        isEnergy
+                                        isstartDate != ''
                                           ?
-                                          <>
-                                            {/* <a
-                                              onClick={() => {
-                                                setisEnergyDaily(true)
-                                                setisTemperature(false)
-                                                setisEnergyMonthly(false)
-                                                setisEnergyTotal(true)
-                                                setisEnergyPhase1(false)
-                                                setisEnergyPhase2(false)
-                                                setisEnergyPhase3(false)
-                                                setisStaticTxtValue1('T-Voltage')
-                                                setisStaticTxtValue2('T-Current')
-                                                setisStaticTxtValue3('T-Power')
-                                                setisStaticTxtValue4('T-Energy')
-                                                setisGraphLabelTxt('L1 Power')
-                                                setisGraphLabelTxt('T-Energy-Daily')
-
-                                                UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "daily")
-                                                  .then((res) => {
-                                                    console.log("get device data res", res.data.data.deviceData)
-                                                    setenergyDataFromDB(res.data.data.deviceData)
-                                                  }).catch(err => {
-                                                    console.log(err)
-                                                  })
-                                                //get latest stats for total voltage, current, power and energy
-                                                UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                                  const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                                  setisStaticValue1(T_voltage)
-                                                  setisStaticValue2(T_current)
-                                                  setisStaticValue3(T_power)
-                                                  setisStaticValue4(T_energy)
-                                                  setisStaticTemperature(temperature) // temperature
-                                                }).catch(err => {
-                                                  console.log(err)
-                                                })
-                                              }}
-                                              className={`tag-cloud-link ${isEnergyDaily ? "bg_green" : null} `}
-                                              style={{ cursor: 'pointer' }}
-                                            >
-                                              Daily
-                                            </a>
-                                            <a
-                                              onClick={() => {
-                                                setisEnergyMonthly(true)
-                                                setisTemperature(false)
-                                                setisEnergyDaily(false)
-                                                setisEnergyTotal(true)
-                                                setisEnergyPhase1(false)
-                                                setisEnergyPhase2(false)
-                                                setisEnergyPhase3(false)
-                                                setisStaticTxtValue1('T-Voltage')
-                                                setisStaticTxtValue2('T-Current')
-                                                setisStaticTxtValue3('T-Power')
-                                                setisStaticTxtValue4('T-Energy')
-                                                setisGraphLabelTxt('T-Energy-Monthly')
-
-                                                UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "monthly")
-                                                  .then((res) => {
-                                                    //console.log("get device data res", res.data.data.deviceData)
-                                                    setenergyDataFromDB(res.data.data.deviceData)
-                                                  }).catch(err => {
-                                                    console.log(err)
-                                                  })
-                                                //get latest stats for total voltage, current, power and energy
-                                                UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                                  const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                                  setisStaticValue1(T_voltage)
-                                                  setisStaticValue2(T_current)
-                                                  setisStaticValue3(T_power)
-                                                  setisStaticValue4(T_energy)
-                                                  setisStaticTemperature(temperature) // temperature
-                                                }).catch(err => {
-                                                  console.log(err)
-                                                })
-
-                                              }}
-                                              className={`tag-cloud-link ${isEnergyMonthly ? "bg_green" : null} `}
-                                              style={{ cursor: 'pointer' }}
-                                            >
-                                              Monthly
-                                            </a> */}
-                                          </>
+                                          <DateRangePicker
+                                            onCallback={handleCallback}
+                                            onApply={handleApply}
+                                            initialSettings={{
+                                              startDate: isstartDate,
+                                              endDate: today,
+                                              minDate: isstartDate,
+                                              maxDate: today,
+                                              drops: 'down',
+                                              opens: 'left',
+                                              ranges: range,
+                                              alwaysShowCalendars: true,
+                                              // locale:{
+                                              //   format: "YYYY/MM/DD"
+                                              // }
+                                            }}
+                                          >
+                                            <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12}} />
+                                          </DateRangePicker>
                                           :
                                           null
                                       }
+                                    </span>
+
                                     </div>
 
                                     <div className="graph_wraper">
@@ -3245,36 +3185,7 @@ const Dashboard = () => {
                                     <button title='1 Month' class={`switcher-item ${isActiveRangeSwitch == "1M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1M")}>1M</button>
                                     <button title='6 Month' class={`switcher-item ${isActiveRangeSwitch == "6M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("6M")}>6M</button>
 
-                                    <div className="form-group">
-                                      {
-                                        isstartDate != ''
-                                          ?
-                                          <DateRangePicker
-                                            onCallback={handleCallback}
-                                            onApply={handleApply}
-                                            initialSettings={{
-                                              startDate: isstartDate,
-                                              endDate: today,
-                                              minDate: isstartDate,
-                                              maxDate: today,
-                                              drops: 'up',
-                                              opens: 'left',
-                                              ranges: range,
-                                              alwaysShowCalendars: true,
-                                              // locale:{
-                                              //   format: "YYYY/MM/DD"
-                                              // }
-                                            }}
-                                          >
-                                            <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, padding: 7 }} />
-                                          </DateRangePicker>
-                                          :
-                                          null
-                                      }
-
-
-
-                                    </div>
+                                   
                                   </div>
 
                                 </>
