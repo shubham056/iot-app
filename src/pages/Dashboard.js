@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
 // import { selectUser } from "../redux/features/AuthenticationSlice";
 import UserService from "../services/user.service";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
@@ -37,44 +37,25 @@ const connectionOptions = {
 };
 
 const Dashboard = () => {
-  let today = moment().tz(tzone).format('YY/MM/DD')
-  let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YY/MM/DD')
-  // function getDates(startDate, endDate) {
-  //   const dates = []
-  //   let currentDate = startDate
-  //   const addDays = function (days) {
-  //     const date = new Date(this.valueOf())
-  //     date.setDate(date.getDate() + days)
-  //     return date
-  //   }
-  //   while (currentDate <= endDate) {
-  //     dates.push(currentDate.toLocaleDateString("sv-SE"))
-  //     currentDate = addDays.call(currentDate, 1)
-  //   }
-  //   return dates
-  // }
 
+  let today = moment().tz(tzone).format('YYYY/MM/DD')
+  let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YYYY/MM/DD')
+
+  
 
   const NodeWithContextMenu = (props) => {
     const [contextMenu, setContextMenu] = React.useState({
       mouseX: null,
       mouseY: null,
     });
-    // console.log("2222222222", contextMenu)
-
     const handleContextMenu = (event) => {
-      console.log("event---------", event)
       event.preventDefault();
       setContextMenu(
         contextMenu.mouseX === null
           ? {
             mouseX: event.clientX + 2,
             mouseY: event.clientY - 6
-          }
-          : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
-          // Other native context menus might behave different.
-          // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
-          {
+          } : {
             mouseX: null,
             mouseY: null
           }
@@ -82,12 +63,11 @@ const Dashboard = () => {
     };
 
     const handleClose = (action, props) => {
-
       const { id, label, is_type } = props
+
       console.log("arg", action)
       setAreaName(label)
       setRenameDeleteId(id)
-
       if (action == "Rename" && is_type == "area") {
         console.log("rename area")
         setIsRenameArea(true)
@@ -157,7 +137,6 @@ const Dashboard = () => {
         onContextMenu={handleContextMenu}
         style={{ cursor: "context-menu" }}
       >
-
         <Typography
           onClick={event => {
             console.log(props)
@@ -212,7 +191,8 @@ const Dashboard = () => {
                   console.log("get device data res------------------", res.data.data.deviceData)
                   setpowerDataFromDB(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
-                 // alert(isstartDate)
+                  //keyRef.current = Date.now();
+                  // alert(isstartDate)
 
                 }).catch(err => {
                   console.log(err)
@@ -269,7 +249,6 @@ const Dashboard = () => {
               <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
               <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
               {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
-
             </Menu>
             :
             null
@@ -528,7 +507,38 @@ const Dashboard = () => {
   const [isDeviceID, setisDeviceID] = useState('')
   const { user } = useSelector((state) => state.auth);
   const userID = user.data.profile.id
+  const keyRef = useRef(Date.now()); 
+  const [isInitialDateData, setisInitialDateData] = useState({
+    startDate: pastDate,
+    endDate: today,
+    minDate: pastDate,
+    maxDate: today,
+    drops: 'down',
+    opens: 'left',
+    applyButtonClasses: 'btn-info',
+    ranges: range,
+    alwaysShowCalendars: true,
+    locale: {
+      format: "YYYY/MM/DD"
+    }
+  })
 
+// start date for date range
+  useEffect(() => {
+    keyRef.current = Date.now();
+      console.log('isstartDate *****************', isstartDate);
+      if(isstartDate){
+        setisInitialDateData({
+          ...isInitialDateData,
+          startDate: isstartDate,
+          minDate: isstartDate,
+        })
+        console.log("latest initial date range data ---------",isInitialDateData)
+      }
+      
+
+      
+  }, [isstartDate,isInitialDateData.startDate]);
 
 
   const io = useRef();
@@ -851,13 +861,6 @@ const Dashboard = () => {
       }
     );
   }, [isGetDeviceLoading, isUpdateData]);
-
-  // start date for date range
-  useEffect(() => {
-    console.log('Count is now: ', isstartDate);
-  }, [isstartDate]);
-
-
   //fetch 
   useEffect(() => {
     console.log("trrrrrrrrrrrrrrrrrrrrrrrrr", treeViewData)
@@ -3114,33 +3117,17 @@ const Dashboard = () => {
                                     <div className="tags ">
                                       <span>{isGraphLabelTxt}</span>
                                       <span>
-                                      {
-                                        isstartDate
-                                          ?
-                                          <DateRangePicker
-                                            onCallback={handleCallback}
-                                            onApply={handleApply}
-                                            initialSettings={{
-                                              startDate: pastDate,
-                                              endDate: today,
-                                              minDate: pastDate,
-                                              maxDate: today,
-                                              drops: 'down',
-                                              opens: 'left',
-                                              applyButtonClasses: 'btn-info',
-                                              ranges: range,
-                                              alwaysShowCalendars: true,
-                                              locale:{
-                                                format: "YYYY/MM/DD"
-                                              }
-                                            }}
-                                          >
-                                            <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12,padding: 5}} />
-                                          </DateRangePicker>
-                                          :
-                                          null
-                                      }
-                                    </span>
+                                        
+                                            <DateRangePicker
+                                              key={keyRef.current} 
+                                              onCallback={handleCallback}
+                                              onApply={handleApply}
+                                              initialSettings={isInitialDateData}
+                                            >
+                                              <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, padding: 5 }} />
+                                            </DateRangePicker>
+                                            
+                                      </span>
 
                                     </div>
 
@@ -3194,7 +3181,7 @@ const Dashboard = () => {
                                     <button title='1 Month' class={`switcher-item ${isActiveRangeSwitch == "1M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1M")}>1M</button>
                                     <button title='6 Month' class={`switcher-item ${isActiveRangeSwitch == "6M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("6M")}>6M</button>
 
-                                   
+
                                   </div>
 
                                 </>
