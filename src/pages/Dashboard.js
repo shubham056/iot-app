@@ -3126,7 +3126,7 @@ const Dashboard = () => {
                                               // }
                                             }}
                                           >
-                                            <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12}} />
+                                            <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12,padding: 5}} />
                                           </DateRangePicker>
                                           :
                                           null
