@@ -3145,7 +3145,7 @@ const Dashboard = () => {
                                               onApply={handleApply}
                                               initialSettings={isInitialDateData}
                                             >
-                                              <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, padding: 5 }} />
+                                              <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, padding: 5, border: "1px solid #46acad",borderRadius: 25 }} />
                                             </DateRangePicker>
                                             :
                                             null
