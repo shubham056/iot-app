@@ -2877,7 +2877,7 @@ const Dashboard = () => {
                                     <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
                                       {isStaticTxtValue1}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
                                       {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${parseFloat(isStaticValue1).toFixed(1)} V`}
                                     </Typography>
                                   </CardContent>
@@ -2893,7 +2893,7 @@ const Dashboard = () => {
                                     <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
                                       {isStaticTxtValue2}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
                                       {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${isStaticValue2} A`}
                                     </Typography>
                                   </CardContent>
@@ -2909,7 +2909,7 @@ const Dashboard = () => {
                                     <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
                                       {isStaticTxtValue3}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
                                       {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${parseFloat(isStaticValue3).toFixed(1)} Kw`}
                                     </Typography>
                                   </CardContent>
@@ -2925,7 +2925,7 @@ const Dashboard = () => {
                                     <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
                                       {isStaticTxtValue4}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
                                       {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${isStaticValue4} kwh`}
                                     </Typography>
                                   </CardContent>
