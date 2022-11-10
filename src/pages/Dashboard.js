@@ -23,7 +23,7 @@ import EnergyChart from '../components/EnergyChart';
 import socketClient from 'socket.io-client';
 import Skeleton from 'react-loading-skeleton';
 import { Typography, Menu, MenuItem, Tooltip, Button, Stack, Card, CardContent, Grid, FormControl, Select } from "@mui/material";
-import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt, KeyboardArrowDown } from "@mui/icons-material";
+import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt, KeyboardArrowDown,Devices } from "@mui/icons-material";
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 const tzone = "Asia/Amman";
@@ -933,6 +933,7 @@ const Dashboard = () => {
       key={nodes.id}
       nodeId={nodes.id}
       label={<NodeWithContextMenu label={nodes.label} id={nodes.id} is_type={nodes.is_type} device_id={nodes.device_id} />}
+      icon={nodes.is_type == 'device' ? <Devices sx={{color: "#1d9b9c"}} /> : null}
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
@@ -1542,7 +1543,7 @@ const Dashboard = () => {
                     <HelpOutlineOutlined className='help-icon' />
                   </Tooltip>
                   <TreeView
-                    aria-label="customized"
+                    aria-label="rich object"
                     defaultCollapseIcon={<ExpandMore />}
                     defaultExpanded={["root"]}
                     defaultExpandIcon={<ChevronRight />}
@@ -3145,7 +3146,7 @@ const Dashboard = () => {
                                               onApply={handleApply}
                                               initialSettings={isInitialDateData}
                                             >
-                                              <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, padding: 5, border: "1px solid #46acad",borderRadius: 25 }} />
+                                              <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, border: "1px solid #46acad",borderRadius: 25 }} />
                                             </DateRangePicker>
                                             :
                                             null

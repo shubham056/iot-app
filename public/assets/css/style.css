@@ -2627,10 +2627,10 @@ section {
 }
 
 .right_wraper span {
-    width: 20%;
+    /* width: 20%; */
     display: inline-block;
     text-align: center;
-    padding: 5px 10px;
+    padding: 5px;
     color: #409c9d;
     font-weight: bold;
 }
@@ -3460,4 +3460,7 @@ nav.navbar.navbar-expand-lg>.container-fluid {
 }
 .daterangepicker .ranges li.active{
     background-color: #335b82 !important;
+}
+.css-118pgjk-MuiTreeItem-content .MuiTreeItem-iconContainer svg{
+    font-size: 16px !important;
 }
