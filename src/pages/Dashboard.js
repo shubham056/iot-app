@@ -2852,10 +2852,6 @@ const Dashboard = () => {
                                   {parseFloat(isStaticTemperature).toFixed(2)} ℃
                                 </a>
                               </div>
-
-
-
-
                             </div>
                             {/* <Grid container >
                             
