@@ -9,23 +9,25 @@ import { clearMessage } from "../redux/features/Message";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
+import UserService from "../services/user.service";
 
 
 const Portal = () => {
     const [switchForm, setswitchForm] = useState(true)
+    const [isForgotPassword, setIsForgotPassword] = useState(false)
     const switchFormHandle = () => {
-        console.log(switchForm)
         setswitchForm(!switchForm)
-        console.log("after", switchForm)
     }
-
+    const switchFormHandleForgotPass = () => {
+        setIsForgotPassword(false)
+        setswitchForm(true)
+    }
     const [isLoading, setisLoading] = useState(false)
     //const { isLoggedIn } = useSelector((state) => state.auth);
     const { message } = useSelector((state) => state.message);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log("-------call clear msg-----------")
         dispatch(clearMessage());
     }, [dispatch]);
 
@@ -49,11 +51,16 @@ const Portal = () => {
             ),
         confirmPwd: Yup.string().required('Password is required.').oneOf([Yup.ref('password')], 'Passwords does not match.'),
     })
+    const forgotPasswordSchema = Yup.object().shape({
+        email: Yup.string().email('Enter valid email id.').required('Email id is required.'),
+    })
     //validation schema end
     const formOptionsLogin = { resolver: yupResolver(loginSchema) }
     const formOptions = { resolver: yupResolver(signupSchema) }
+    const forgotOptions = { resolver: yupResolver(forgotPasswordSchema) }
     const { register, formState: { errors, isSubmitting }, handleSubmit, } = useForm(formOptionsLogin);
     const { register: register2, formState: { errors: errors2 }, handleSubmit: handleSubmit2, } = useForm(formOptions);
+    const { register: register3, formState: { errors: errors3 }, handleSubmit: handleSubmit3, } = useForm(forgotOptions);
     //login submit handler
     const onSubmit = formValue => {
         setisLoading(true)
@@ -85,11 +92,33 @@ const Portal = () => {
                 dispatch(clearMessage());
             });
     }
+    const onSubmitForgotPassword = formValue =>{
+        setisLoading(true)
+        console.log(JSON.stringify(formValue));
+        UserService.forgotPasword(formValue.email)
+        .then((res) => {
+            setisLoading(false)
+            if(res.data.error){
+                //error
+                toast.error("The email address isn't recongnized, Please try again or register for a new account.", {toastId: 23})
+            }else{
+                //success
+                toast.success("Password reset email successfully sent!", {toastId: 23})
+            }
+          }).catch(err => {
+            setisLoading(false)
+            console.log(err)
+          })
+    }
 
     {
         message && toast.info(message, {
             toastId: 23453643
         })
+    }
+    //Handle forgot password 
+    const handleForgotPassword = () => {
+        setIsForgotPassword(true)
     }
     return (
         <>
@@ -115,127 +144,157 @@ const Portal = () => {
                                 </div>
                             </div>
                             {
-                                switchForm
+                                isForgotPassword
                                     ?
                                     <div className="col-lg-4 col-sm-12">
                                         <div className="contact-form2 login_wraper">
-                                            <h4 className="text-uppercase">Login to your Account</h4>
-                                            <form onSubmit={handleSubmit(onSubmit)}>
+                                            <h4 className="text-uppercase">Forgot Password</h4>
+                                            <form onSubmit={handleSubmit3(onSubmitForgotPassword)}>
                                                 <div className="form-group">
                                                     <input
                                                         type="text"
-                                                        {...register("email")}
+                                                        {...register3("email")}
                                                         placeholder="Email address"
-                                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                                        className={`form-control ${errors3.email ? 'is-invalid' : ''}`}
                                                     />
-                                                    <span style={{ color: 'red' }}>{errors.email?.message}</span>
-
+                                                    <span style={{ color: 'red' }}>{errors3.email?.message}</span>
                                                 </div>
-                                                <div className="form-group">
-                                                    <input
-                                                        type="password"
-                                                        {...register("password")}
-                                                        placeholder="Password"
-                                                        className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                                                    />
-                                                    <span style={{ color: 'red' }}>{errors.password?.message}</span>
-
-                                                </div>
+                                               
                                                 {
                                                     isLoading
                                                         ?
-                                                        <button style={{ width: "100%" }} className="btn btn-primary">Sign In...  <div className="spinner-border"  style={{width:'1rem',height:'1rem'}}/>
+                                                        <button style={{ width: "100%" }} className="btn btn-primary">Submit...  <div className="spinner-border"  style={{width:'1rem',height:'1rem'}}/>
                                                         </button>
 
                                                         :
-                                                        <button style={{ width: "100%" }} type='submit' className="btn btn-primary">Sign In</button>
-                                                }
-
-
-                                                <div className="forgot">
-                                                    <a href>Forgot Password?</a>
-                                                </div>
-                                                <p>Don't have account yet? <Link to="#" onClick={() => switchFormHandle()} style={{ cursor: "pointer" }}>Register</Link></p>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    :
-                                    <div className="col-lg-4 col-sm-12">
-                                        <div className="contact-form2 login_wraper">
-                                            <h4 className="text-uppercase">Create an account</h4>
-                                            <form onSubmit={handleSubmit2(onSubmitSignup)}>
-                                                <div className="form-group">
-                                                    <input
-                                                        type="text"
-                                                        {...register2("firstName")}
-                                                        placeholder="First name"
-                                                        className={`form-control ${errors2.firstName ? 'is-invalid' : ''}`}
-                                                    />
-                                                    <span style={{ color: 'red' }}>{errors2.firstName?.message}</span>
-                                                </div>
-                                                <div className="form-group">
-                                                    <input
-                                                        type="text"
-                                                        {...register2("lastName")}
-                                                        placeholder="First name"
-                                                        className={`form-control ${errors2.lastName ? 'is-invalid' : ''}`}
-                                                    />
-                                                    <span style={{ color: 'red' }}>{errors2.lastName?.message}</span>
-                                                </div>
-
-                                                <div className="form-group">
-                                                    <input
-                                                        type="text"
-                                                        {...register2("email")}
-                                                        placeholder="Email address"
-                                                        className={`form-control ${errors2.email ? 'is-invalid' : ''}`}
-                                                    />
-                                                    <span style={{ color: 'red' }}>{errors2.email?.message}</span>
-                                                </div>
-                                                <div className="form-group">
-                                                    <input
-                                                        type="password"
-                                                        {...register2("password")}
-                                                        placeholder="Password"
-                                                        className={`form-control ${errors2.password ? 'is-invalid' : ''}`}
-                                                    />
-                                                    <span style={{ color: 'red' }}>{errors2.password?.message}</span>
-                                                </div>
-                                                <div className="form-group">
-                                                    <input
-                                                        type="password"
-                                                        {...register2("confirmPwd")}
-                                                        placeholder="Confirm Password"
-                                                        className={`form-control ${errors2.confirmPwd ? 'is-invalid' : ''}`}
-                                                    />
-                                                    <span style={{ color: 'red' }}>{errors2.confirmPwd?.message}</span>
-                                                </div>
-                                                {
-                                                    isLoading
-                                                        ?
-                                                        <button style={{ width: "100%" }} className="btn btn-primary">Sign Up...  <div className="spinner-border"  style={{width:'1rem',height:'1rem'}}/>
-                                                        </button>
-
-                                                        :
-                                                        <button style={{ width: "100%" }} type='submit' href="#" className="btn btn-primary">Sign Up</button>
+                                                        <button style={{ width: "100%" }} type='submit' href="#" className="btn btn-primary">Submit</button>
                                                 }
 
                                                 <br /><br />
                                                 <p><a href>
-                                                    Already have account? <Link to="#" onClick={() => switchFormHandle()} style={{ cursor: "pointer" }}>SignIn</Link>
+                                                    Already have account? <Link to="#" onClick={() => switchFormHandleForgotPass()} style={{ cursor: "pointer" }}>SignIn</Link>
                                                 </a></p>
                                             </form>
 
-
                                         </div>
                                     </div>
+                                    :
+                                    switchForm
+                                        ?
+                                        <div className="col-lg-4 col-sm-12">
+                                            <div className="contact-form2 login_wraper">
+                                                <h4 className="text-uppercase">Login to your Account</h4>
+                                                <form onSubmit={handleSubmit(onSubmit)}>
+                                                    <div className="form-group">
+                                                        <input
+                                                            type="text"
+                                                            {...register("email")}
+                                                            placeholder="Email address"
+                                                            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                                        />
+                                                        <span style={{ color: 'red' }}>{errors.email?.message}</span>
+
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <input
+                                                            type="password"
+                                                            {...register("password")}
+                                                            placeholder="Password"
+                                                            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                                        />
+                                                        <span style={{ color: 'red' }}>{errors.password?.message}</span>
+
+                                                    </div>
+                                                    {
+                                                        isLoading
+                                                            ?
+                                                            <button style={{ width: "100%" }} className="btn btn-primary">Sign In...  <div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                                            </button>
+
+                                                            :
+                                                            <button style={{ width: "100%" }} type='submit' className="btn btn-primary">Sign In</button>
+                                                    }
+
+
+                                                    <div className="forgot" style={{ cursor: "pointer" }} onClick={handleForgotPassword}>
+                                                        Forgot Password?
+                                                    </div>
+                                                    <p>Don't have account yet? <Link to="#" onClick={() => switchFormHandle()} style={{ cursor: "pointer" }}>Register</Link></p>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        :
+                                        <div className="col-lg-4 col-sm-12">
+                                            <div className="contact-form2 login_wraper">
+                                                <h4 className="text-uppercase">Create an account</h4>
+                                                <form onSubmit={handleSubmit2(onSubmitSignup)}>
+                                                    <div className="form-group">
+                                                        <input
+                                                            type="text"
+                                                            {...register2("firstName")}
+                                                            placeholder="First name"
+                                                            className={`form-control ${errors2.firstName ? 'is-invalid' : ''}`}
+                                                        />
+                                                        <span style={{ color: 'red' }}>{errors2.firstName?.message}</span>
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <input
+                                                            type="text"
+                                                            {...register2("lastName")}
+                                                            placeholder="First name"
+                                                            className={`form-control ${errors2.lastName ? 'is-invalid' : ''}`}
+                                                        />
+                                                        <span style={{ color: 'red' }}>{errors2.lastName?.message}</span>
+                                                    </div>
+
+                                                    <div className="form-group">
+                                                        <input
+                                                            type="text"
+                                                            {...register2("email")}
+                                                            placeholder="Email address"
+                                                            className={`form-control ${errors2.email ? 'is-invalid' : ''}`}
+                                                        />
+                                                        <span style={{ color: 'red' }}>{errors2.email?.message}</span>
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <input
+                                                            type="password"
+                                                            {...register2("password")}
+                                                            placeholder="Password"
+                                                            className={`form-control ${errors2.password ? 'is-invalid' : ''}`}
+                                                        />
+                                                        <span style={{ color: 'red' }}>{errors2.password?.message}</span>
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <input
+                                                            type="password"
+                                                            {...register2("confirmPwd")}
+                                                            placeholder="Confirm Password"
+                                                            className={`form-control ${errors2.confirmPwd ? 'is-invalid' : ''}`}
+                                                        />
+                                                        <span style={{ color: 'red' }}>{errors2.confirmPwd?.message}</span>
+                                                    </div>
+                                                    {
+                                                        isLoading
+                                                            ?
+                                                            <button style={{ width: "100%" }} className="btn btn-primary">Sign Up...  <div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                                            </button>
+
+                                                            :
+                                                            <button style={{ width: "100%" }} type='submit' href="#" className="btn btn-primary">Sign Up</button>
+                                                    }
+
+                                                    <br /><br />
+                                                    <p><a href>
+                                                        Already have account? <Link to="#" onClick={() => switchFormHandle()} style={{ cursor: "pointer" }}>SignIn</Link>
+                                                    </a></p>
+                                                </form>
+                                            </div>
+                                        </div>
                             }
-
-
                         </div>
                     </div>
                 </section>
-
                 {/* Footer STYLES  */}
                 <Footer />
                 {/* FOOTER STYLES END */}

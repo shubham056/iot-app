@@ -28,7 +28,7 @@ export const ChartComponent = props => {
           fontSize
         },
         width: 900,
-        height: 300,
+        height: 340,
         timeScale: {
           timeVisible: true,
           secondsVisible: true,

@@ -26,6 +26,8 @@ import ChangePassword from './pages/ChangePassword';
 import NotFound from './pages/NotFound';
 import Portal from './pages/Portal';
 import Profile from './pages/Profile';
+import AddUser from './pages/AddUser';
+import ResetPassword from './pages/ResetPassword';
 
 const muiTheme = createTheme ({
   typography: {
@@ -49,6 +51,7 @@ function App() {
           <Route path="/listing" element={<PrivateRoute><Listing /></PrivateRoute>} />
           <Route path="/view-listing" element={<PrivateRoute><ViewListing /></PrivateRoute>} />
           <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+          <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
 
@@ -56,6 +59,7 @@ function App() {
           <Route path="/about-us" element={<About />} />
           <Route path="/support" element={<Support />} />
           <Route path="/portal" element={<ProtectedRoute><Portal /></ProtectedRoute>} />
+          <Route path="/reset-password/:token" element={<ProtectedRoute><ResetPassword /></ProtectedRoute>} />
           <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />
           <Route path="/signup" element={<ProtectedRoute><Signup /></ProtectedRoute>} />
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />

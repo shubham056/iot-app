@@ -917,12 +917,12 @@ const Dashboard = () => {
       }
       return tree;
     }
-    //console.log("++++++++++++++++locations+++++++++++++++++++++", locations)
+    console.log("++++++++++++++++before loop tree view+++++++++++++++++++++", treeViewData[0])
     createTreeView(treeViewData[0]).then(data => {
-      console.log("tree view data *************************88", data[0])
+      console.log("tree view final data *************************", data)
       setRootTreeViewData(data[0])
     })
-    //setRootTreeViewData(createTreeView(locations))
+    //setRootTreeViewData(createTreeView(treeViewData[0]))
     //console.log("__________________Root_________________", createTreeView(locations))
 
 
@@ -3195,14 +3195,14 @@ const Dashboard = () => {
                               isPower
                                 ?
                                 <>
-                                  <div class="switcher">
+                                  {/* <div class="switcher">
                                     <button title='1 Day' class={`switcher-item ${isActiveRangeSwitch == "1D" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1D")}>1D</button>
                                     <button title='1 Week' class={`switcher-item ${isActiveRangeSwitch == "1W" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1W")}>1W</button>
                                     <button title='1 Month' class={`switcher-item ${isActiveRangeSwitch == "1M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("1M")}>1M</button>
                                     <button title='6 Month' class={`switcher-item ${isActiveRangeSwitch == "6M" ? 'switcher-active-item' : null}`} onClick={() => powerGrapghRangeSwitcher("6M")}>6M</button>
 
 
-                                  </div>
+                                  </div> */}
 
                                 </>
                                 :

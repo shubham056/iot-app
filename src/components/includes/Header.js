@@ -18,7 +18,7 @@ export const Header = () => {
             <nav className="navbar navbar-expand-lg">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">
-                        <img src="assets/images/logo.jpg" alt="logo" className="img-fluid logo" />
+                        <img src="/assets/images/logo.jpg" alt="logo" className="img-fluid logo" />
                     </Link>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="fa fa-bars" />
@@ -99,6 +99,7 @@ export const Header = () => {
                                                 </button>
                                                 <div className="dropdown-menu">
                                                     <Link className="dropdown-item" to="/profile">Profile</Link>
+                                                    {/* <Link className="dropdown-item" to="/add-user">Add User</Link> */}
                                                     <Link className="dropdown-item" to="/change-password">Change Password</Link>
                                                     <Link className="dropdown-item" to="/logout">Logout</Link>
                                                 </div>

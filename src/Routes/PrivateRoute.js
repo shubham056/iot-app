@@ -34,24 +34,30 @@ const parseJwt = (token) => {
 };
 
 function PrivateRoute({ children }) {
+  console.log("++++++++++++++++++++++++++++++ Private Routes access +++++++++++++++++++++++++")
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectUser);
   const user = JSON.parse(localStorage.getItem("user"));
-  //console.log("user private roure value",user)
-  if(user){
+  //console.log("user private roure value",user.token)
+  if (user === null || user === undefined) {
+    dispatch(logout())
+  }
+  if (user) {
     const decodedJwt = parseJwt(user.token);
+    console.log("Decode token expiry", decodedJwt.exp * 100)
     if (decodedJwt.exp * 1000 < Date.now()) {
       console.log('exp token')
       dispatch(logout())
       dispatch(RESET_ACTION())
       return <Navigate to="/" />
     }
-    console.log("isAuthenticated private route value",isAuthenticated)
-    return isAuthenticated  ? children : <Navigate to="/" />;
+    console.log("isAuthenticated private route value", isAuthenticated)
+    return isAuthenticated ? children : <Navigate to="/" />;
   }
-  else{
+  else {
+
     return <Navigate to="/" />
-  }  
+  }
 }
 
 export default PrivateRoute;

@@ -67,6 +67,17 @@ const AddNewArea = (userId,data) => {
     })
 };
 
+const addUsers = (userId,data) => {
+    return axios({
+        method: "post",
+        url:`users/addUsers/${userId}`,
+        data,
+        headers: authHeader()
+    })
+};
+
+
+
 const AddRootUser = (userId,data) => {
     return axios({
         method: "post",
@@ -91,6 +102,10 @@ const checkAssignDeviceID = (deviceID) => {
 //remove assosiated device
 const removeAssignDeviceID = (deviceID) => {
     return axios.get(`users/remove_associated_device/${deviceID}`, { headers: authHeader() });
+};
+//forgot password
+const forgotPasword = (email) => {
+    return axios.get(`users/forgot_password/${email}`);
 };
 //Add device to area
 const AddNewDevice = (userId,data) => {  
@@ -146,6 +161,16 @@ const deleteAllAreasandDevices = (ids) => {
     return axios.get(`users/delete_areas_and_devices/${ids}`, { headers: authHeader() });
 };
 
+//reset password check token and time
+const resetPassword = (data) => {
+    console.log("data ---",data)
+    return axios({
+        method: "post",
+        url:`users/reset_password`,
+        data
+    })
+};
+
 
 
 const userService = {
@@ -177,5 +202,8 @@ const userService = {
     editAreaName,
     editDeviceName,
     moveDevices,
+    forgotPasword,
+    addUsers,
+    resetPassword
 };
 export default userService;
