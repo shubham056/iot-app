@@ -103,7 +103,7 @@ const Portal = () => {
                 toast.error("The email address isn't recongnized, Please try again or register for a new account.", {toastId: 23})
             }else{
                 //success
-                toast.success("Password reset email successfully sent!", {toastId: 23})
+                toast.success("Password reset link successfully sent!", {toastId: 23})
             }
           }).catch(err => {
             setisLoading(false)
