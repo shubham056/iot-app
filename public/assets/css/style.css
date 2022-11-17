@@ -3464,3 +3464,27 @@ nav.navbar.navbar-expand-lg>.container-fluid {
 .css-118pgjk-MuiTreeItem-content .MuiTreeItem-iconContainer svg{
     font-size: 16px !important;
 }
+.control-row-input{
+    padding-top: 20px;
+}
+.control-row{
+    background-color: #6eadd7;
+    border-radius: 25px;
+    margin: 3px;
+    padding: 5px;
+    text-align: center;
+}
+.control-row .col-md-3{
+    padding: 10px 0px 0px 0px;
+}
+.control-row .col-md-3 p{
+    color: white;
+}
+.control-input{
+    width: 35%
+}
+.input-command:focus{
+    background-color: #335b82;
+    border: 1px solid #335b82;
+    color: white;
+}

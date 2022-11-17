@@ -5,13 +5,9 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment-timezone';
 import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
-import randomcolor from "randomcolor";
-//import "../../node_modules/react-simple-tree-menu/dist/main.css";
 import "react-simple-tree-menu/dist/main.css";
-
 import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
-// import { selectUser } from "../redux/features/AuthenticationSlice";
 import UserService from "../services/user.service";
 import { set, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -21,12 +17,14 @@ import PowerCharts from '../components/PowerCharts';
 import TempetureChart from "../components/TempetureChart";
 import EnergyChart from '../components/EnergyChart';
 import socketClient from 'socket.io-client';
-import Skeleton from 'react-loading-skeleton';
-import { Typography, Menu, MenuItem, Tooltip, Button, Stack, Card, CardContent, Grid, FormControl, Select } from "@mui/material";
-import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt, KeyboardArrowDown,Devices } from "@mui/icons-material";
+import { Typography, Menu, MenuItem, Tooltip, Button, Stack } from "@mui/material";
+import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt, KeyboardArrowDown, Devices } from "@mui/icons-material";
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
+import Control from '../components/Control';
+import DeviceStats from '../components/DeviceStats';
 const tzone = "Asia/Amman";
+
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
@@ -36,13 +34,12 @@ const connectionOptions = {
   "transports": ["websocket"]
 };
 
-const Dashboard = () => {
 
+
+
+const Dashboard = () => {
   let today = moment().tz(tzone).format('YYYY/MM/DD')
   let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YYYY/MM/DD')
-
-
-
   const NodeWithContextMenu = (props) => {
     const [contextMenu, setContextMenu] = React.useState({
       mouseX: null,
@@ -154,6 +151,7 @@ const Dashboard = () => {
               setisPowerPhase3(false)
               setisEnergy(false)
               setisTemperature(false)
+              setisControl(false)
               setisEnergyDaily(false)
               setisEnergyMonthly(false)
               setshowGraph(true)
@@ -410,6 +408,7 @@ const Dashboard = () => {
     } if (type === "monthly") {
       setisEnergyMonthly(true)
       setisTemperature(false)
+      setisControl(false)
       setisEnergyDaily(false)
       setisEnergyTotal(true)
       setisEnergyPhase1(false)
@@ -476,6 +475,7 @@ const Dashboard = () => {
   const [devicename, setDeviceName] = useState("")
   const [isPower, setisPower] = useState(false)
   const [isTemperature, setisTemperature] = useState(false)
+  const [isControl, setisControl] = useState(false)
   const [isPowerTotal, setisPowerTotal] = useState(false)
   const [isPowerPhase1, setisPowerPhase1] = useState(false)
   const [isPowerPhase2, setisPowerPhase2] = useState(false)
@@ -933,7 +933,7 @@ const Dashboard = () => {
       key={nodes.id}
       nodeId={nodes.id}
       label={<NodeWithContextMenu label={nodes.label} id={nodes.id} is_type={nodes.is_type} device_id={nodes.device_id} />}
-      icon={nodes.is_type == 'device' ? <Devices sx={{color: "#1d9b9c"}} /> : null}
+      icon={nodes.is_type == 'device' ? <Devices sx={{ color: "#1d9b9c" }} /> : null}
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
@@ -2241,7 +2241,7 @@ const Dashboard = () => {
                             <div className="widget_categories right-widget top_heding">
                               <div className="tags top_tag">
                                 {
-                                  isPower || isTemperature
+                                  isPower || isTemperature || isControl
                                     ?
                                     <>
                                       {/* <div className="tags bottom_tag"> */}
@@ -2254,6 +2254,7 @@ const Dashboard = () => {
                                           setisPowerPhase3(false)
                                           setisEnergy(false)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisStaticTxtValue1('T-Voltage')
                                           setisStaticTxtValue2('T-Current')
                                           setisStaticTxtValue3('T-Power')
@@ -2303,6 +2304,7 @@ const Dashboard = () => {
                                           setisEnergy(false)
                                           setisEnergyTotal(false)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisStaticTxtValue1('L1-Voltage')
                                           setisStaticTxtValue2('L1-Current')
                                           setisStaticTxtValue3('L1-Power')
@@ -2352,6 +2354,7 @@ const Dashboard = () => {
                                           setisPowerPhase3(false)
                                           setisEnergy(false)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisStaticTxtValue1('L2-Voltage')
                                           setisStaticTxtValue2('L2-Current')
                                           setisStaticTxtValue3('L2-Power')
@@ -2399,6 +2402,7 @@ const Dashboard = () => {
                                           setisPowerPhase3(true)
                                           setisEnergy(false)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisStaticTxtValue1('L3-Voltage')
                                           setisStaticTxtValue2('L3-Current')
                                           setisStaticTxtValue3('L3-Power')
@@ -2455,6 +2459,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(true)
                                           setisStaticTxtValue1('T-Voltage')
                                           setisStaticTxtValue2('T-Current')
@@ -2496,6 +2501,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(false)
                                           setisStaticTxtValue1('L1-Voltage')
                                           setisStaticTxtValue2('L1-Current')
@@ -2537,6 +2543,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(false)
                                           setisStaticTxtValue1('L2-Voltage')
                                           setisStaticTxtValue2('L2-Current')
@@ -2578,6 +2585,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(true)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(false)
                                           setisStaticTxtValue1('L3-Voltage')
                                           setisStaticTxtValue2('L3-Current')
@@ -2629,6 +2637,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(true)
                                           setisStaticTxtValue1('T-Voltage')
                                           setisStaticTxtValue2('T-Current')
@@ -2671,6 +2680,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(false)
                                           setisStaticTxtValue1('L1-Voltage')
                                           setisStaticTxtValue2('L1-Current')
@@ -2712,6 +2722,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(false)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(false)
                                           setisStaticTxtValue1('L2-Voltage')
                                           setisStaticTxtValue2('L2-Current')
@@ -2753,6 +2764,7 @@ const Dashboard = () => {
                                           setisEnergyPhase3(true)
                                           setisEnergy(true)
                                           setisTemperature(false)
+                                          setisControl(false)
                                           setisEnergyTotal(false)
                                           setisStaticTxtValue1('L3-Voltage')
                                           setisStaticTxtValue2('L3-Current')
@@ -2790,7 +2802,41 @@ const Dashboard = () => {
                                     :
                                     null
                                 }
-                                <a href="#" className="tag-cloud-link ">Control</a>
+                                <a
+                                  onClick={() => {
+                                    setisPower(false)
+                                    setisPowerTotal(false)
+                                    setisEnergyPhase1(false)
+                                    setisEnergyPhase2(false)
+                                    setisEnergyPhase3(false)
+                                    setisPowerPhase1(false)
+                                    setisPowerPhase2(false)
+                                    setisPowerPhase3(false)
+                                    setisEnergy(false)
+                                    setisTemperature(false)
+                                    setisEnergyDaily(false)
+                                    setisEnergyMonthly(false)
+                                    setshowGraph(true)
+                                    setIsRenameDevice(false)
+                                    setIsRenameArea(false)
+                                    setIsAddArea(false)
+                                    setIsAddDevice(false)
+                                    setshowWelcomeDiv(false)
+                                    setIsForgotDevice(false)
+                                    setIsDeleteArea(false)
+                                    SetIsMoveDevice(false)
+                                    //setDeviceName(label)
+                                    setisActiveRangeSwitch(null)
+                                    setisControl(true)
+                                    setisEnergyDaily(false)
+                                    setisEnergyMonthly(false)
+                                    setisEnergyTotal(false)
+                                  }}
+                                  style={{ cursor: 'pointer' }}
+                                  className={`tag-cloud-link ${isControl ? "bg_green" : null} `}
+                                >
+                                  Control
+                                </a>
                                 <a href="#" className="tag-cloud-link ">Diagnostic</a>
                                 <a
                                   onClick={() => {
@@ -2817,6 +2863,10 @@ const Dashboard = () => {
                                     SetIsMoveDevice(false)
                                     //setDeviceName(label)
                                     setisActiveRangeSwitch(null)
+                                    setisControl(false)
+                                    setisEnergyDaily(false)
+                                    setisEnergyMonthly(false)
+                                    setisEnergyTotal(false)
 
                                     setisStaticTxtValue1('T-Voltage')
                                     setisStaticTxtValue2('T-Current')
@@ -2853,344 +2903,195 @@ const Dashboard = () => {
                                 </a>
                               </div>
                             </div>
-                            {/* <Grid container >
-                            
-                            </Grid> */}
-                            <Grid
-                              container
-                              spacing={1}
-                              direction="row"
-                              justify="flex-start"
-                              alignItems="flex-start"
-                            >
-                              <Grid spacing={1} item xs={12} sm={6} md={3}>
-                                <Card className='' sx={{
-                                  maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
-                                    boxShadow: 5,
-                                  }
-                                }}>
-                                  <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
-                                      {isStaticTxtValue1}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
-                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${parseFloat(isStaticValue1).toFixed(1)} V`}
-                                    </Typography>
-                                  </CardContent>
-                                </Card>
-                              </Grid>
-                              <Grid spacing={1} item xs={12} sm={6} md={3}>
-                                <Card className='' sx={{
-                                  maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
-                                    boxShadow: 5,
-                                  }
-                                }}>
-                                  <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
-                                      {isStaticTxtValue2}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
-                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${isStaticValue2} A`}
-                                    </Typography>
-                                  </CardContent>
-                                </Card>
-                              </Grid>
-                              <Grid spacing={1} item xs={12} sm={6} md={3}>
-                                <Card className='' sx={{
-                                  maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
-                                    boxShadow: 5,
-                                  }
-                                }}>
-                                  <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
-                                      {isStaticTxtValue3}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
-                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${parseFloat(isStaticValue3).toFixed(1)} Kw`}
-                                    </Typography>
-                                  </CardContent>
-                                </Card>
-                              </Grid>
-                              <Grid spacing={1} item xs={12} sm={6} md={3}>
-                                <Card className='' sx={{
-                                  maxWidth: 345, boxShadow: 2, margin: "0 5px 10px", ':hover': {
-                                    boxShadow: 5,
-                                  }
-                                }}>
-                                  <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
-                                      {isStaticTxtValue4}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold',fontSize: 15 }}>
-                                      {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${isStaticValue4} kwh`}
-                                    </Typography>
-                                  </CardContent>
-                                </Card>
-                              </Grid>
-
-                            </Grid>
 
 
-                            {/* <div className="tags">
-                              <div className="tag_box">
-                                <span>{isStaticTxtValue1}</span>
-                                <a href="#" className={`tag-cloud-link`}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : parseFloat(isStaticValue1).toFixed(1)}</a>
-                              </div>
-                              <div className="tag_box">
-                                <span>{isStaticTxtValue2}</span>
-                                <a href="#" className={`tag-cloud-link`}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : isStaticValue2}</a>
-                              </div>
-                              <div className="tag_box">
-                                <span>{isStaticTxtValue3}</span>
-                                <a href="#" className={`tag-cloud-link `}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : parseFloat(isStaticValue3).toFixed(1)} </a>
-                              </div>
-                              <div className="tag_box">
-                                <span>{isStaticTxtValue4}</span>
-                                <a href="#" className={`tag-cloud-link`}>{isGraphStatsLoading ? <Skeleton height={15} width={100} /> : isStaticValue4}</a>
-                              </div>
-                            </div> */}
-                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                              <div className="row">
-                                {
-                                  (isTemperature == false)
-                                    ?
-                                    <div className="col-xl-2 col-lg-4 col-md-4 col-sm-12">
-                                      <div className="row">
-                                        <div className="tags left_wraper">
-                                          <Stack spacing={2} sx={{ paddingRight: "10px" }}>
+                            <DeviceStats
+                              isStaticTxtValue1={isStaticTxtValue1}
+                              isStaticTxtValue2={isStaticTxtValue2}
+                              isStaticTxtValue3={isStaticTxtValue3}
+                              isStaticTxtValue4={isStaticTxtValue4}
+                              isStaticValue1={isStaticValue1}
+                              isStaticValue2={isStaticValue2}
+                              isStaticValue3={isStaticValue3}
+                              isStaticValue4={isStaticValue4}
+                              isGraphStatsLoading={isGraphStatsLoading}
+                            />
 
-                                            <Button
-                                              variant="contained"
-                                              className={`${isPower ? 'active' : null}`}
-                                              style={{
-                                                borderRadius: 25,
-                                                backgroundColor: "rgb(51, 164, 165)",
-                                                textTransform: "capitalize"
-                                              }}
-                                              size="large"
-                                              onClick={() => {
-                                                setisPower(true)
-                                                setisPowerTotal(true)
-                                                setisPowerPhase1(false)
-                                                setisPowerPhase2(false)
-                                                setisPowerPhase3(false)
-                                                setisEnergy(false)
-                                                setisTemperature(false)
-                                                setisEnergyDaily(false)
-                                                setisEnergyMonthly(false)
-                                                setisActiveRangeSwitch(null)
-                                                setisStaticTxtValue1('T-Voltage')
-                                                setisStaticTxtValue2('T-Current')
-                                                setisStaticTxtValue3('T-Power')
-                                                setisStaticTxtValue4('T-Energy')
-                                                setisGraphLabelTxt('Total Power')
 
-                                                UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
-                                                  .then((res) => {
-                                                    //console.log("get device data res", res.data.data.deviceData)
-                                                    setpowerDataFromDB(res.data.data.deviceData)
-                                                  }).catch(err => {
-                                                    console.log(err)
-                                                  })
-                                                //get latest stats for total voltage, current, power and energy
-                                                UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                                  const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                                  setisStaticValue1(T_voltage)
-                                                  setisStaticValue2(T_current)
-                                                  setisStaticValue3(T_power)
-                                                  setisStaticValue4(T_energy)
-                                                  setisStaticTemperature(temperature) // temperature
-                                                }).catch(err => {
-                                                  console.log(err)
-                                                })
-                                              }}
-                                            >
-                                              Power
-                                            </Button>
-                                            <Button
-                                              variant="contained"
-                                              className={`${isEnergy ? 'active' : null}`}
-                                              style={{
-                                                borderRadius: 25,
-                                                backgroundColor: "rgb(51, 164, 165)",
-                                                textTransform: "capitalize"
-                                              }}
-                                              size="large"
-                                              aria-controls={open ? 'basic-menu' : undefined}
-                                              aria-haspopup="true"
-                                              aria-expanded={open ? 'true' : undefined}
-                                              onClick={handleClick}
-                                              endIcon={<KeyboardArrowDown />}
-                                            >
-                                              Energy
-                                            </Button>
-                                            <Menu
-                                              id="basic-menu"
-                                              anchorEl={anchorEl}
-                                              open={open}
-                                              // onClose={handleCloseMenu}
-                                              MenuListProps={{
-                                                'aria-labelledby': 'basic-button',
-                                              }}
-                                            >
-                                              <MenuItem onClick={() => handleCloseMenu('daily')}>Daily</MenuItem>
-                                              <MenuItem onClick={() => handleCloseMenu('monthly')}>Monthly</MenuItem>
-                                            </Menu>
-                                          </Stack>
+                            {
+                              isControl
+                                ?
+                                <Control />
+                                :
+                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                  <div className="row">
+                                    {
+                                      (isTemperature == false)
+                                        ?
+                                        <div className="col-xl-2 col-lg-4 col-md-4 col-sm-12">
+                                          <div className="row">
+                                            <div className="tags left_wraper">
+                                              <Stack spacing={2} sx={{ paddingRight: "10px" }}>
 
-                                          {/* <a
-                                        onClick={() => {
-                                          setisPower(true)
-                                          setisPowerTotal(true)
-                                          setisPowerPhase1(false)
-                                          setisPowerPhase2(false)
-                                          setisPowerPhase3(false)
-                                          setisEnergy(false)
-                                          setisEnergyDaily(false)
-                                          setisEnergyMonthly(false)
-                                          setisActiveRangeSwitch(null)
-                                          setisStaticTxtValue1('T-Voltage')
-                                          setisStaticTxtValue2('T-Current')
-                                          setisStaticTxtValue3('T-Power')
-                                          setisStaticTxtValue4('T-Energy')
-                                          setisGraphLabelTxt('Total Power')
+                                                <Button
+                                                  variant="contained"
+                                                  className={`${isPower ? 'active' : null}`}
+                                                  style={{
+                                                    borderRadius: 25,
+                                                    backgroundColor: "rgb(51, 164, 165)",
+                                                    textTransform: "capitalize"
+                                                  }}
+                                                  size="large"
+                                                  onClick={() => {
+                                                    setisPower(true)
+                                                    setisPowerTotal(true)
+                                                    setisPowerPhase1(false)
+                                                    setisPowerPhase2(false)
+                                                    setisPowerPhase3(false)
+                                                    setisEnergy(false)
+                                                    setisTemperature(false)
+                                                    setisControl(false)
+                                                    setisEnergyDaily(false)
+                                                    setisEnergyMonthly(false)
+                                                    setisActiveRangeSwitch(null)
+                                                    setisStaticTxtValue1('T-Voltage')
+                                                    setisStaticTxtValue2('T-Current')
+                                                    setisStaticTxtValue3('T-Power')
+                                                    setisStaticTxtValue4('T-Energy')
+                                                    setisGraphLabelTxt('Total Power')
 
-                                          UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
-                                            .then((res) => {
-                                              //console.log("get device data res", res.data.data.deviceData)
-                                              setpowerDataFromDB(res.data.data.deviceData)
-                                            }).catch(err => {
-                                              console.log(err)
-                                            })
-                                          //get latest stats for total voltage, current, power and energy
-                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                            setisStaticValue1(T_voltage)
-                                            setisStaticValue2(T_current)
-                                            setisStaticValue3(T_power)
-                                            setisStaticValue4(T_energy)
-                                            setisStaticTemperature(temperature) // temperature
-                                          }).catch(err => {
-                                            console.log(err)
-                                          })
-                                        }}
-                                        className={`tag-cloud-link ${isPower ? "bg_green" : null} `}
-                                        style={{ cursor: 'pointer' }}
-                                      >
-                                        Power
-                                      </a> */}
-                                          {/* <a
-                                        onClick={() => {
-                                          setisPower(false)
-                                          setisPowerTotal(false)
-                                          setisEnergyMonthly(false)
-                                          setisEnergyDaily(true)
-                                          setisEnergy(true)
-                                          setisEnergyTotal(true)
-                                          setisEnergyPhase1(false)
-                                          setisEnergyPhase2(false)
-                                          setisEnergyPhase3(false)
-                                          setisStaticTxtValue1('T-Voltage')
-                                          setisStaticTxtValue2('T-Current')
-                                          setisStaticTxtValue3('T-Power')
-                                          setisStaticTxtValue4('T-Energy')
-                                          setisGraphLabelTxt('T-Energy-Daily')
-                                          UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "daily")
-                                            .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
-                                              setenergyDataFromDB(res.data.data.deviceData)
-                                              console.log("energyDataFromDB", energyDataFromDB)
-                                            }).catch(err => {
-                                              console.log(err)
-                                            })
-                                          //get latest stats for total voltage, current, power and energy
-                                          UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
-                                            setisStaticValue1(T_voltage)
-                                            setisStaticValue2(T_current)
-                                            setisStaticValue3(T_power)
-                                            setisStaticValue4(T_energy)
-                                            setisStaticTemperature(temperature) // temperature
-                                          }).catch(err => {
-                                            console.log(err)
-                                          })
-                                        }}
-                                        className={`tag-cloud-link ${isEnergy ? "bg_green" : null} `}
-                                        style={{ cursor: 'pointer' }}
-                                      >
-                                        Energy
-                                      </a> */}
+                                                    UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
+                                                      .then((res) => {
+                                                        //console.log("get device data res", res.data.data.deviceData)
+                                                        setpowerDataFromDB(res.data.data.deviceData)
+                                                      }).catch(err => {
+                                                        console.log(err)
+                                                      })
+                                                    //get latest stats for total voltage, current, power and energy
+                                                    UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
+                                                      const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
+                                                      setisStaticValue1(T_voltage)
+                                                      setisStaticValue2(T_current)
+                                                      setisStaticValue3(T_power)
+                                                      setisStaticValue4(T_energy)
+                                                      setisStaticTemperature(temperature) // temperature
+                                                    }).catch(err => {
+                                                      console.log(err)
+                                                    })
+                                                  }}
+                                                >
+                                                  Power
+                                                </Button>
+                                                <Button
+                                                  variant="contained"
+                                                  className={`${isEnergy ? 'active' : null}`}
+                                                  style={{
+                                                    borderRadius: 25,
+                                                    backgroundColor: "rgb(51, 164, 165)",
+                                                    textTransform: "capitalize"
+                                                  }}
+                                                  size="large"
+                                                  aria-controls={open ? 'basic-menu' : undefined}
+                                                  aria-haspopup="true"
+                                                  aria-expanded={open ? 'true' : undefined}
+                                                  onClick={handleClick}
+                                                  endIcon={<KeyboardArrowDown />}
+                                                >
+                                                  Energy
+                                                </Button>
+                                                <Menu
+                                                  id="basic-menu"
+                                                  anchorEl={anchorEl}
+                                                  open={open}
+                                                  // onClose={handleCloseMenu}
+                                                  MenuListProps={{
+                                                    'aria-labelledby': 'basic-button',
+                                                  }}
+                                                >
+                                                  <MenuItem onClick={() => handleCloseMenu('daily')}>Daily</MenuItem>
+                                                  <MenuItem onClick={() => handleCloseMenu('monthly')}>Monthly</MenuItem>
+                                                </Menu>
+                                              </Stack>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        :
+                                        null
+                                    }
+
+                                    <div className={`col-xl-${isTemperature ? 12 : 10} col-lg-${isTemperature ? 12 : 8} col-md-${isTemperature ? 12 : 8} col-sm-12`}>
+                                      <div className="row right_wraper">
+
+                                        <div className="tags ">
+                                          <span>{isGraphLabelTxt}</span>
+                                          <span>
+                                            {
+                                              isPower || isTemperature
+                                                ?
+                                                <DateRangePicker
+                                                  key={keyRef.current}
+                                                  onCallback={handleCallback}
+                                                  onApply={handleApply}
+                                                  initialSettings={isInitialDateData}
+                                                >
+                                                  <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, border: "1px solid #46acad", borderRadius: 25 }} />
+                                                </DateRangePicker>
+                                                :
+                                                null
+                                            }
+                                          </span>
+
+                                        </div>
+
+                                        <div className="graph_wraper">
+                                          {
+                                            isPower
+                                              ?
+                                              <PowerCharts
+                                                powerDataFromDB={powerDataFromDB}
+                                              />
+                                              :
+                                              null
+                                          }
+
+                                          {
+                                            isTemperature
+                                              ?
+                                              <TempetureChart
+                                                tempetureDataFromDB={tempetureDataFromDB}
+                                              />
+                                              :
+                                              null
+                                          }
+                                          {
+                                            isEnergyDaily
+                                              ?
+                                              <EnergyChart
+                                                energyDataFromDB={energyDataFromDB}
+                                                chartType="daily" />
+                                              :
+                                              null
+                                          }
+
+                                          {
+                                            isEnergyMonthly
+                                              ?
+                                              <EnergyChart
+                                                energyDataFromDB={energyDataFromDB}
+                                                chartType="monthly" />
+                                              :
+                                              null
+                                          }
+
                                         </div>
                                       </div>
                                     </div>
-                                    :
-                                    null
-                                }
-
-                                <div className={`col-xl-${isTemperature ? 12 : 10} col-lg-${isTemperature ? 12 : 8} col-md-${isTemperature ? 12 : 8} col-sm-12`}>
-                                  <div className="row right_wraper">
-
-                                    <div className="tags ">
-                                      <span>{isGraphLabelTxt}</span>
-                                      <span>
-                                        {
-                                          isPower || isTemperature
-                                            ?
-                                            <DateRangePicker
-                                              key={keyRef.current}
-                                              onCallback={handleCallback}
-                                              onApply={handleApply}
-                                              initialSettings={isInitialDateData}
-                                            >
-                                              <input type="text" className="form-control" placeholder='Select date range' style={{ fontSize: 12, border: "1px solid #46acad",borderRadius: 25 }} />
-                                            </DateRangePicker>
-                                            :
-                                            null
-                                        }
-                                      </span>
-
-                                    </div>
-
-                                    <div className="graph_wraper">
-                                      {
-                                        isPower
-                                          ?
-                                          <PowerCharts
-                                            powerDataFromDB={powerDataFromDB}
-                                          />
-                                          :
-                                          null
-                                      }
-                                      {
-                                        isTemperature
-                                          ?
-                                          <TempetureChart
-                                            tempetureDataFromDB={tempetureDataFromDB}
-                                          />
-                                          :
-                                          null
-                                      }
-                                      {
-                                        isEnergyDaily
-                                          ?
-                                          <EnergyChart energyDataFromDB={energyDataFromDB} chartType="daily" />
-                                          :
-                                          null
-                                      }
-
-                                      {
-                                        isEnergyMonthly
-                                          ?
-                                          <EnergyChart energyDataFromDB={energyDataFromDB} chartType="monthly" />
-                                          :
-                                          null
-                                      }
-
-                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
+                            }
+
+
+
                             {
                               isPower
                                 ?
