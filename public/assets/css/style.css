@@ -38,7 +38,7 @@ body {
     min-height: 100%;
     overflow-x: hidden;
     height: auto;
-    padding: 0 !important; 
+    padding: 0 !important;
     overflow: auto !important;
 }
 
@@ -2597,7 +2597,8 @@ section {
 }
 
 .tags a.bg_green {
-    background: #1e4a75;;
+    background: #1e4a75;
+    ;
     color: #fff;
     border-color: #1e4a75;
     border-radius: 4px;
@@ -3440,51 +3441,76 @@ nav.navbar.navbar-expand-lg>.container-fluid {
 .help-icon {
     float: right;
 }
-.add-btn .active{
-    background-color: #1e4a75 !important;
-}
-.left_wraper .active{
+
+.add-btn .active {
     background-color: #1e4a75 !important;
 }
 
-.switcher .form-group{
+.left_wraper .active {
+    background-color: #1e4a75 !important;
+}
+
+.switcher .form-group {
     margin-bottom: 0 !important;
     padding: 5px !important;
 }
+
 .MuiCardContent-root {
     padding-bottom: 15px !important;
     padding-top: 20px !important;
 }
-.daterangepicker td.active, .daterangepicker td.active:hover {
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
     background-color: #335b82 !important;
 }
-.daterangepicker .ranges li.active{
+
+.daterangepicker .ranges li.active {
     background-color: #335b82 !important;
 }
-.css-118pgjk-MuiTreeItem-content .MuiTreeItem-iconContainer svg{
+
+.css-118pgjk-MuiTreeItem-content .MuiTreeItem-iconContainer svg {
     font-size: 16px !important;
 }
-.control-row-input{
+
+.control-row-input {
     padding-top: 20px;
 }
-.control-row{
-    background-color: #6eadd7;
-    border-radius: 25px;
-    margin: 3px;
-    padding: 5px;
+
+.control-row {
     text-align: center;
+    border: 1px solid;
+    padding: 10px;
+    margin-bottom: 15px;
 }
-.control-row .col-md-3{
-    padding: 10px 0px 0px 0px;
+
+.table td,
+.table th {
+    border: none !important;
 }
-.control-row .col-md-3 p{
-    color: white;
+
+.table-hover thead tr:hover th,
+.table-hover tbody tr:hover td {
+    /* background-color: #33a4a5b0 */
 }
-.control-input{
-    width: 35%
-}
-.input-command:focus{
+
+.nav-pills .nav-link.active {
     background-color: #335b82;
-    border: 1px solid #335b82;
+}
+
+.nav-link:focus,
+.nav-link:hover {
+    text-decoration: none;
+    background-color: darkcyan;
     color: white;
+    margin: 1px;
+}
+
+.btn-secondary:hover {
+    color: #fff;
+    background-color: #b69942;
+    border-color: #b69942;
+}
+.active-dc-btn{
+    background-color: #1e4a75 !important;
 }

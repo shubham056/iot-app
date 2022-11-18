@@ -4,8 +4,8 @@ import { Header } from '../components/includes/Header'
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment-timezone';
-import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
-import "react-simple-tree-menu/dist/main.css";
+// import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
+//import "react-simple-tree-menu/dist/main.css";
 import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
 import UserService from "../services/user.service";
