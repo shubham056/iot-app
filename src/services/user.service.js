@@ -87,6 +87,14 @@ const AddRootUser = (userId,data) => {
     })
 };
 
+const AddRootUserAfterSignUp = (userId,data) => {
+    return axios({
+        method: "post",
+        url:`users/addRootUserAfterSignup/${userId}`,
+        data
+    })
+};
+
 //check for valid device id
 const checkDeviceID = (deviceID) => {
     return axios.get(`users/check_device_id/${deviceID}`, { headers: authHeader() });
@@ -106,6 +114,15 @@ const removeAssignDeviceID = (deviceID) => {
 //forgot password
 const forgotPasword = (email) => {
     return axios.get(`users/forgot_password/${email}`);
+};
+//add device to users
+const assignDeviceTousers = (email,data) => {
+    return axios({
+        method: "post",
+        url:`users/assign_device_to_user/${email}`,
+        data,
+        headers: authHeader()
+    })
 };
 //Add device to area
 const AddNewDevice = (userId,data) => {  
@@ -204,6 +221,8 @@ const userService = {
     moveDevices,
     forgotPasword,
     addUsers,
-    resetPassword
+    resetPassword,
+    AddRootUserAfterSignUp,
+    assignDeviceTousers
 };
 export default userService;

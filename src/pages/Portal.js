@@ -82,7 +82,27 @@ const Portal = () => {
         //console.log(JSON.stringify(formValue));//print form data to console
         dispatch(signUp(formValue))
             .unwrap()
-            .then(() => {
+            .then((res) => {
+                let userID = res.data.profile.id
+                let user_name = `${res.data.profile.first_name} ${res.data.profile.last_name}`
+                UserService.AddRootUserAfterSignUp(userID, { user_name }).then(
+                    (response) => {
+                      if (response.data.type == 'success') {
+                        console.log('added')
+                      } else {
+                        console.log("added already")
+                      }
+                    },
+                    (error) => {
+                      //{ error && toast.error(error.response.data.message, { toastId: 2603453643 }) }
+                      const _content =
+                        (error.response &&
+                          error.response.data &&
+                          error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                    }
+                  );
                 setisLoading(false)
                 setswitchForm(true)
                 dispatch(clearMessage());

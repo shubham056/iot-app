@@ -62,12 +62,13 @@ const Dashboard = () => {
     const handleClose = (action, props) => {
       const { id, label, is_type } = props
 
-      console.log("arg", action)
+      console.log("arg", props)
       setAreaName(label)
       setRenameDeleteId(id)
       if (action == "Rename" && is_type == "area") {
         console.log("rename area")
         setIsRenameArea(true)
+        SetIsAddDeviceTouser(false)
         SetIsMoveDevice(false)
         setIsRenameDevice(false)
         setIsDeleteArea(false)
@@ -79,6 +80,7 @@ const Dashboard = () => {
       } if (action == "Rename" && is_type == "device") {
         console.log("rename device")
         setIsRenameDevice(true)
+        SetIsAddDeviceTouser(false)
         SetIsMoveDevice(false)
         setIsRenameArea(false)
         setIsDeleteArea(false)
@@ -90,6 +92,7 @@ const Dashboard = () => {
       } if (action == "Delete" && is_type == 'area') {
         console.log("Delete area")
         setIsDeleteArea(true)
+        SetIsAddDeviceTouser(false)
         SetIsMoveDevice(false)
         setIsRenameArea(false)
         setIsRenameDevice(false)
@@ -102,6 +105,7 @@ const Dashboard = () => {
       } if (action == "Delete" && is_type == 'device') {
         console.log("Delete device")
         setIsForgotDevice(true)
+        SetIsAddDeviceTouser(false)
         SetIsMoveDevice(false)
         setIsRenameArea(false)
         setIsRenameDevice(false)
@@ -113,6 +117,21 @@ const Dashboard = () => {
       } if (action == "Move") {
         console.log("move")
         SetIsMoveDevice(true)
+        SetIsAddDeviceTouser(false)
+        setIsForgotDevice(false)
+        setIsRenameArea(false)
+        setIsRenameDevice(false)
+        setIsDeleteArea(false)
+        setIsAddDevice(false)
+        setIsAddArea(false)
+        setshowGraph(false)
+        setshowWelcomeDiv(false)
+      }if (action == "addUsers") {
+        console.log("addUsers")
+        setValue9("user_id",userID)
+        setValue9("device_id",props.device_id)
+        SetIsAddDeviceTouser(true)
+        SetIsMoveDevice(false)
         setIsForgotDevice(false)
         setIsRenameArea(false)
         setIsRenameDevice(false)
@@ -163,6 +182,7 @@ const Dashboard = () => {
               setIsForgotDevice(false)
               setIsDeleteArea(false)
               SetIsMoveDevice(false)
+              SetIsAddDeviceTouser(false)
               setDeviceName(label)
               setisActiveRangeSwitch(null)
 
@@ -245,6 +265,7 @@ const Dashboard = () => {
               <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
               <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
               {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
+              {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("addUsers", props)}>Add Users to {props.label}</MenuItem> : null}
             </Menu>
             :
             null
@@ -453,6 +474,7 @@ const Dashboard = () => {
   const [stepTwoisLoading, setstepTwoisLoading] = useState(false)
   const [forgotisLoading, setforgotisLoading] = useState(false)
   const [deleteAreaisLoading, setdeleteAreaisLoading] = useState(false)
+  const [isaddDeviceToUser, setisaddDeviceToUser] = useState(false)
   const [renameAreaisLoading, setrenameAreaisLoading] = useState(false)
   const [isAddArea, setIsAddArea] = useState(false);
   const [isAddDevice, setIsAddDevice] = useState(false);
@@ -462,6 +484,7 @@ const Dashboard = () => {
   const [isRenameArea, setIsRenameArea] = useState(false);
   const [isRenameDevice, setIsRenameDevice] = useState(false);
   const [isMoveDevice, SetIsMoveDevice] = useState(false);
+  const [isAddDeviceTouser, SetIsAddDeviceTouser] = useState(false);
   const [content, setContent] = useState([]);
   const [contentDevice, setContentDevice] = useState([]);
   const [contentArea, setContentArea] = useState([]);
@@ -724,6 +747,10 @@ const Dashboard = () => {
     device_id: Yup.string().required("Please select device name"),
     area_id: Yup.string().required("Please select area name where you want to move!"),
   });
+  const addDeviceToUsers = Yup.object().shape({
+    //device_id: Yup.string().required("Please select device name"),
+    email: Yup.string().email('Enter valid email id.').required('Email id is required.'),
+  });
   const formOptions = { resolver: yupResolver(Schema) }
   const adddeviceformOptionsStep1 = { resolver: yupResolver(AddDeviceSchemaStep1) }
   const adddeviceformOptionsStep2 = { resolver: yupResolver(AddDeviceSchemaStep2) }
@@ -732,6 +759,7 @@ const Dashboard = () => {
   const formOptionRenameArea = { resolver: yupResolver(renameArea) }
   const formOptionRenameDevice = { resolver: yupResolver(renameDevice) }
   const formOptionMoveDevice = { resolver: yupResolver(moveDevice) }
+  const formOptionAddUserDevice = { resolver: yupResolver(addDeviceToUsers) }
   const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, resetField } = useForm(formOptions);
   const { register: register2, formState: { errors: errors2, isSubmitting: isSubmitting2 }, handleSubmit: handleSubmit2, resetField: resetField2 } = useForm(adddeviceformOptionsStep1);
   const { register: register3, formState: { errors: errors3, isSubmitting: isSubmitting3 }, handleSubmit: handleSubmit3, resetField: resetField3 } = useForm(adddeviceformOptionsStep2);
@@ -740,6 +768,7 @@ const Dashboard = () => {
   const { register: register6, formState: { errors: errors6, isSubmitting: isSubmitting6 }, handleSubmit: handleSubmit6, resetField: resetField6 } = useForm(formOptionRenameArea);
   const { register: register7, formState: { errors: errors7, isSubmitting: isSubmitting7 }, handleSubmit: handleSubmit7, resetField: resetField7 } = useForm(formOptionRenameDevice);
   const { register: register8, formState: { errors: errors8, isSubmitting: isSubmitting8 }, handleSubmit: handleSubmit8, resetField: resetField8 } = useForm(formOptionMoveDevice);
+  const { register: register9, setValue: setValue9, formState: { errors: errors9, isSubmitting: isSubmitting9 }, handleSubmit: handleSubmit9, resetField: resetField9 } = useForm(formOptionAddUserDevice);
 
   const callOnce = useRef(true)
   //add root user node 
@@ -1229,34 +1258,7 @@ const Dashboard = () => {
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
               } else {
-                // Swal.fire({
-                //   title: 'Are you want to sure ?',
-                //   text: res.data.data.msg,
-                //   icon: 'question',
-                //   showCancelButton: true,
-                //   confirmButtonColor: '#3085d6',
-                //   cancelButtonColor: '#d33',
-                //   confirmButtonText: 'Yes, Delete it!'
-                // }).then((result) => {
-                //   if (result.isConfirmed) {
-                //     setdeleteAreaisLoading(true)
-                //     //delete all area and devices in it
-                //     UserService.deleteAllAreasandDevices(res.data.data.ids)
-                //       .then((res) => {
-                //         console.log("ressss", res)
-                //         toast.success('Area successfully deleted!', { toastId: 4564676867878 })
-                //         setisUpdateData(res.data.data.updatedId)
-                //         setdeleteAreaisLoading(false)
-                //       }).catch(err => {
-                //         console.log(err)
-                //         setdeleteAreaisLoading(false)
-                //       })
-                //   } else {
-                //     setdeleteAreaisLoading(false)
-                //   }
-                // })
-                // setdeleteAreaisLoading(false)
-
+                toast.error('Internal server error, please try after some time!', { toastId: 4164676867878 })
               }
 
             })
@@ -1274,6 +1276,57 @@ const Dashboard = () => {
     } else {
       toast.info('Please select device name', { toastId: 2345366467686787 })
     }
+  }
+  //Add device to users
+  const onSubmitaddDeviceToUser = formValue => {
+   // console.log(formValue)
+    //return false
+    const {email, user_id, device_id} = formValue
+      Swal.fire({
+        title: 'Are you sure ?',
+        text: "want to add this device!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, add it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+         
+          setisaddDeviceToUser(true)
+          console.log("isaddDeviceToUser",isaddDeviceToUser)
+          let data ={
+            user_id,
+            device_id
+          }
+          UserService.assignDeviceTousers(email,data)
+            .then((res) => {
+              setisaddDeviceToUser(false)
+              console.log("add device to user API res--", res.data.message)
+              if(res.data.message === "Not_found"){
+                toast.info('This user is not registered with us,sent a email to sign our plateform!', { toastId: 4524 })
+              }
+
+              // if (res.data.data.error == false) {
+              //   toast.success('Device successfully moved!', { toastId: 4464676867878 })
+              //   setisUpdateData(res.data.data.updatedId)
+              //   setisaddDeviceToUser(false)
+              // } else {
+              //   toast.error('Internal server error, please try after some time!', { toastId: 4164676867878 })
+              // }
+            })
+            .catch((error) => {
+              setisaddDeviceToUser(false)
+              console.log(error)
+              { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+            });
+         
+
+        } else {
+          setisaddDeviceToUser(false)
+        }
+      })
+    
   }
 
   const onSubmitStepOne = formValue => {
@@ -2041,6 +2094,58 @@ const Dashboard = () => {
                       </div>
                       :
                       null
+                  }
+                  {
+                    isAddDeviceTouser
+                    ?
+                    <div className="welcome_wraper" id='step2'>
+                        <div className="section-heading text-center">
+                          <section className="login_wraper">
+                            <div className="container">
+                              <div className="row">
+                                <div className="col-lg-12 col-sm-12">
+                                  <div className="contact-form2">
+                                    <h4 className="text-uppercase text-center">Add Device To User</h4>
+                                    <form onSubmit={handleSubmit9(onSubmitaddDeviceToUser)}>
+                                      <div className="form-group">
+                                        <input 
+                                        type="hidden"
+                                        {...register9("user_id")}
+                                        />
+                                        <input 
+                                        type="hidden"
+                                        {...register9("device_id")}
+                                        />
+                                        <input 
+                                        type="text"
+                                        {...register9("email")}
+                                        className={`form-control ${errors9.email ? 'is-invalid' : ''}`}
+                                        placeholder="Enter User Email ID"
+                                        />
+                                        <span style={{ color: 'red', float: 'left' }}>{errors9.email?.message}</span>
+                                      </div>
+                                      {
+                                        isaddDeviceToUser
+                                          ?
+                                          <button className="btn btn-primary" style={{ borderRadius: 25 }}>Submit...<div className="spinner-border" style={{ width: '1rem', height: '1rem' }} />
+                                          </button>
+
+                                          :
+                                          <>
+                                            <button type="submit" style={{ borderRadius: 25, margin: 10 }} className="btn btn-primary" disabled={isSubmitting9}>Submit</button>
+                                          </>
+
+                                      }
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                    :
+                    null
                   }
                   {/* ---------------------- Add new device section ------------------------- */}
 
