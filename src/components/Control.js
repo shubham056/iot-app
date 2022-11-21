@@ -4,80 +4,256 @@ import { Button, Switch } from '@mui/material'
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 const Control = () => {
-    const [oneManual, setoneManual] = useState(false)
-    const [oneHVAC, setoneHVAC] = useState(false)
-    const [oneTimer, setoneTimer] = useState(false)
-    const [oneAlarm, setoneAlarm] = useState(false)
+    const [stepOne, setstepOne] = useState({
+        manual: false,
+        switch: false,
+        HAVC: false,
+        timer: false,
+        alarm: false,
+        confirmManual: false,
+        confirmHAVC: false,
+        confirmTimer: false,
+        confirmAlarm: false,
+    })
+    const [stepTwo, setstepTwo] = useState({
+        manual: false,
+        switch: false,
+        HAVC: false,
+        timer: false,
+        alarm: false,
+        confirmManual: false,
+        confirmHAVC: false,
+        confirmTimer: false,
+        confirmAlarm: false,
+    })
+    const [stepThree, setstepThree] = useState({
+        manual: false,
+        switch: false,
+        HAVC: false,
+        timer: false,
+        alarm: false,
+        confirmManual: false,
+        confirmHAVC: false,
+        confirmTimer: false,
+        confirmAlarm: false,
+    })
+    const [stepFour, setstepFour] = useState({
+        manual: false,
+        switch: false,
+        HAVC: false,
+        timer: false,
+        alarm: false,
+        confirmManual: false,
+        confirmHAVC: false,
+        confirmTimer: false,
+        confirmAlarm: false,
+    })
 
-    const [twoManual, settwoManual] = useState(false)
-    const [twoHVAC, settwoHVAC] = useState(false)
-    const [twoTimer, settwoTimer] = useState(false)
-    const [twoAlarm, settwoAlarm] = useState(false)
-
-    const [threeManual, setthreeManual] = useState(false)
-    const [threeHVAC, setthreeHVAC] = useState(false)
-    const [threeTimer, setthreeTimer] = useState(false)
-    const [threeAlarm, setthreeAlarm] = useState(false)
-
-    const [fourManual, setfourManual] = useState(false)
-    const [fourHVAC, setfourHVAC] = useState(false)
-    const [fourTimer, setfourTimer] = useState(false)
-    const [fourAlarm, setfourAlarm] = useState(false)
-    //First tab handler
+    //StepOne tab handler
     const oneManualHandler = () => {
-        setoneManual(!oneManual)
+        setstepOne({
+            ...stepOne,
+            manual: !setstepOne.manual
+        })
     }
-    const oneHVACHanlder = () => {
-        setoneHVAC(!oneHVAC)
+    const oneHVACHandler = () => {
+        setstepOne({
+            ...stepOne,
+            HAVC: !setstepOne.HAVC
+        })
     }
     const oneTimerHandler = () => {
-        setoneTimer(!oneTimer)
+        setstepOne({
+            ...stepOne,
+            timer: !setstepOne.timer
+        })
     }
     const oneAlarmHandler = () => {
-        setoneAlarm(!oneAlarm)
+        setstepOne({
+            ...stepOne,
+            alarm: !setstepOne.alarm
+        })
     }
-    //Second tab handler
+    //StepTwo tab handler
     const twoManualHandler = () => {
-        settwoManual(!twoManual)
+        setstepTwo({
+            ...stepTwo,
+            manual: !setstepTwo.manual
+        })
     }
-    const twoHVACHanlder = () => {
-        settwoHVAC(!twoHVAC)
+    const twoHVACHandler = () => {
+        setstepTwo({
+            ...stepTwo,
+            HAVC: !setstepTwo.HAVC
+        })
     }
     const twoTimerHandler = () => {
-        settwoTimer(!twoTimer)
+        setstepTwo({
+            ...stepTwo,
+            timer: !setstepTwo.timer
+        })
     }
     const twoAlarmHandler = () => {
-        settwoAlarm(!twoAlarm)
+        setstepTwo({
+            ...stepTwo,
+            alarm: !setstepTwo.alarm
+        })
     }
-    //Three tab handler
+    //StepThree tab handler
     const threeManualHandler = () => {
-        setthreeManual(!threeManual)
+        setstepThree({
+            ...stepThree,
+            manual: !stepThree.manual
+        })
     }
-    const threeHVACHanlder = () => {
-        setthreeHVAC(!threeHVAC)
+    const threeHVACHandler = () => {
+        setstepThree({
+            ...stepThree,
+            HAVC: !stepThree.HAVC
+        })
     }
     const threeTimerHandler = () => {
-        setthreeTimer(!threeTimer)
+        setstepThree({
+            ...stepThree,
+            timer: !stepThree.timer
+        })
     }
     const threeAlarmHandler = () => {
-        setthreeAlarm(!threeAlarm)
+        setstepThree({
+            ...stepThree,
+            alarm: !stepThree.alarm
+        })
     }
-    //Fourth tab handler
+    //StepFourth tab handler
     const fourManualHandler = () => {
-        setfourManual(!fourManual)
+        setstepFour({
+            ...stepFour,
+            manual: !stepFour.manual
+        })
     }
-    const fourHVACHanlder = () => {
-        setfourHVAC(!fourHVAC)
+    const fourHVACHandler = () => {
+        setstepFour({
+            ...stepFour,
+            HAVC: !stepFour.HAVC
+        })
     }
     const fourTimerHandler = () => {
-        setfourTimer(!fourTimer)
+        setstepFour({
+            ...stepFour,
+            timer: !stepFour.timer
+        })
     }
     const fourAlarmHandler = () => {
-        setfourAlarm(!fourAlarm)
+        setstepFour({
+            ...stepFour,
+            alarm: !stepFour.alarm
+        })
     }
+
+    //StepOne Confirm Handlers
+    const stepOneManualCfmHandler = () => {
+        setstepOne({
+            ...stepOne,
+            confirmManual: !setstepOne.confirmManual
+        })
+    }
+    const stepOneHVACCfmHandler = () => {
+        setstepOne({
+            ...stepOne,
+            confirmHAVC: !setstepOne.confirmHAVC
+        })
+    }
+    const stepOneTimerCfmHandler = () => {
+        setstepOne({
+            ...stepOne,
+            confirmTimer: !setstepOne.confirmTimer
+        })
+    }
+    const stepOneAlarmCfmHandler = () => {
+        setstepOne({
+            ...stepOne,
+            confirmAlarm: !setstepOne.confirmAlarm
+        })
+    }
+    //StepTwo Confirm Handler
+    const stepTwoManualCfmHandler = () => {
+        setstepTwo({
+            ...stepTwo,
+            confirmManual: !setstepTwo.confirmManual
+        })
+    }
+    const stepTwoHVACCfmHandler = () => {
+        setstepTwo({
+            ...stepTwo,
+            confirmHAVC: !setstepTwo.confirmHAVC
+        })
+    }
+    const stepTwoTimerCfmHandler = () => {
+        setstepTwo({
+            ...stepTwo,
+            confirmTimer: !setstepTwo.confirmTimer
+        })
+    }
+    const stepTwoAlarmCfmHandler = () => {
+        setstepTwo({
+            ...stepTwo,
+            confirmAlarm: !setstepTwo.confirmAlarm
+        })
+    }
+    //StepThree Confirm Handler
+    const stepThreeManualCfmHandler = () => {
+        setstepThree({
+            ...stepThree,
+            confirmManual: !setstepThree.confirmManual
+        })
+    }
+    const stepThreeHVACCfmHandler = () => {
+        setstepThree({
+            ...stepThree,
+            confirmHAVC: !setstepThree.confirmHAVC
+        })
+    }
+    const stepThreeTimerCfmHandler = () => {
+        setstepThree({
+            ...stepThree,
+            confirmTimer: !setstepThree.confirmTimer
+        })
+    }
+    const stepThreeAlarmCfmHandler = () => {
+        setstepThree({
+            ...stepThree,
+            confirmAlarm: !setstepThree.confirmAlarm
+        })
+    }
+    //StepFour Confirm Handler
+    const stepFourManualCfmHandler = () => {
+        setstepFour({
+            ...stepFour,
+            confirmManual: !setstepFour.confirmManual
+        })
+    }
+    const stepFourHVACCfmHandler = () => {
+        setstepFour({
+            ...stepFour,
+            confirmHAVC: !setstepFour.confirmHAVC
+        })
+    }
+    const stepFourTimerCfmHandler = () => {
+        setstepFour({
+            ...stepFour,
+            confirmTimer: !setstepFour.confirmTimer
+        })
+    }
+    const stepFourAlarmCfmHandler = () => {
+        setstepFour({
+            ...stepFour,
+            confirmAlarm: !setstepFour.confirmAlarm
+        })
+    }
+
     return (
         <div className="container">
-            <h1 style={{ textAlign: "center", margin: 20 }}>Devices Controls</h1>
+            <h2 style={{ textAlign: "center", margin: 20, color: "#5a5757" }}>Devices Controls</h2>
             <div className="row control-row">
                 <div className="col-md-2 mb-3" style={{ marginTop: 13 }}>
                     <ul className="nav nav-pills flex-column" id="myTab" role="tablist">
@@ -104,18 +280,18 @@ const Control = () => {
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <button onClick={oneManualHandler} className={`btn btn-secondary btn-sm ${oneManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
+                                            <button onClick={oneManualHandler} className={`btn btn-secondary btn-sm ${stepOne.manual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
                                         </td>
                                         <td>
                                             <Switch {...label} defaultChecked />
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepOneManualCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={oneHVACHanlder} className={`btn btn-secondary btn-sm ${oneHVAC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
+                                            <button onClick={oneHVACHandler} className={`btn btn-secondary btn-sm ${stepOne.HAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -128,12 +304,12 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepOneHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmHAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={oneTimerHandler} className={`btn btn-secondary btn-sm ${oneTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
+                                            <button onClick={oneTimerHandler} className={`btn btn-secondary btn-sm ${stepOne.timer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -155,12 +331,12 @@ const Control = () => {
 
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepOneTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={oneAlarmHandler} className={`btn btn-secondary btn-sm ${oneAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
+                                            <button onClick={oneAlarmHandler} className={`btn btn-secondary btn-sm ${stepOne.alarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -173,7 +349,7 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepOneAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -185,18 +361,18 @@ const Control = () => {
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <button onClick={twoManualHandler} className={`btn btn-secondary btn-sm ${twoManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
+                                            <button onClick={twoManualHandler} className={`btn btn-secondary btn-sm ${stepTwo.manual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
                                         </td>
                                         <td>
                                             <Switch {...label} defaultChecked />
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepTwoManualCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={twoHVACHanlder} className={`btn btn-secondary btn-sm ${twoHVAC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
+                                            <button onClick={twoHVACHandler} className={`btn btn-secondary btn-sm ${stepTwo.HAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -209,12 +385,12 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepTwoHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmHAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={twoTimerHandler} className={`btn btn-secondary btn-sm ${twoTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
+                                            <button onClick={twoTimerHandler} className={`btn btn-secondary btn-sm ${stepTwo.timer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -236,12 +412,12 @@ const Control = () => {
 
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepTwoTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={twoAlarmHandler} className={`btn btn-secondary btn-sm ${twoAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
+                                            <button onClick={twoAlarmHandler} className={`btn btn-secondary btn-sm ${stepTwo.alarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -254,7 +430,7 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepTwoAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -266,18 +442,18 @@ const Control = () => {
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <button onClick={threeManualHandler} className={`btn btn-secondary btn-sm ${threeManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
+                                            <button onClick={threeManualHandler} className={`btn btn-secondary btn-sm ${stepThree.manual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
                                         </td>
                                         <td>
                                             <Switch {...label} defaultChecked />
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepThreeManualCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={threeHVACHanlder} className={`btn btn-secondary btn-sm ${threeHVAC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
+                                            <button onClick={threeHVACHandler} className={`btn btn-secondary btn-sm ${stepThree.HAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -290,12 +466,12 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepThreeHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmHAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={threeTimerHandler} className={`btn btn-secondary btn-sm ${threeTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
+                                            <button onClick={threeTimerHandler} className={`btn btn-secondary btn-sm ${stepThree.timer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -317,12 +493,12 @@ const Control = () => {
 
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepThreeTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={threeAlarmHandler} className={`btn btn-secondary btn-sm ${threeAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
+                                            <button onClick={threeAlarmHandler} className={`btn btn-secondary btn-sm ${stepThree.alarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -335,7 +511,7 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepThreeAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -347,18 +523,18 @@ const Control = () => {
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <button onClick={fourManualHandler} className={`btn btn-secondary btn-sm ${fourManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
+                                            <button onClick={fourManualHandler} className={`btn btn-secondary btn-sm ${stepFour.manual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Manual</button>
                                         </td>
                                         <td>
                                             <Switch {...label} defaultChecked />
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepFourManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={fourHVACHanlder} className={`btn btn-secondary btn-sm ${fourHVAC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
+                                            <button onClick={fourHVACHandler} className={`btn btn-secondary btn-sm ${stepFour.HAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>HVAC</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -371,12 +547,12 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepFourHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmHAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={fourTimerHandler} className={`btn btn-secondary btn-sm ${fourTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
+                                            <button onClick={fourTimerHandler} className={`btn btn-secondary btn-sm ${stepFour.timer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Timer</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -398,12 +574,12 @@ const Control = () => {
 
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepFourTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button onClick={fourAlarmHandler} className={`btn btn-secondary btn-sm ${fourAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
+                                            <button onClick={fourAlarmHandler} className={`btn btn-secondary btn-sm ${stepFour.alarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Alarm</button>
                                         </td>
                                         <td>
                                             <div className='row'>
@@ -416,7 +592,7 @@ const Control = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <button className='btn btn-secondary btn-sm' style={{ borderRadius: 25 }}>Confirm</button>
+                                            <button onClick={stepFourAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25 }}>Confirm</button>
                                         </td>
                                     </tr>
                                 </tbody>
