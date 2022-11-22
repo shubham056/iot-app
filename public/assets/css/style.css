@@ -3506,7 +3506,9 @@ nav.navbar.navbar-expand-lg>.container-fluid {
     color: white;
     margin: 1px;
 }
-
+.btn-secondary{
+    text-transform: capitalize !important;
+}
 .btn-secondary:hover {
     color: #fff;
     background-color: #b69942;
@@ -3530,4 +3532,11 @@ background-clip: padding-box;
 border: 1px solid #ced4da;
 border-radius: .25rem;
 transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.react-ios-time-picker-btn-container{
+    background-color: darkcyan !important;
+}
+.react-ios-time-picker-btn-container button{
+    color: white !important;
 }
