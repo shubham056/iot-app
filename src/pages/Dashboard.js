@@ -130,6 +130,7 @@ const Dashboard = () => {
         console.log("addUsers")
         setValue9("user_id",userID)
         setValue9("device_id",props.device_id)
+        setValue9("device_name",props.label)
         SetIsAddDeviceTouser(true)
         SetIsMoveDevice(false)
         setIsForgotDevice(false)
@@ -1279,9 +1280,9 @@ const Dashboard = () => {
   }
   //Add device to users
   const onSubmitaddDeviceToUser = formValue => {
-   // console.log(formValue)
+   console.log(formValue)
     //return false
-    const {email, user_id, device_id} = formValue
+    const {email, user_id, device_id, device_name} = formValue
       Swal.fire({
         title: 'Are you sure ?',
         text: "want to add this device!",
@@ -1297,7 +1298,8 @@ const Dashboard = () => {
           console.log("isaddDeviceToUser",isaddDeviceToUser)
           let data ={
             user_id,
-            device_id
+            device_id,
+            device_name
           }
           UserService.assignDeviceTousers(email,data)
             .then((res) => {
@@ -1305,6 +1307,10 @@ const Dashboard = () => {
               console.log("add device to user API res--", res.data.message)
               if(res.data.message === "Not_found"){
                 toast.info('This user is not registered with us,sent a email to sign our plateform!', { toastId: 4524 })
+              }if(res.data.message === "successfully_added_shared_device"){
+                toast.success('Device successfully shared.', { toastId: 4224 })
+              }if(res.data.message === "already_added_shared_device"){
+                toast.info('Device already shared.', { toastId: 4024 })
               }
 
               // if (res.data.data.error == false) {
@@ -2108,6 +2114,10 @@ const Dashboard = () => {
                                     <h4 className="text-uppercase text-center">Add Device To User</h4>
                                     <form onSubmit={handleSubmit9(onSubmitaddDeviceToUser)}>
                                       <div className="form-group">
+                                        <input 
+                                        type="hidden"
+                                        {...register9("device_name")}
+                                        />
                                         <input 
                                         type="hidden"
                                         {...register9("user_id")}

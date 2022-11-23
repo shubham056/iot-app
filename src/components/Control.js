@@ -101,7 +101,9 @@ const Control = () => {
     })
 
     //StepOne tab handler
-    const oneManualHandler = () => {
+    const oneManualHandler = (prevState ) => {
+        console.log("prevState ",prevState.setstepOne )
+        console.log("state ",setstepOne.manual )
         setstepOne({
             ...stepOne,
             manual: !setstepOne.manual

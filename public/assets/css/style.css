@@ -3506,37 +3506,44 @@ nav.navbar.navbar-expand-lg>.container-fluid {
     color: white;
     margin: 1px;
 }
-.btn-secondary{
+
+.btn-secondary {
     text-transform: capitalize !important;
 }
+
 .btn-secondary:hover {
     color: #fff;
     background-color: #b69942;
     border-color: #b69942;
 }
-.active-dc-btn{
+
+.active-dc-btn {
     background-color: #1e4a75 !important;
 }
 
 .react-ios-time-picker-input {
-display: block;
-width: 100%;
-height: calc(1.5em + .75rem + 2px);
-padding: .375rem .75rem;
-font-size: 1rem;
-font-weight: 400;
-line-height: 1.5;
-color: #495057;
-background-color: #fff;
-background-clip: padding-box;
-border: 1px solid #ced4da;
-border-radius: .25rem;
-transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-.react-ios-time-picker-btn-container{
+.react-ios-time-picker-btn-container {
     background-color: darkcyan !important;
 }
-.react-ios-time-picker-btn-container button{
+
+.react-ios-time-picker-btn-container button {
     color: white !important;
+}
+..react-ios-time-picker{
+    margin-bottom: 200px !important;
 }
