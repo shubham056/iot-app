@@ -3532,7 +3532,12 @@ nav.navbar.navbar-expand-lg>.container-fluid {
     border-radius: .25rem;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-
+.react-ios-time-picker-container{
+    background-color: white !important;
+}
+.react-ios-time-picker-selected-overlay{
+    background-color: #335b82 !important;
+}
 .react-ios-time-picker-btn-container {
     background-color: darkcyan !important;
 }
