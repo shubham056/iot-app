@@ -3511,14 +3511,10 @@ nav.navbar.navbar-expand-lg>.container-fluid {
     text-transform: capitalize !important;
 }
 
-.btn-secondary:hover {
-    color: #fff;
-    background-color: #b69942;
-    border-color: #b69942;
-}
+
 
 .active-dc-btn {
-    background-color: #1e4a75 !important;
+    background-color: #b69942 !important;
 }
 
 .react-ios-time-picker-input {
