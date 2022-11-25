@@ -538,12 +538,14 @@ const Control = () => {
             ...stepOne,
             switch: event.target.checked
         })
+        console.log(stepOne.switch)
     }
     const stepTwoSwitchHandler = (event) => {
         setstepTwo({
             ...stepTwo,
             switch: event.target.checked
         })
+        console.log(stepTwo.switch)
     }
     const stepThreeSwitchHandler = (event) => {
         setstepThree({
@@ -709,97 +711,193 @@ const Control = () => {
         console.log(stepOne)
     }
     const stepOneAlarmCfmHandler = () => {
-        setstepOne({
-            ...stepOne,
-            confirmManual: false,
-            confirmHAVC: false,
-            confirmTimer: false,
-            confirmAlarm: true,
-        })
         let alarmVal = stepOne.setAlarm
         console.log(stepOne)
         console.log("alarm val", alarmVal)
-        if(alarmVal != ''){
-            // console.log(stepOne)
-        }else{
+        if (alarmVal != '') {
+            //call API
+            setstepOne({
+                ...stepOne,
+                confirmManual: false,
+                confirmHAVC: false,
+                confirmTimer: false,
+                confirmAlarm: true,
+            })
+            console.log(stepOne)
+        } else {
             alert("Alarm val can't empty!")
         }
-        
     }
     //StepTwo Confirm Handler
     const stepTwoManualCfmHandler = () => {
         setstepTwo({
             ...stepTwo,
-            confirmManual: !setstepTwo.confirmManual
+            confirmManual: true,
+            confirmHAVC: false,
+            confirmTimer: false,
+            confirmAlarm: false,
         })
+        console.log(stepTwo)
     }
     const stepTwoHVACCfmHandler = () => {
-        setstepTwo({
-            ...stepTwo,
-            confirmHAVC: !setstepTwo.confirmHAVC
-        })
+        let HVACVal = stepTwo.HAVC
+        let setPointsVal = stepTwo.setPoints
+        if (setPointsVal != '') {
+            //call API
+            setstepTwo({
+                ...stepTwo,
+                confirmManual: false,
+                confirmHAVC: true,
+                confirmTimer: false,
+                confirmAlarm: false,
+            })
+        } else {
+            alert("Set Points can't be empty!")
+        }
+        console.log("HVAC", HVACVal)
+        console.log("setPointsVal", setPointsVal)
     }
     const stepTwoTimerCfmHandler = () => {
         setstepTwo({
             ...stepTwo,
-            confirmTimer: !setstepTwo.confirmTimer
+            confirmManual: false,
+            confirmHAVC: false,
+            confirmTimer: true,
+            confirmAlarm: false,
         })
+        console.log(stepTwo)
     }
     const stepTwoAlarmCfmHandler = () => {
-        setstepTwo({
-            ...stepTwo,
-            confirmAlarm: !setstepTwo.confirmAlarm
-        })
+        let alarmVal = stepTwo.setAlarm
+        console.log(stepTwo)
+        console.log("alarm val", alarmVal)
+        if (alarmVal != '') {
+            //call API
+            setstepTwo({
+                ...stepTwo,
+                confirmManual: false,
+                confirmHAVC: false,
+                confirmTimer: false,
+                confirmAlarm: true,
+            })
+            console.log(stepTwo)
+        } else {
+            alert("Alarm val can't empty!")
+        }
     }
     //StepThree Confirm Handler
     const stepThreeManualCfmHandler = () => {
         setstepThree({
             ...stepThree,
-            confirmManual: !setstepThree.confirmManual
+            confirmManual: true,
+            confirmHAVC: false,
+            confirmTimer: false,
+            confirmAlarm: false,
         })
+        console.log(stepThree)
     }
     const stepThreeHVACCfmHandler = () => {
-        setstepThree({
-            ...stepThree,
-            confirmHAVC: !setstepThree.confirmHAVC
-        })
+        let HVACVal = stepThree.HAVC
+        let setPointsVal = stepThree.setPoints
+        if (setPointsVal != '') {
+            //call API
+            setstepThree({
+                ...stepThree,
+                confirmManual: false,
+                confirmHAVC: true,
+                confirmTimer: false,
+                confirmAlarm: false,
+            })
+        } else {
+            alert("Set Points can't be empty!")
+        }
+        console.log("HVAC", HVACVal)
+        console.log("setPointsVal", setPointsVal)
     }
     const stepThreeTimerCfmHandler = () => {
         setstepThree({
             ...stepThree,
-            confirmTimer: !setstepThree.confirmTimer
+            confirmManual: false,
+            confirmHAVC: false,
+            confirmTimer: true,
+            confirmAlarm: false,
         })
+        console.log(stepThree)
     }
     const stepThreeAlarmCfmHandler = () => {
-        setstepThree({
-            ...stepThree,
-            confirmAlarm: !setstepThree.confirmAlarm
-        })
+        let alarmVal = stepThree.setAlarm
+        console.log(stepThree)
+        console.log("alarm val", alarmVal)
+        if (alarmVal != '') {
+            //call API
+            setstepThree({
+                ...stepThree,
+                confirmManual: false,
+                confirmHAVC: false,
+                confirmTimer: false,
+                confirmAlarm: true,
+            })
+            console.log(stepThree)
+        } else {
+            alert("Alarm val can't empty!")
+        }
     }
     //StepFour Confirm Handler
     const stepFourManualCfmHandler = () => {
         setstepFour({
             ...stepFour,
-            confirmManual: !setstepFour.confirmManual
+            confirmManual: true,
+            confirmHAVC: false,
+            confirmTimer: false,
+            confirmAlarm: false,
         })
+        console.log(stepFour)
     }
     const stepFourHVACCfmHandler = () => {
-        setstepFour({
-            ...stepFour,
-            confirmHAVC: !setstepFour.confirmHAVC
-        })
+        let HVACVal = stepFour.HAVC
+        let setPointsVal = stepFour.setPoints
+        if (setPointsVal != '') {
+            //call API
+            setstepFour({
+                ...stepFour,
+                confirmManual: false,
+                confirmHAVC: true,
+                confirmTimer: false,
+                confirmAlarm: false,
+            })
+        } else {
+            alert("Set Points can't be empty!")
+        }
+        console.log("HVAC", HVACVal)
+        console.log("setPointsVal", setPointsVal)
     }
     const stepFourTimerCfmHandler = () => {
         setstepFour({
             ...stepFour,
-            confirmTimer: !setstepFour.confirmTimer
+            confirmManual: false,
+            confirmHAVC: false,
+            confirmTimer: true,
+            confirmAlarm: false,
         })
+        console.log(stepFour)
     }
     const stepFourAlarmCfmHandler = () => {
-        setstepFour({
-            ...stepFour,
-            confirmAlarm: !setstepFour.confirmAlarm
-        })
+        let alarmVal = stepFour.setAlarm
+        console.log(stepFour)
+        console.log("alarm val", alarmVal)
+        if (alarmVal != '') {
+            //call API
+            setstepFour({
+                ...stepFour,
+                confirmManual: false,
+                confirmHAVC: false,
+                confirmTimer: false,
+                confirmAlarm: true,
+            })
+            console.log(stepFour)
+        } else {
+            alert("Alarm val can't empty!")
+        }
     }
 
     return (
@@ -964,10 +1062,10 @@ const Control = () => {
                                                 <Button variant="contained" size="large" disabled={stepTwo.isDisableManual ? true : false} onClick={twoManualHandler} className={`btn btn-secondary btn-sm ${stepTwo.manual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Manual</Button>
                                             </td>
                                             <td>
-                                                <Switch {...label} defaultChecked disabled={stepTwo.isDisableswitch ? true : false} />
+                                                <Switch {...label} defaultChecked disabled={stepTwo.isDisableswitch ? true : false} onChange={stepTwoSwitchHandler} checked={stepTwo.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmManual ? true : false} onClick={stepTwoManualCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmManual ? true : false} onClick={stepTwoManualCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -980,12 +1078,23 @@ const Control = () => {
                                                         Set Points
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <input type="number" className='form-control' name='set_input' placeholder='22.5' disabled={stepTwo.isSetPointsDisable ? true : false} />
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepTwo({
+                                                                    ...stepTwo,
+                                                                    setPoints: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control' name='set_input'
+                                                            placeholder='Enter Points'
+                                                            disabled={stepTwo.isSetPointsDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmHAVC ? true : false} onClick={stepTwoHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmHAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmHAVC ? true : false} onClick={stepTwoHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -998,7 +1107,17 @@ const Control = () => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker onChange={onChange} value={value} className="form-control" disabled={stepTwo.isTurnOnDisable ? true : false} />
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepTwo({
+                                                                    ...stepTwo,
+                                                                    turnOn: val
+                                                                })
+                                                            }}
+                                                            value={stepTwo.turnOn}
+                                                            className="form-control"
+                                                            disabled={stepTwo.isTurnOnDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -1006,13 +1125,23 @@ const Control = () => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker onChange={onChange} value={value} className="form-control" disabled={stepTwo.isTurnOffDisable ? true : false} />
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepTwo({
+                                                                    ...stepTwo,
+                                                                    turnOff: val
+                                                                })
+                                                            }}
+                                                            value={stepTwo.turnOff}
+                                                            className="form-control"
+                                                            disabled={stepTwo.isTurnOffDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmTimer ? true : false} onClick={stepTwoTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmTimer ? true : false} onClick={stepTwoTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1025,12 +1154,25 @@ const Control = () => {
                                                         Alarm
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <input type="number" className='form-control' name='set_input' placeholder='22' disabled={stepTwo.isSetAlarmDisable ? true : false} />
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepTwo({
+                                                                    ...stepTwo,
+                                                                    setAlarm: event.target.value
+                                                                })
+                                                            }}
+                                                            clas
+                                                            className='form-control'
+                                                            name='set_alarm'
+                                                            placeholder='Enter alarm'
+                                                            disabled={stepTwo.isSetAlarmDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmAlarm ? true : false} onClick={stepTwoAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmAlarm ? true : false} onClick={stepTwoAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1045,10 +1187,10 @@ const Control = () => {
                                                 <Button variant="contained" size="large" disabled={stepThree.isDisableManual ? true : false} onClick={threeManualHandler} className={`btn btn-secondary btn-sm ${stepThree.manual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Manual</Button>
                                             </td>
                                             <td>
-                                                <Switch {...label} defaultChecked disabled={stepThree.isDisableswitch ? true : false} />
+                                                <Switch {...label} defaultChecked disabled={stepThree.isDisableswitch ? true : false} onChange={stepThreeSwitchHandler} checked={stepThree.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmManual ? true : false} onClick={stepThreeManualCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmManual ? true : false} onClick={stepThreeManualCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1061,12 +1203,23 @@ const Control = () => {
                                                         Set Points
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <input type="number" className='form-control' name='set_input' placeholder='22.5' disabled={stepThree.isSetPointsDisable ? true : false} />
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepThree({
+                                                                    ...stepThree,
+                                                                    setPoints: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control' name='set_input'
+                                                            placeholder='Enter Points'
+                                                            disabled={stepThree.isSetPointsDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmHAVC ? true : false} onClick={stepThreeHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmHAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmHAVC ? true : false} onClick={stepThreeHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1079,7 +1232,17 @@ const Control = () => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker onChange={onChange} value={value} className="form-control" disabled={stepThree.isTurnOnDisable ? true : false} />
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepThree({
+                                                                    ...stepThree,
+                                                                    turnOn: val
+                                                                })
+                                                            }}
+                                                            value={stepThree.turnOn}
+                                                            className="form-control"
+                                                            disabled={stepThree.isTurnOnDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -1087,13 +1250,23 @@ const Control = () => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker onChange={onChange} value={value} className="form-control" disabled={stepThree.isTurnOffDisable ? true : false} />
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepThree({
+                                                                    ...stepThree,
+                                                                    turnOff: val
+                                                                })
+                                                            }}
+                                                            value={stepThree.turnOff}
+                                                            className="form-control"
+                                                            disabled={stepThree.isTurnOffDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmTimer ? true : false} onClick={stepThreeTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmTimer ? true : false} onClick={stepThreeTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1106,12 +1279,25 @@ const Control = () => {
                                                         Alarm
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <input type="number" className='form-control' name='set_input' placeholder='22' disabled={stepThree.isSetAlarmDisable ? true : false} />
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepThree({
+                                                                    ...stepThree,
+                                                                    setAlarm: event.target.value
+                                                                })
+                                                            }}
+                                                            clas
+                                                            className='form-control'
+                                                            name='set_alarm'
+                                                            placeholder='Enter alarm'
+                                                            disabled={stepThree.isSetAlarmDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmAlarm ? true : false} onClick={stepThreeAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmAlarm ? true : false} onClick={stepThreeAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1126,10 +1312,10 @@ const Control = () => {
                                                 <Button variant="contained" size="large" disabled={stepFour.isDisableManual ? true : false} onClick={fourManualHandler} className={`btn btn-secondary btn-sm ${stepFour.manual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Manual</Button>
                                             </td>
                                             <td>
-                                                <Switch {...label} defaultChecked disabled={stepFour.isDisableswitch ? true : false} />
+                                                <Switch {...label} defaultChecked disabled={stepFour.isDisableswitch ? true : false} onChange={stepFourSwitchHandler} checked={stepFour.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmManual ? true : false} onClick={stepFourManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmManual ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmManual ? true : false} onClick={stepFourManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1142,12 +1328,23 @@ const Control = () => {
                                                         Set Points
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <input type="number" className='form-control' name='set_input' placeholder='22.5' disabled={stepFour.isSetPointsDisable ? true : false} />
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepFour({
+                                                                    ...stepFour,
+                                                                    setPoints: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control' name='set_input'
+                                                            placeholder='Enter Points'
+                                                            disabled={stepFour.isSetPointsDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmHAVC ? true : false} onClick={stepFourHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmHAVC ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmHAVC ? true : false} onClick={stepFourHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1160,7 +1357,17 @@ const Control = () => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker onChange={onChange} value={value} className="form-control" disabled={stepFour.isTurnOnDisable ? true : false} />
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepFour({
+                                                                    ...stepFour,
+                                                                    turnOn: val
+                                                                })
+                                                            }}
+                                                            value={stepFour.turnOn}
+                                                            className="form-control"
+                                                            disabled={stepFour.isTurnOnDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -1168,13 +1375,23 @@ const Control = () => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker onChange={onChange} value={value} className="form-control" disabled={stepFour.isTurnOffDisable ? true : false} />
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepFour({
+                                                                    ...stepFour,
+                                                                    turnOff: val
+                                                                })
+                                                            }}
+                                                            value={stepFour.turnOff}
+                                                            className="form-control"
+                                                            disabled={stepFour.isTurnOffDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmTimer ? true : false} onClick={stepFourTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmTimer ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmTimer ? true : false} onClick={stepFourTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1187,12 +1404,25 @@ const Control = () => {
                                                         Alarm
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <input type="number" className='form-control' name='set_input' placeholder='22' disabled={stepFour.isSetAlarmDisable ? true : false} />
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepFour({
+                                                                    ...stepFour,
+                                                                    setAlarm: event.target.value
+                                                                })
+                                                            }}
+                                                            clas
+                                                            className='form-control'
+                                                            name='set_alarm'
+                                                            placeholder='Enter alarm'
+                                                            disabled={stepFour.isSetAlarmDisable ? true : false}
+                                                        />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmAlarm ? true : false} onClick={stepFourAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmAlarm ? 'active-dc-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmAlarm ? true : false} onClick={stepFourAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                     </tbody>
