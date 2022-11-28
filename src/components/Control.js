@@ -682,19 +682,19 @@ const Control = ({ device_id }) => {
         let switchVal = stepOne.switch
         console.log("mamual", mamualVal)
         console.log("switchVal", switchVal)
-        let data = {
+        let data = [{
             "CM-1-Mode": 10,
             "CM-1-On-Off": switchVal
-        }
+        }]
         console.log("data", data)
 
-        // UserService.getDeviceCertificatesByID(device_id)
-        //     .then((res) => {
-        //         console.log("get device certificates data------------------", res.data)
+        UserService.getDeviceCertificatesByID(device_id,data)
+            .then((res) => {
+                console.log("get device certificates data------------------", res.data)
 
-        //     }).catch(err => {
-        //         console.log(err)
-        //     })
+            }).catch(err => {
+                console.log(err)
+            })
 
        
 

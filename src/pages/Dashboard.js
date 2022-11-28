@@ -3037,7 +3037,7 @@ const Dashboard = () => {
                             {
                               isControl
                                 ?
-                                <Control />
+                                <Control device_id={isDeviceID} />
                                 :
                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                   <div className="row">

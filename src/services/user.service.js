@@ -188,6 +188,25 @@ const resetPassword = (data) => {
     })
 };
 
+//------------------------------------------------ Control Page API --------------------------------------------
+const postControlData = (deviceID,data) => {
+    return axios({
+        method: "post",
+        url:`users/post_control_data/${deviceID}`,
+        data,
+        headers: authHeader()
+    })
+};
+const getDeviceCertificatesByID = (deviceID,data) =>{
+    return axios({
+        method: "post",
+        url:`users/get_device_certificates/${deviceID}`,
+        data,
+        headers: authHeader()
+    })
+}
+
+
 
 
 const userService = {
@@ -223,6 +242,8 @@ const userService = {
     addUsers,
     resetPassword,
     AddRootUserAfterSignUp,
-    assignDeviceTousers
+    assignDeviceTousers,
+    postControlData,
+    getDeviceCertificatesByID
 };
 export default userService;
