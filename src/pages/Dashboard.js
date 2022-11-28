@@ -60,9 +60,7 @@ const Dashboard = () => {
     };
 
     const handleClose = (action, props) => {
-      const { id, label, is_type } = props
-
-      console.log("arg", props)
+      const { id, label, is_type, shared_by, is_shared_device  } = props
       setAreaName(label)
       setRenameDeleteId(id)
       if (action == "Rename" && is_type == "area") {
@@ -253,6 +251,9 @@ const Dashboard = () => {
         {
           props.is_type != 'user'
             ?
+            props.is_shared_device == "true" ?
+            null
+            :
             <Menu
               open={contextMenu.mouseX !== null}
               onClose={handleClose}
@@ -962,7 +963,7 @@ const Dashboard = () => {
     <TreeItem
       key={nodes.id}
       nodeId={nodes.id}
-      label={<NodeWithContextMenu label={nodes.label} id={nodes.id} is_type={nodes.is_type} device_id={nodes.device_id} />}
+      label={<NodeWithContextMenu label={nodes.label} id={nodes.id} is_type={nodes.is_type} device_id={nodes.device_id} shared_by={nodes.shared_by} is_shared_device={nodes.is_shared_device} />}
       icon={nodes.is_type == 'device' ? <Devices sx={{ color: "#1d9b9c" }} /> : null}
     >
       {Array.isArray(nodes.children)

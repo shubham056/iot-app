@@ -949,7 +949,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Set Points
                                                     </div>
                                                     <div className='col-md-9'>
@@ -978,7 +978,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
@@ -996,7 +996,7 @@ const Control = () => {
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1025,7 +1025,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Alarm
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1074,7 +1074,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Set Points
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1103,7 +1103,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1121,7 +1121,7 @@ const Control = () => {
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1150,7 +1150,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Alarm
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1199,7 +1199,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Set Points
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1228,7 +1228,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1246,7 +1246,7 @@ const Control = () => {
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1275,7 +1275,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Alarm
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1324,7 +1324,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Set Points
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1353,7 +1353,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1371,7 +1371,7 @@ const Control = () => {
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
@@ -1400,7 +1400,7 @@ const Control = () => {
                                             </td>
                                             <td>
                                                 <div className='row'>
-                                                    <div className='col-md-3'>
+                                                    <div className='col-md-3' style={{color: 'white'}}>
                                                         Alarm
                                                     </div>
                                                     <div className='col-md-9'>

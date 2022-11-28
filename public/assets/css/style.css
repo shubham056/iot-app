@@ -3479,10 +3479,13 @@ nav.navbar.navbar-expand-lg>.container-fluid {
 
 .control-row {
     text-align: center;
-    border: 1px solid #96cfcf;
+    border: 1px solid #3196a8;
     padding: 10px;
     margin-bottom: 15px;
-    background-color: #96cfcf;
+    background: linear-gradient(90deg, rgb(51, 164, 165) 13%, rgb(60, 135, 174) 40%, rgb(26, 89, 150) 100%);
+}
+.nav-pills .nav-link{
+    color: white !important;
 }
 
 .table td,
