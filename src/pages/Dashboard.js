@@ -964,7 +964,7 @@ const Dashboard = () => {
       key={nodes.id}
       nodeId={nodes.id}
       label={<NodeWithContextMenu label={nodes.label} id={nodes.id} is_type={nodes.is_type} device_id={nodes.device_id} shared_by={nodes.shared_by} is_shared_device={nodes.is_shared_device} />}
-      icon={nodes.is_type == 'device' ? <Devices sx={{ color: "#1d9b9c" }} /> : null}
+      icon={nodes.is_type == 'device' ? <Devices sx={{ color: `${nodes.is_shared_device == "true" ? "orange" : "#1d9b9c"}` }} /> : null}
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
