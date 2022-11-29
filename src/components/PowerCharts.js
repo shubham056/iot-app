@@ -38,12 +38,9 @@ export const ChartComponent = props => {
         }
       });
       // chart.timeScale().fitContent();
-      console.log("dddddddddddddddddddd", data)
       if (data.length == 1 && data[0].value == 0) {
-        console.log("no0000000000000000000000000000000")
         chart.timeScale().fitContent();
       } else {
-        console.log('yyyyyyyyyyyyyyyyyyyyyyyy')
         let randomValue = Math.floor(Math.random() * (10 - 2 + 1) + 2)
         chart.timeScale().scrollToPosition(-randomValue, false);
       }
@@ -75,7 +72,7 @@ export const ChartComponent = props => {
 // ];
 
 function App(props) {
-  console.log("app props data", props)
+  //console.log("app props data", props)
   const { powerDataFromDB } = props
   let myData;
   if (typeof (powerDataFromDB) != "undefined") {
@@ -86,7 +83,7 @@ function App(props) {
     myData = []
   }
 
-  console.log("final data", myData)
+  //console.log("final data", myData)
   return (
     <ChartComponent
       {...props}

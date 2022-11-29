@@ -228,7 +228,7 @@ const Dashboard = () => {
         <Typography
           onClick={event => {
             const { id, is_type, device_id, label, shared_by, is_shared_device } = props
-            console.log("device ++++++++++++++++++++++++",props)
+            //console.log("device ++++++++++++++++++++++++",props)
             if (is_type == "device") {
               setIsSharedDevice(is_shared_device)
               setisDeviceID(device_id)
@@ -266,7 +266,7 @@ const Dashboard = () => {
 
               //let areaName = parent.split("/").pop()
 
-              console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
+              //console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
               io.current.emit("liveStatsData", { device_id: device_id, objectName: "T_power", dataType: null }, (response) => {
                 console.log(response.status); // ok
               }); // sent to socket server
@@ -278,7 +278,6 @@ const Dashboard = () => {
               })
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
-                  console.log("get device data res------------------", res.data.data.deviceData)
                   setpowerDataFromDB(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
 
@@ -420,7 +419,6 @@ const Dashboard = () => {
       console.log("power total")
       UserService.GetLinkedDeviceData(isDeviceID, "T_power_A", format, startDate, endDate)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -430,7 +428,6 @@ const Dashboard = () => {
       console.log("power phase 1")
       UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A", format, startDate, endDate)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -440,7 +437,6 @@ const Dashboard = () => {
       console.log("power phase 2")
       UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A", format, startDate, endDate)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -450,7 +446,6 @@ const Dashboard = () => {
       console.log("power phase 3")
       UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A", format, startDate, endDate)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -483,9 +478,7 @@ const Dashboard = () => {
       setisGraphLabelTxt('T-Energy-Daily')
       UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "daily")
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setenergyDataFromDB(res.data.data.deviceData)
-          console.log("energyDataFromDB", energyDataFromDB)
         }).catch(err => {
           console.log(err)
         })
@@ -518,7 +511,6 @@ const Dashboard = () => {
 
       UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "monthly")
         .then((res) => {
-          //console.log("get device data res", res.data.data.deviceData)
           setenergyDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -557,14 +549,13 @@ const Dashboard = () => {
   // start date for date range
   useEffect(() => {
     keyRef.current = Date.now();
-    console.log('isstartDate *****************', isstartDate);
+    
     if (isstartDate) {
       setisInitialDateData({
         ...isInitialDateData,
         startDate: isstartDate,
         minDate: isstartDate,
       })
-      console.log("latest initial date range data ---------", isInitialDateData)
     }
     if (isstartDate == undefined) {
       setisInitialDateData({
@@ -572,7 +563,6 @@ const Dashboard = () => {
         startDate: today,
         minDate: today,
       })
-      console.log("latest initial date range data ---------", isInitialDateData)
     }
   }, [isstartDate, isInitialDateData.startDate]);
 
@@ -583,10 +573,9 @@ const Dashboard = () => {
     io.current = socketClient(SocketServer, connectionOptions);
 
     io.current.on('connect', () => {
-      console.log(`I'm connected with socket id ${io.current.id} from the back-end`);
+      console.log(`I'm(${isDeviceID}) connected with socket id ${io.current.id} from the back-end`);
 
       let userIds = { "user_id": userID, "device_id": isDeviceID };
-      //console.log("userIds", userIds)
       io.current.emit("user_connected", userIds);
 
       //--------------------------- Stats Data -------------------------------------
@@ -596,7 +585,7 @@ const Dashboard = () => {
         // console.log("isPowerPhase1", isPowerPhase1)
         // console.log("isPowerPhase2", isPowerPhase2)
         // console.log("isPowerPhase3", isPowerPhase3)
-        console.log('power graph with device id', isDeviceID, data)
+        //console.log('power graph with device id', isDeviceID, data)
         if (isDeviceID == data.device_id) {
           console.log("data from socket server", data)
 
@@ -770,17 +759,17 @@ const Dashboard = () => {
   useEffect(() => {
     if (callOnce.current) {
       callOnce.current = false
-      console.log("************************call add root use **************************")
+      //console.log("************************call add root use **************************")
       //callOnce.current = false
       UserService.AddRootUser(userID, { user_name: user.data.profile.first_name + ' ' + user.data.profile.last_name }).then(
         (response) => {
-          console.log("++++++++++++++++++++++++response root user+++++++++++++++++++++++++", response.data.data)
+          //console.log("++++++++++++++++++++++++response root user+++++++++++++++++++++++++", response.data.data)
           if (response.data.type == 'success') {
             console.log('added')
             setisUpdateData(response.data.data.area.id)
-            console.log(response.data.data.area)
+            //console.log(response.data.data.area)
           } else {
-            console.log("added already")
+            //console.log("added already")
             let randomNumber = Math.random() * 10000
             setisUpdateData(randomNumber)
           }
@@ -863,7 +852,7 @@ const Dashboard = () => {
   useEffect(() => {
     UserService.GetTreeViewData(userID).then(
       (response) => {
-        console.log("tree view data0000000000000000000000", response.data.data.profile)
+        //console.log("tree view data0000000000000000000000", response.data.data.profile)
         setTreeViewData(response.data.data.profile);
         //console.log("response", response.data.data.profile)
       },
@@ -884,11 +873,11 @@ const Dashboard = () => {
 
   //fetch category data
   useEffect(() => {
-    console.log("########### call added device id function ##################")
+    //console.log("########### call added device id function ##################")
     UserService.GetAddedDevices(userID).then(
       (response) => {
         setContentDevice(response.data.data.profile);
-        console.log("response device data ---", response.data.data.profile)
+        //console.log("response device data ---", response.data.data.profile)
       },
       (error) => {
 
@@ -905,7 +894,6 @@ const Dashboard = () => {
   }, [isGetDeviceLoading, isUpdateData]);
   //fetch 
   useEffect(() => {
-    console.log("trrrrrrrrrrrrrrrrrrrrrrrrr", treeViewData)
     // let locations = []
     // Object.values(treeViewData).map(item => {
     //   //.log("first", item)
@@ -914,7 +902,6 @@ const Dashboard = () => {
     // })
 
     async function createTreeView(location) {
-      console.log("location data from root fun", location)
       var tree = [],
         object = {},
         parent,
@@ -941,9 +928,8 @@ const Dashboard = () => {
       }
       return tree;
     }
-    console.log("++++++++++++++++before loop tree view+++++++++++++++++++++", treeViewData[0])
     createTreeView(treeViewData[0]).then(data => {
-      console.log("tree view final data *************************", data)
+      //console.log("tree view final data *************************", data)
       setRootTreeViewData(data[0])
     })
     //setRootTreeViewData(createTreeView(treeViewData[0]))
@@ -967,7 +953,7 @@ const Dashboard = () => {
 
   //submit handler
   const onSubmit = formValue => {
-    console.log(formValue)
+    //console.log(formValue)
     //return false
     setisLoading(true)
     UserService.AddNewArea(userID, formValue)
@@ -984,7 +970,6 @@ const Dashboard = () => {
   }
   //forgot device submit
   const onSubmitForgotDevice = formValue => {
-    console.log(formValue)
     //return false
     if (formValue.device_id != undefined) {
       Swal.fire({
@@ -1034,7 +1019,6 @@ const Dashboard = () => {
   }
   //delete area submit
   const onSubmitDeleteArea = formValue => {
-    console.log(formValue)
     //return false
     if (formValue.area_id != undefined) {
       Swal.fire({
@@ -1075,7 +1059,7 @@ const Dashboard = () => {
                     //delete all area and devices in it
                     UserService.deleteAllAreasandDevices(res.data.data.ids)
                       .then((res) => {
-                        console.log("ressss", res)
+                        //console.log("ressss", res)
                         toast.success('Area successfully deleted!', { toastId: 4564676867878 })
                         setisUpdateData(res.data.data.updatedId)
                         setdeleteAreaisLoading(false)
@@ -1109,7 +1093,6 @@ const Dashboard = () => {
   }
   //rename area
   const onSubmitRenameArea = formValue => {
-    console.log(formValue)
     //return false
     const { area_id, area_name } = formValue
     if (area_id != undefined && area_name != undefined) {
@@ -1126,7 +1109,6 @@ const Dashboard = () => {
           setrenameAreaisLoading(true)
           UserService.editAreaName(area_id, area_name)
             .then((res) => {
-              console.log("Rename area API res--", res)
               if (res.data.data.error == false) {
                 toast.success('Area successfully renamed!', { toastId: 4494676867878 })
                 setisUpdateData(res.data.data.updatedId)
@@ -1201,8 +1183,6 @@ const Dashboard = () => {
           setdeleteAreaisLoading(true)
           UserService.editDeviceName(formValue.device_id, formValue.device_name)
             .then((res) => {
-              console.log("Rename device API res--", res)
-
               if (res.data.data.error == false) {
                 toast.success('Device successfully renamed!', { toastId: 1464676867878 })
                 setisUpdateData(res.data.data.updatedId)
@@ -1230,7 +1210,6 @@ const Dashboard = () => {
   }
   //move devices
   const onSubmitMoveDevice = formValue => {
-    console.log(formValue)
     //return false
     if (formValue.area_id != undefined) {
       Swal.fire({
@@ -1246,8 +1225,6 @@ const Dashboard = () => {
           setdeleteAreaisLoading(true)
           UserService.moveDevices(formValue.device_id, formValue.area_id, userID)
             .then((res) => {
-              console.log("Move device API res--", res)
-
               if (res.data.data.error == false) {
                 toast.success('Device successfully moved!', { toastId: 4464676867878 })
                 setisUpdateData(res.data.data.updatedId)
@@ -1274,7 +1251,6 @@ const Dashboard = () => {
   }
   //Add device to users
   const onSubmitaddDeviceToUser = formValue => {
-   console.log(formValue)
     //return false
     const {email, user_id, device_id, device_name} = formValue
       Swal.fire({
@@ -1289,7 +1265,6 @@ const Dashboard = () => {
         if (result.isConfirmed) {
          
           setisaddDeviceToUser(true)
-          console.log("isaddDeviceToUser",isaddDeviceToUser)
           let data ={
             user_id,
             device_id,
@@ -1298,7 +1273,6 @@ const Dashboard = () => {
           UserService.assignDeviceTousers(email,data)
             .then((res) => {
               setisaddDeviceToUser(false)
-              console.log("add device to user API res--", res.data.message)
               if(res.data.message === "Not_found"){
                 toast.info('This user is not registered with us,sent a email to sign our plateform!', { toastId: 4524 })
               }if(res.data.message === "successfully_added_shared_device"){
@@ -1330,13 +1304,11 @@ const Dashboard = () => {
   }
 
   const onSubmitStepOne = formValue => {
-    console.log(formValue)
     setstepOne(false)
     setstepTwo(true)
     return false
   }
   const onSubmitSteptwo = formValue => {
-    console.log(formValue)
     //return false
     setstepTwoisLoading(true)
     const deviceID = formValue.device_id
@@ -1541,7 +1513,6 @@ const Dashboard = () => {
       console.log("power total")
       UserService.GetLinkedDeviceData(isDeviceID, "T_power_A", args)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -1551,7 +1522,6 @@ const Dashboard = () => {
       console.log("power phase 1")
       UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A", args)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -1561,7 +1531,6 @@ const Dashboard = () => {
       console.log("power phase 2")
       UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A", args)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -1571,7 +1540,6 @@ const Dashboard = () => {
       console.log("power phase 3")
       UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A", args)
         .then((res) => {
-          console.log("get device data res", res.data.data.deviceData)
           setpowerDataFromDB(res.data.data.deviceData)
         }).catch(err => {
           console.log(err)
@@ -1671,7 +1639,6 @@ const Dashboard = () => {
                                       })
                                       UserService.GetLinkedDeviceData(device_id, "T_power_A")
                                         .then((res) => {
-                                          console.log("get device data res", res.data.data.deviceData)
                                           setpowerDataFromDB(res.data.data.deviceData)
                                         }).catch(err => {
                                           console.log(err)
@@ -2376,7 +2343,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setpowerDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2426,7 +2392,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setpowerDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2475,7 +2440,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setpowerDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2523,7 +2487,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setpowerDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2578,7 +2541,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_Hr_A", "daily")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2620,7 +2582,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L1_Energy_Hr_A", "daily")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2662,7 +2623,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L2_Energy_Hr_A", "daily")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2704,7 +2664,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_Hr_A", "daily")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2757,7 +2716,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "T_Energy_D_A", "monthly")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2799,7 +2757,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L1_Energy_D_A", "monthly")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2841,7 +2798,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L2_Energy_D_A", "monthly")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -2883,7 +2839,6 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L3_Energy_D_A", "monthly")
                                             .then((res) => {
-                                              console.log("get device data res", res.data.data.deviceData)
                                               setenergyDataFromDB(res.data.data.deviceData)
                                             }).catch(err => {
                                               console.log(err)
@@ -3071,7 +3026,6 @@ const Dashboard = () => {
 
                                                     UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
                                                       .then((res) => {
-                                                        //console.log("get device data res", res.data.data.deviceData)
                                                         setpowerDataFromDB(res.data.data.deviceData)
                                                       }).catch(err => {
                                                         console.log(err)

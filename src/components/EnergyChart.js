@@ -89,7 +89,7 @@ export const ChartComponent = props => {
 };
 
 function App(props) {
-  console.log("app props data", props)
+  //console.log("app props data", props)
   const { energyDataFromDB, chartType } = props
   let myData;
   if (typeof (energyDataFromDB) != "undefined") {
@@ -100,7 +100,7 @@ function App(props) {
     myData = []
   }
 
-  console.log("final data", myData)
+  //console.log("final data", myData)
   return (
     <ChartComponent
       {...props}

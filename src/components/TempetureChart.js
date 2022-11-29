@@ -75,7 +75,7 @@ export const ChartComponent = props => {
 // ];
 
 function App(props) {
-  console.log("app props data", props)
+  //console.log("app props data", props)
   const { tempetureDataFromDB } = props
   let myData;
   if (typeof (tempetureDataFromDB) != "undefined") {
