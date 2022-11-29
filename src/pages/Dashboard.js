@@ -34,10 +34,83 @@ const connectionOptions = {
   "transports": ["websocket"]
 };
 
-
-
-
 const Dashboard = () => {
+  //set states start here
+  const [isstartDate, setIsstartDate] = useState("")
+  const [isEnergyTxt, setisEnergyTxt] = useState("Energy")
+  const [isUpdateData, setisUpdateData] = useState("")
+  const [addDeviceBtnText, setAddDeviceBtnText] = useState("Verify")
+  const [showWelcomeDiv, setshowWelcomeDiv] = useState(true)
+  const [stepOne, setstepOne] = useState(true)
+  const [stepTwo, setstepTwo] = useState(false)
+  const [stepTwoisLoading, setstepTwoisLoading] = useState(false)
+  const [forgotisLoading, setforgotisLoading] = useState(false)
+  const [deleteAreaisLoading, setdeleteAreaisLoading] = useState(false)
+  const [isaddDeviceToUser, setisaddDeviceToUser] = useState(false)
+  const [renameAreaisLoading, setrenameAreaisLoading] = useState(false)
+  const [isAddArea, setIsAddArea] = useState(false);
+  const [isAddDevice, setIsAddDevice] = useState(false);
+  const [isforgotdDevice, setIsForgotDevice] = useState(false);
+  const [isActiveBtn, setIsActiveBtn] = useState(false);
+  const [isDeleteArea, setIsDeleteArea] = useState(false);
+  const [isRenameArea, setIsRenameArea] = useState(false);
+  const [isRenameDevice, setIsRenameDevice] = useState(false);
+  const [isMoveDevice, SetIsMoveDevice] = useState(false);
+  const [isAddDeviceTouser, SetIsAddDeviceTouser] = useState(false);
+  const [content, setContent] = useState([]);
+  const [contentDevice, setContentDevice] = useState([]);
+  const [contentArea, setContentArea] = useState([]);
+  const [treeViewData, setTreeViewData] = useState([]);
+  const [isLoading, setisLoading] = useState(false)
+  const [isAddDeviceLoading, setisAddDeviceLoading] = useState(false)
+  const [isGetDeviceLoading, setisgetDeviceLoading] = useState(false)
+  const [showGraph, setshowGraph] = useState(false)
+  const [areaName, setAreaName] = useState("")
+  const [isSharedDevice, setIsSharedDevice] = useState(false)
+  const [renameDeleteId, setRenameDeleteId] = useState("")
+  const [devicename, setDeviceName] = useState("")
+  const [isPower, setisPower] = useState(false)
+  const [isTemperature, setisTemperature] = useState(false)
+  const [isControl, setisControl] = useState(false)
+  const [isPowerTotal, setisPowerTotal] = useState(false)
+  const [isPowerPhase1, setisPowerPhase1] = useState(false)
+  const [isPowerPhase2, setisPowerPhase2] = useState(false)
+  const [isPowerPhase3, setisPowerPhase3] = useState(false)
+
+  const [isEnergyTotal, setisEnergyTotal] = useState(false)
+  const [isEnergyPhase1, setisEnergyPhase1] = useState(false)
+  const [isEnergyPhase2, setisEnergyPhase2] = useState(false)
+  const [isEnergyPhase3, setisEnergyPhase3] = useState(false)
+
+  const [isEnergy, setisEnergy] = useState(false)
+  const [isEnergyDaily, setisEnergyDaily] = useState(false)
+  const [isEnergyMonthly, setisEnergyMonthly] = useState(false)
+
+  const [isStaticTxtValue1, setisStaticTxtValue1] = useState('T-Voltage')
+  const [isStaticTxtValue2, setisStaticTxtValue2] = useState('T-Current')
+  const [isStaticTxtValue3, setisStaticTxtValue3] = useState('T-Power')
+  const [isStaticTxtValue4, setisStaticTxtValue4] = useState('T-Energy')
+
+  const [isStaticValue1, setisStaticValue1] = useState('---')
+  const [isStaticValue2, setisStaticValue2] = useState('---')
+  const [isStaticValue3, setisStaticValue3] = useState('---')
+  const [isStaticValue4, setisStaticValue4] = useState('---')
+  const [isStaticTemperature, setisStaticTemperature] = useState('---')
+
+  const [isGraphLabelTxt, setisGraphLabelTxt] = useState('Total Power')
+  const [isDeviceStatus, setisDeviceStatus] = useState('');
+  const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
+  const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
+
+  const [rootTreeViewData, setRootTreeViewData] = useState([])
+  const [powerDataFromDB, setpowerDataFromDB] = useState([])
+  const [tempetureDataFromDB, settempetureDataFromDB] = useState([])
+  const [energyDataFromDB, setenergyDataFromDB] = useState([])
+  const [isDeviceID, setisDeviceID] = useState('')
+  const { user } = useSelector((state) => state.auth);
+  const userID = user.data.profile.id
+  const keyRef = useRef(Date.now());
+
   let today = moment().tz(tzone).format('YYYY/MM/DD')
   let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YYYY/MM/DD')
   const NodeWithContextMenu = (props) => {
@@ -154,10 +227,10 @@ const Dashboard = () => {
       >
         <Typography
           onClick={event => {
-            console.log(props)
-            const { id, is_type, device_id, label } = props
+            const { id, is_type, device_id, label, shared_by, is_shared_device } = props
+            console.log("device ++++++++++++++++++++++++",props)
             if (is_type == "device") {
-              console.log("device_id", device_id)
+              setIsSharedDevice(is_shared_device)
               setisDeviceID(device_id)
               setisPower(true)
               setisPowerTotal(true)
@@ -465,83 +538,7 @@ const Dashboard = () => {
     setAnchorEl(null);
   };
 
-  //set states start here
-  const [isstartDate, setIsstartDate] = useState("")
-  const [isEnergyTxt, setisEnergyTxt] = useState("Energy")
-  const [isUpdateData, setisUpdateData] = useState("")
-  const [addDeviceBtnText, setAddDeviceBtnText] = useState("Verify")
-  const [showWelcomeDiv, setshowWelcomeDiv] = useState(true)
-  const [stepOne, setstepOne] = useState(true)
-  const [stepTwo, setstepTwo] = useState(false)
-  const [stepTwoisLoading, setstepTwoisLoading] = useState(false)
-  const [forgotisLoading, setforgotisLoading] = useState(false)
-  const [deleteAreaisLoading, setdeleteAreaisLoading] = useState(false)
-  const [isaddDeviceToUser, setisaddDeviceToUser] = useState(false)
-  const [renameAreaisLoading, setrenameAreaisLoading] = useState(false)
-  const [isAddArea, setIsAddArea] = useState(false);
-  const [isAddDevice, setIsAddDevice] = useState(false);
-  const [isforgotdDevice, setIsForgotDevice] = useState(false);
-  const [isActiveBtn, setIsActiveBtn] = useState(false);
-  const [isDeleteArea, setIsDeleteArea] = useState(false);
-  const [isRenameArea, setIsRenameArea] = useState(false);
-  const [isRenameDevice, setIsRenameDevice] = useState(false);
-  const [isMoveDevice, SetIsMoveDevice] = useState(false);
-  const [isAddDeviceTouser, SetIsAddDeviceTouser] = useState(false);
-  const [content, setContent] = useState([]);
-  const [contentDevice, setContentDevice] = useState([]);
-  const [contentArea, setContentArea] = useState([]);
-  const [treeViewData, setTreeViewData] = useState([]);
-  const [isLoading, setisLoading] = useState(false)
-  const [isAddDeviceLoading, setisAddDeviceLoading] = useState(false)
-  const [isGetDeviceLoading, setisgetDeviceLoading] = useState(false)
-  const [showGraph, setshowGraph] = useState(false)
-  const [areaName, setAreaName] = useState("")
-  const [renameDeleteId, setRenameDeleteId] = useState("")
-  const [devicename, setDeviceName] = useState("")
-  const [isPower, setisPower] = useState(false)
-  const [isTemperature, setisTemperature] = useState(false)
-  const [isControl, setisControl] = useState(false)
-  const [isPowerTotal, setisPowerTotal] = useState(false)
-  const [isPowerPhase1, setisPowerPhase1] = useState(false)
-  const [isPowerPhase2, setisPowerPhase2] = useState(false)
-  const [isPowerPhase3, setisPowerPhase3] = useState(false)
 
-  const [isEnergyTotal, setisEnergyTotal] = useState(false)
-  const [isEnergyPhase1, setisEnergyPhase1] = useState(false)
-  const [isEnergyPhase2, setisEnergyPhase2] = useState(false)
-  const [isEnergyPhase3, setisEnergyPhase3] = useState(false)
-
-  const [isEnergy, setisEnergy] = useState(false)
-  const [isEnergyDaily, setisEnergyDaily] = useState(false)
-  const [isEnergyMonthly, setisEnergyMonthly] = useState(false)
-
-  const [isStaticTxtValue1, setisStaticTxtValue1] = useState('T-Voltage')
-  const [isStaticTxtValue2, setisStaticTxtValue2] = useState('T-Current')
-  const [isStaticTxtValue3, setisStaticTxtValue3] = useState('T-Power')
-  const [isStaticTxtValue4, setisStaticTxtValue4] = useState('T-Energy')
-
-  const [isStaticValue1, setisStaticValue1] = useState('---')
-  const [isStaticValue2, setisStaticValue2] = useState('---')
-  const [isStaticValue3, setisStaticValue3] = useState('---')
-  const [isStaticValue4, setisStaticValue4] = useState('---')
-  const [isStaticTemperature, setisStaticTemperature] = useState('---')
-
-
-
-  const [isGraphLabelTxt, setisGraphLabelTxt] = useState('Total Power')
-  const [isDeviceStatus, setisDeviceStatus] = useState('');
-  const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
-  const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
-
-  const [rootTreeViewData, setRootTreeViewData] = useState([])
-
-  const [powerDataFromDB, setpowerDataFromDB] = useState([])
-  const [tempetureDataFromDB, settempetureDataFromDB] = useState([])
-  const [energyDataFromDB, setenergyDataFromDB] = useState([])
-  const [isDeviceID, setisDeviceID] = useState('')
-  const { user } = useSelector((state) => state.auth);
-  const userID = user.data.profile.id
-  const keyRef = useRef(Date.now());
   const [isInitialDateData, setisInitialDateData] = useState({
     startDate: pastDate,
     endDate: today,
@@ -577,10 +574,6 @@ const Dashboard = () => {
       })
       console.log("latest initial date range data ---------", isInitialDateData)
     }
-
-
-
-
   }, [isstartDate, isInitialDateData.startDate]);
 
 
@@ -3037,7 +3030,7 @@ const Dashboard = () => {
                             {
                               isControl
                                 ?
-                                <Control device_id={isDeviceID} />
+                                <Control device_id={isDeviceID} isSharedDevice={isSharedDevice} />
                                 :
                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                   <div className="row">

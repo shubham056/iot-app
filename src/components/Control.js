@@ -13,8 +13,8 @@ import UserService from '../services/user.service';
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 
-const Control = ({ device_id }) => {
-    console.log("device_id------------------------", device_id)
+const Control = ({ device_id, isSharedDevice }) => {
+    console.log("device_id------------------------", device_id, isSharedDevice)
     let dt = moment();
     dt.format("HH:mm")
     const [value, setValues] = useState(dt.format("HH:mm"))
@@ -77,15 +77,15 @@ const Control = ({ device_id }) => {
         confirmHAVC: false,
         confirmTimer: false,
         confirmAlarm: false,
-        isDisableManual: false,
-        isDisableswitch: false,
-        isDisableHAVC: false,
-        isSetPointsDisable: false,
-        isDisabletimer: false,
-        isTurnOnDisable: false,
-        isTurnOffDisable: false,
-        isDisablealarm: false,
-        isSetAlarmDisable: false,
+        isDisableManual: isSharedDevice == "true" ? true : false,
+        isDisableswitch: isSharedDevice == "true" ? true : false,
+        isDisableHAVC: isSharedDevice == "true" ? true : false,
+        isSetPointsDisable: isSharedDevice == "true" ? true : false,
+        isDisabletimer: isSharedDevice == "true" ? true : false,
+        isTurnOnDisable: isSharedDevice == "true" ? true : false,
+        isTurnOffDisable: isSharedDevice == "true" ? true : false,
+        isDisablealarm: isSharedDevice == "true" ? true : false,
+        isSetAlarmDisable: isSharedDevice == "true" ? true : false,
         isDisableconfirmManual: true,
         isDisableconfirmHAVC: true,
         isDisableconfirmTimer: true,
@@ -933,20 +933,20 @@ const Control = ({ device_id }) => {
                     <div className="col-md-2 mb-3" style={{ marginTop: 13 }}>
                         <ul className="nav nav-pills flex-column" id="myTab" role="tablist">
                             <li className="nav-item">
-                                <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{firstDeviceName}</a>
-                                <a onClick={() => onOpenModal(firstDeviceName, "firstDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
+                                <a  className={`nav-link active ${isSharedDevice == "true" ? 'disabled' : null}`} id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{firstDeviceName}</a>
+                                <a className={`${isSharedDevice == "true" ? 'disabled' : null}`} onClick={() => onOpenModal(firstDeviceName, "firstDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{secondDeviceName}</a>
-                                <a onClick={() => onOpenModal(secondDeviceName, "secondDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
+                                <a className={`nav-link ${isSharedDevice == "true" ? 'disabled' : null}`} id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{secondDeviceName}</a>
+                                <a className={`${isSharedDevice == "true" ? 'disabled' : null}`} onClick={() => onOpenModal(secondDeviceName, "secondDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">{thirdDeviceName}</a>
-                                <a onClick={() => onOpenModal(thirdDeviceName, "thirdDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
+                                <a className={`nav-link ${isSharedDevice == "true" ? 'disabled' : null}`} id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">{thirdDeviceName}</a>
+                                <a className={`${isSharedDevice == "true" ? 'disabled' : null}`} onClick={() => onOpenModal(thirdDeviceName, "thirdDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" id="command-tab" data-toggle="tab" href="#command" role="tab" aria-controls="command" aria-selected="false">{fourthDeviceName}</a>
-                                <a onClick={() => onOpenModal(fourthDeviceName, "fourthDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
+                                <a className={`nav-link ${isSharedDevice == "true" ? 'disabled' : null}`} id="command-tab" data-toggle="tab" href="#command" role="tab" aria-controls="command" aria-selected="false">{fourthDeviceName}</a>
+                                <a className={`${isSharedDevice == "true" ? 'disabled' : null}`} onClick={() => onOpenModal(fourthDeviceName, "fourthDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
                             </li>
                         </ul>
                     </div>

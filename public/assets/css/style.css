@@ -3484,6 +3484,10 @@ nav.navbar.navbar-expand-lg>.container-fluid {
     margin-bottom: 15px;
     background: linear-gradient(90deg, rgb(51, 164, 165) 13%, rgb(60, 135, 174) 40%, rgb(79, 111, 141) 100%);
 }
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+  }
 .nav-pills .nav-link{
     color: white !important;
 }
