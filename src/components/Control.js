@@ -16,7 +16,7 @@ const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
     if(isDeviceStatus != 'green'){
-        toast.info("Device is offline, make device onlice for use control commands!",{toastId:1})
+        toast.info("Device is offline, make device online for use control commands!",{toastId:1})
     }if(isDeviceStatus == 'green'){
         toast.success("Device is online now.",{toastId:2})
     }
