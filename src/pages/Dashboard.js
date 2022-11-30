@@ -98,7 +98,7 @@ const Dashboard = () => {
   const [isStaticTemperature, setisStaticTemperature] = useState('---')
 
   const [isGraphLabelTxt, setisGraphLabelTxt] = useState('Total Power')
-  const [isDeviceStatus, setisDeviceStatus] = useState('');
+  const [isDeviceStatus, setisDeviceStatus] = useState('yellow');
   const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
   const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
 
@@ -2984,7 +2984,7 @@ const Dashboard = () => {
                             {
                               isControl
                                 ?
-                                <Control device_id={isDeviceID} isSharedDevice={isSharedDevice} />
+                                <Control device_id={isDeviceID} isSharedDevice={isSharedDevice} isDeviceStatus={isDeviceStatus} />
                                 :
                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                   <div className="row">

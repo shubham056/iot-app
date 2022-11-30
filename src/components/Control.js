@@ -9,12 +9,19 @@ import * as Yup from 'yup'
 import moment from 'moment-timezone';
 import { useEffect } from 'react';
 import UserService from '../services/user.service';
+import { toast } from 'react-toastify';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 
-const Control = ({ device_id, isSharedDevice }) => {
-    console.log("device_id------------------------", device_id, isSharedDevice)
+const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
+    if(isDeviceStatus != 'green'){
+        toast.info("Device is offline, make device onlice for use control commands!",{toastId:1})
+    }if(isDeviceStatus == 'green'){
+        toast.success("Device is online now.",{toastId:2})
+    }
+    //alert(isDeviceStatus)
+    console.log("device_id------------------------", device_id, isSharedDevice, isDeviceStatus)
     let dt = moment();
     dt.format("HH:mm")
     const [value, setValues] = useState(dt.format("HH:mm"))
@@ -23,17 +30,15 @@ const Control = ({ device_id, isSharedDevice }) => {
     const [secondDeviceName, setsecondDeviceName] = useState("Device 2")
     const [thirdDeviceName, setthirdDeviceName] = useState("Device 3")
     const [fourthDeviceName, setfourthDeviceName] = useState("Device 4")
+    const [fivethhDeviceName, setfivethhDeviceName] = useState("Device 5")
 
     const [open, setOpen] = useState(false);
     const onOpenModal = (val, stateName) => {
         setOpen(true);
         setValue("state_name", stateName)
         setValue("device_name", val)
-
     }
     const onCloseModal = () => setOpen(false);
-
-
 
     const profileSchema = Yup.object().shape({
         device_name: Yup.string().required('Device name is required.'),
@@ -60,6 +65,8 @@ const Control = ({ device_id, isSharedDevice }) => {
             setthirdDeviceName(device_name)
         } if (state_name === "fourthDeviceName") {
             setfourthDeviceName(device_name)
+        } if (state_name === "fivethhDeviceName") {
+            setfivethhDeviceName(device_name)
         }
         setOpen(false)
     }
@@ -148,6 +155,34 @@ const Control = ({ device_id, isSharedDevice }) => {
         isDisableconfirmAlarm: true,
     })
     const [stepFour, setstepFour] = useState({
+        manual: false,
+        switch: false,
+        HAVC: false,
+        setPoints: false,
+        timer: false,
+        turnOn: dt.format("HH:mm"),
+        turnOff: dt.format("HH:mm"),
+        alarm: false,
+        setAlarm: false,
+        confirmManual: false,
+        confirmHAVC: false,
+        confirmTimer: false,
+        confirmAlarm: false,
+        isDisableManual: false,
+        isDisableswitch: false,
+        isDisableHAVC: false,
+        isSetPointsDisable: false,
+        isDisabletimer: false,
+        isTurnOnDisable: false,
+        isTurnOffDisable: false,
+        isDisablealarm: false,
+        isSetAlarmDisable: false,
+        isDisableconfirmManual: true,
+        isDisableconfirmHAVC: true,
+        isDisableconfirmTimer: true,
+        isDisableconfirmAlarm: true,
+    })
+    const [stepFive, setstepFive] = useState({
         manual: false,
         switch: false,
         HAVC: false,
@@ -533,6 +568,95 @@ const Control = ({ device_id, isSharedDevice }) => {
             isDisableconfirmAlarm: false,
         })
     }
+    //StepFiveth tab handler
+    const fiveManualHandler = () => {
+        setstepFive({
+            ...stepFive,
+            manual: true,
+            HAVC: false,
+            timer: false,
+            alarm: false,
+            isDisableManual: false,
+            isDisableswitch: false,
+            isDisableHAVC: false,
+            isSetPointsDisable: true,
+            isDisabletimer: false,
+            isTurnOnDisable: true,
+            isTurnOffDisable: true,
+            isDisablealarm: false,
+            isSetAlarmDisable: true,
+            isDisableconfirmManual: false,
+            isDisableconfirmHAVC: true,
+            isDisableconfirmTimer: true,
+            isDisableconfirmAlarm: true,
+        })
+    }
+    const fiveHVACHandler = () => {
+        setstepFive({
+            ...stepFour,
+            HAVC: true,
+            manual: false,
+            timer: false,
+            alarm: false,
+            isDisableManual: false,
+            isDisableswitch: true,
+            isDisableHAVC: false,
+            isSetPointsDisable: false,
+            isDisabletimer: false,
+            isTurnOnDisable: true,
+            isTurnOffDisable: true,
+            isDisablealarm: false,
+            isSetAlarmDisable: true,
+            isDisableconfirmManual: true,
+            isDisableconfirmHAVC: false,
+            isDisableconfirmTimer: true,
+            isDisableconfirmAlarm: true,
+        })
+    }
+    const fiveTimerHandler = () => {
+        setstepFive({
+            ...stepFive,
+            timer: true,
+            manual: false,
+            HAVC: false,
+            alarm: false,
+            isDisableManual: false,
+            isDisableswitch: true,
+            isDisableHAVC: false,
+            isSetPointsDisable: true,
+            isDisabletimer: false,
+            isTurnOnDisable: false,
+            isTurnOffDisable: false,
+            isDisablealarm: false,
+            isSetAlarmDisable: true,
+            isDisableconfirmManual: true,
+            isDisableconfirmHAVC: true,
+            isDisableconfirmTimer: false,
+            isDisableconfirmAlarm: true,
+        })
+    }
+    const fiveAlarmHandler = () => {
+        setstepFive({
+            ...stepFive,
+            alarm: true,
+            manual: false,
+            HAVC: false,
+            timer: false,
+            isDisableManual: false,
+            isDisableswitch: true,
+            isDisableHAVC: false,
+            isSetPointsDisable: true,
+            isDisabletimer: false,
+            isTurnOnDisable: true,
+            isTurnOffDisable: true,
+            isDisablealarm: false,
+            isSetAlarmDisable: false,
+            isDisableconfirmManual: true,
+            isDisableconfirmHAVC: true,
+            isDisableconfirmTimer: true,
+            isDisableconfirmAlarm: false,
+        })
+    }
 
     //------------ Switch Handlers ------------------------
     const stepOneSwitchHandler = (event) => {
@@ -558,6 +682,12 @@ const Control = ({ device_id, isSharedDevice }) => {
     const stepFourSwitchHandler = (event) => {
         setstepFour({
             ...stepFour,
+            switch: event.target.checked
+        })
+    }
+    const stepFiveSwitchHandler = (event) => {
+        setstepFive({
+            ...stepFive,
             switch: event.target.checked
         })
     }
@@ -658,17 +788,31 @@ const Control = ({ device_id, isSharedDevice }) => {
         })
 
     }, [stepFour.setPoints, stepFour.turnOn, stepFour.turnOff, stepFour.alarm]);
-    //----------------------------------------- useEffect Section End ------------------------------------------
-
-    const onChange = (timeValue) => {
-        setValues(timeValue);
-        setstepOne({
-            ...stepOne,
-            turnOn: timeValue
+    //Step Five
+    useEffect(() => {
+        //setPoints
+        setstepFive({
+            ...stepFive,
+            setPoints: stepFive.setPoints
         })
-        console.log(stepOne.turnOn)
-    }
+        //turnOn
+        setstepFive({
+            ...stepFive,
+            turnOn: stepFive.turnOn
+        })
+        //turnOff
+        setstepFive({
+            ...stepFive,
+            turnOff: stepFive.turnOff
+        })
+        //alarm
+        setstepFive({
+            ...stepFive,
+            alarm: stepFive.alarm
+        })
 
+    }, [stepFive.setPoints, stepFive.turnOn, stepFive.turnOff, stepFive.alarm]);
+    //----------------------------------------- useEffect Section End ------------------------------------------
     //StepOne Confirm Handlers
     const stepOneManualCfmHandler = () => {
         setstepOne({
@@ -1094,6 +1238,112 @@ const Control = ({ device_id, isSharedDevice }) => {
             alert("Alarm val can't empty!")
         }
     }
+    //StepFive Confirm Handler
+    const stepFiveManualCfmHandler = () => {
+        setstepFive({
+            ...stepFive,
+            confirmManual: true,
+            confirmHAVC: false,
+            confirmTimer: false,
+            confirmAlarm: false,
+        })
+        console.log(stepFive)
+        let mamualVal = stepFive.manual
+        let switchVal = stepFive.switch
+        console.log("mamual", mamualVal)
+        console.log("switchVal", switchVal)
+        let data = [{
+            "CM-5-Mode": 10,
+            "CM-5-On-Off": switchVal
+        }]
+        console.log("data", stepFive)
+        UserService.postControlData(device_id,"mode5-manual",data)
+            .then((res) => {
+                console.log("get Manual 5 data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
+    }
+    const stepFiveHVACCfmHandler = () => {
+        let HVACVal = stepFive.HAVC
+        let setPointsVal = stepFive.setPoints
+        if (setPointsVal != '') {
+            //call API
+            setstepFive({
+                ...stepFive,
+                confirmManual: false,
+                confirmHAVC: true,
+                confirmTimer: false,
+                confirmAlarm: false,
+            })
+            let data =[{
+                "CM-5-Mode": 20,
+                "CM-5-Temp-SP": setPointsVal,
+            }]
+            console.log(data)
+            UserService.postControlData(device_id,"mode5-hvac",data)
+            .then((res) => {
+                console.log("get HVAC 5 data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
+        } else {
+            alert("Set Points can't be empty!")
+        }
+        console.log("HVAC", HVACVal)
+        console.log("setPointsVal", setPointsVal)
+    }
+    const stepFiveTimerCfmHandler = () => {
+        setstepFive({
+            ...stepFive,
+            confirmManual: false,
+            confirmHAVC: false,
+            confirmTimer: true,
+            confirmAlarm: false,
+        })
+        console.log(stepFive)
+        let data =[{
+            "CM-5-Mode": 30,
+            "CM-5-T-ON": stepFive.turnOn,
+            "CM-5-T-OFF": stepFive.turnOff,
+        }]
+        console.log(data)
+        UserService.postControlData(device_id,"mode5-timer",data)
+        .then((res) => {
+            console.log("get Timer 5 data------------------", res.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    const stepFiveAlarmCfmHandler = () => {
+        let alarmVal = stepFive.setAlarm
+        console.log(stepFive)
+        console.log("alarm val", alarmVal)
+        if (alarmVal != '') {
+            //call API
+            setstepFive({
+                ...stepFive,
+                confirmManual: false,
+                confirmHAVC: false,
+                confirmTimer: false,
+                confirmAlarm: true,
+            })
+            console.log(stepFive)
+            let data =[{
+                "CM-5-Mode": 40,
+                "CM5-ALM": stepFive.setAlarm
+            }]
+            console.log(data)
+            UserService.postControlData(device_id,"mode5-alarm",data)
+            .then((res) => {
+                console.log("get Alarm 5 data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
+        } else {
+            alert("Alarm val can't empty!")
+        }
+    }
 
     return (
         <>
@@ -1117,6 +1367,10 @@ const Control = ({ device_id, isSharedDevice }) => {
                             <li className="nav-item">
                                 <a className={`nav-link ${isSharedDevice == "true" ? 'disabled' : null}`} id="command-tab" data-toggle="tab" href="#command" role="tab" aria-controls="command" aria-selected="false">{fourthDeviceName}</a>
                                 <a className={`${isSharedDevice == "true" ? 'disabled' : null}`} onClick={() => onOpenModal(fourthDeviceName, "fourthDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
+                            </li>
+                            <li className="nav-item">
+                                <a className={`nav-link ${isSharedDevice == "true" ? 'disabled' : null}`} id="command-tab" data-toggle="tab" href="#commandfive" role="tab" aria-controls="command" aria-selected="false">{fivethhDeviceName}</a>
+                                <a className={`${isSharedDevice == "true" ? 'disabled' : null}`} onClick={() => onOpenModal(fivethhDeviceName, "fivethhDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -1618,6 +1872,131 @@ const Control = ({ device_id, isSharedDevice }) => {
                                             </td>
                                             <td>
                                                 <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmAlarm ? true : false} onClick={stepFourAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="tab-pane fade" id="commandfive" role="tabpanel" aria-labelledby="command-tab">
+                                <table class="table table-hover">
+
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisableManual ? true : false} onClick={fiveManualHandler} className={`btn btn-secondary btn-sm ${stepFive.manual ? 'active-dc-btn' : null} ${stepFive.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Manual</Button>
+                                            </td>
+                                            <td>
+                                                <Switch {...label} defaultChecked disabled={stepFive.isDisableswitch ? true : false} onChange={stepFiveSwitchHandler} checked={stepFive.switch} />
+                                            </td>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmManual ? true : false} onClick={stepFiveManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisableHAVC ? true : false} onClick={fiveHVACHandler} className={`btn btn-secondary btn-sm ${stepFive.HAVC ? 'active-dc-btn' : null} ${stepFive.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>HVAC</Button>
+                                            </td>
+                                            <td>
+                                                <div className='row'>
+                                                    <div className='col-md-3' style={{ color: 'white' }}>
+                                                        Set Points
+                                                    </div>
+                                                    <div className='col-md-9'>
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepFive({
+                                                                    ...stepFive,
+                                                                    setPoints: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control' name='set_input'
+                                                            placeholder='Enter Points'
+                                                            disabled={stepFive.isSetPointsDisable ? true : false}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmHAVC ? true : false} onClick={stepFiveHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisabletimer ? true : false} onClick={fiveTimerHandler} className={`btn btn-secondary btn-sm ${stepFive.timer ? 'active-dc-btn' : null} ${stepFive.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Timer</Button>
+                                            </td>
+                                            <td>
+                                                <div className='row'>
+                                                    <div className='col-md-3' style={{ color: 'white' }}>
+                                                        Turn On
+                                                    </div>
+                                                    <div className='col-md-9'>
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepFive({
+                                                                    ...stepFive,
+                                                                    turnOn: val
+                                                                })
+                                                            }}
+                                                            value={stepFive.turnOn}
+                                                            className="form-control"
+                                                            disabled={stepFive.isTurnOnDisable ? true : false}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className='row' style={{ marginTop: 5 }}>
+                                                    <div className='col-md-3' style={{ color: 'white' }}>
+                                                        Turn Off
+                                                    </div>
+                                                    <div className='col-md-9'>
+                                                        <TimePicker
+                                                            onChange={(val) => {
+                                                                setstepFive({
+                                                                    ...stepFive,
+                                                                    turnOff: val
+                                                                })
+                                                            }}
+                                                            value={stepFive.turnOff}
+                                                            className="form-control"
+                                                            disabled={stepFive.isTurnOffDisable ? true : false}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmTimer ? true : false} onClick={stepFiveTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisablealarm ? true : false} onClick={fiveAlarmHandler} className={`btn btn-secondary btn-sm ${stepFive.alarm ? 'active-dc-btn' : null} ${stepFive.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Alarm</Button>
+                                            </td>
+                                            <td>
+                                                <div className='row'>
+                                                    <div className='col-md-3' style={{ color: 'white' }}>
+                                                        Alarm
+                                                    </div>
+                                                    <div className='col-md-9'>
+                                                        <input
+                                                            type="number"
+                                                            onChange={(event) => {
+                                                                setstepFive({
+                                                                    ...stepFive,
+                                                                    setAlarm: event.target.value
+                                                                })
+                                                            }}
+                                                            clas
+                                                            className='form-control'
+                                                            name='set_alarm'
+                                                            placeholder='Enter alarm'
+                                                            disabled={stepFive.isSetAlarmDisable ? true : false}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmAlarm ? true : false} onClick={stepFiveAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
                                             </td>
                                         </tr>
                                     </tbody>
