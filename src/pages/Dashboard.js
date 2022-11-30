@@ -587,7 +587,7 @@ const Dashboard = () => {
         // console.log("isPowerPhase3", isPowerPhase3)
         //console.log('power graph with device id', isDeviceID, data)
         if (isDeviceID == data.device_id) {
-          console.log("data from socket server", data)
+          console.log(`Device(${data.device_id}) stats data:`, data)
 
 
           if (isPower && isPowerTotal) {
@@ -632,7 +632,7 @@ const Dashboard = () => {
 
       //---------------------------- Graph Data -----------------------------------
       io.current.on('received_graph_data', (data, device_id, objectName, dataType) => {
-        console.log("**** Graph data from socket server *****", device_id, objectName, dataType)
+        console.log(`*** Graph data of Device(${device_id}) :`, device_id, objectName, dataType)
 
         if (isDeviceID == device_id) {
           console.log("data from socket server", data)
@@ -664,10 +664,9 @@ const Dashboard = () => {
       })
       //---------------------- Check device status -------------------------
       io.current.on('received_device_status_data', (data, device_id) => {
-        console.log(" *** Device Status data from server ***", data, "and device id", device_id)
+        console.log(`Device(${device_id}) Live Status:`, data)
         if (isDeviceID == device_id) {
           const { device_status, device_status_timestamp_diff } = data
-          console.log("-------", device_status)
           if (device_status == 1 && device_status_timestamp_diff <= 20) {
             setisDeviceStatus('green')
           } else if (device_status == 0 && device_status_timestamp_diff >= 21 && device_status_timestamp_diff <= 39) {
