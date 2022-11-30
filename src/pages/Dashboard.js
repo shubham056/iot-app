@@ -25,8 +25,8 @@ import Control from '../components/Control';
 import DeviceStats from '../components/DeviceStats';
 const tzone = "Asia/Amman";
 
-//const SocketServer = "http://localhost:5001/";
-const SocketServer = "https://iot.cwsbuild.com/";
+const SocketServer = "http://localhost:5001/";
+//const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
   "force new connection": true,
   "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
@@ -641,7 +641,7 @@ const Dashboard = () => {
             console.log("with switch")
 
           } else {
-            console.log("wothout switch")
+            //console.log("wothout switch")
             if (isPower && isPowerTotal && objectName == "T_power_A") {
               console.log("----------- power graph total--------------")
               setpowerDataFromDB(data)
@@ -658,6 +658,13 @@ const Dashboard = () => {
               console.log("power graph phase 3")
               setpowerDataFromDB(data)
             }
+            //For Temperature 
+            if (isTemperature && objectName == "temperature") {
+              console.log("----------- temperature graph data--------------")
+              //setpowerDataFromDB(data)
+              settempetureDataFromDB(data)
+
+            } 
           }
 
         }
@@ -2955,6 +2962,15 @@ const Dashboard = () => {
                                       setisStaticTemperature(temperature) // temperature
                                     }).catch(err => {
                                       console.log(err)
+                                    })
+                                    io.current.emit("liveStatsData", { device_id: isDeviceID, objectName: "T_power", dataType: null }, (response) => {
+                                      console.log(response.status); // ok
+                                    }); // sent to socket server
+                                    io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "temperature", dataType: null }, (response) => {
+                                      console.log(response.status); // ok
+                                    }); // sent to socket server
+                                    io.current.emit("checkDeviceStatus", { device_id: isDeviceID }, (response) => {
+                                      console.log(response.status); // ok
                                     })
 
                                   }}
