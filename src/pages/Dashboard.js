@@ -671,7 +671,7 @@ const Dashboard = () => {
       })
       //---------------------- Check device status -------------------------
       io.current.on('received_device_status_data', (data, device_id) => {
-        console.log(`Device(${device_id}) Live Status:`, data)
+        console.log("------------------ Live Device Status --------------------",data, device_id)
         if (isDeviceID == device_id) {
           const { device_status, device_status_timestamp_diff } = data
           if (device_status == 1 && device_status_timestamp_diff <= 20) {
@@ -691,7 +691,7 @@ const Dashboard = () => {
 
     })
     return () => io.current.disconnect();
-  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isActiveRangeSwitch]);
+  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3]);
 
 
   //socket 
