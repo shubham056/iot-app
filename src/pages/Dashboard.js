@@ -339,7 +339,7 @@ const Dashboard = () => {
               <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
               <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
               {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
-              {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("addUsers", props)}>Add Users to {props.label}</MenuItem> : null}
+              {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("addUsers", props)}>Share {props.label}</MenuItem> : null}
             </Menu>
             :
             null
@@ -590,7 +590,7 @@ const Dashboard = () => {
           console.log(`Device(${data.device_id}) stats data:`, data)
 
 
-          if (isPower && isPowerTotal) {
+          if (isPower && isPowerTotal || isTemperature) {
             console.log("power total -------------")
             const { T_voltage, T_current, T_power, T_energy, temperature } = data
 
@@ -3000,7 +3000,7 @@ const Dashboard = () => {
                             {
                               isControl
                                 ?
-                                <Control device_id={isDeviceID} isSharedDevice={isSharedDevice} isDeviceStatus={isDeviceStatus} />
+                                <Control device_id={isDeviceID} userID={userID} isSharedDevice={isSharedDevice} isDeviceStatus={isDeviceStatus} />
                                 :
                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                   <div className="row">
