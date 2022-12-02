@@ -76,7 +76,14 @@ const addUsers = (userId,data) => {
     })
 };
 
-
+const insertUpdateControlData = (deviceID,userId,data) => {
+    return axios({
+        method: "post",
+        url:`users/insert_update_control_device_data/${deviceID}/${userId}`,
+        data,
+        headers: authHeader()
+    })
+};
 
 const AddRootUser = (userId,data) => {
     return axios({
@@ -236,5 +243,6 @@ const userService = {
     AddRootUserAfterSignUp,
     assignDeviceTousers,
     postControlData,
+    insertUpdateControlData,
 };
 export default userService;

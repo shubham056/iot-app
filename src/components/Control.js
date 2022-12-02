@@ -14,14 +14,8 @@ import { toast } from 'react-toastify';
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 
-const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
-    if(isDeviceStatus != 'green'){
-        toast.info("Device is offline, make device online for use control commands!",{toastId:1})
-    }if(isDeviceStatus == 'green'){
-        toast.success("Device is online now.",{toastId:2})
-    }
-    //alert(isDeviceStatus)
-    console.log("device_id------------------------", device_id, isSharedDevice, isDeviceStatus)
+const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
+    console.log("device_id------------------------", device_id, userID, isSharedDevice, isDeviceStatus)
     let dt = moment();
     dt.format("HH:mm")
     const [value, setValues] = useState(dt.format("HH:mm"))
@@ -31,6 +25,14 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
     const [thirdDeviceName, setthirdDeviceName] = useState("Device 3")
     const [fourthDeviceName, setfourthDeviceName] = useState("Device 4")
     const [fivethhDeviceName, setfivethhDeviceName] = useState("Device 5")
+
+    useEffect(() => {
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+        } if (isDeviceStatus == 'green') {
+            toast.success("Device is online now.", { toastId: 2 })
+        }
+    }, [isDeviceStatus])
 
     const [open, setOpen] = useState(false);
     const onOpenModal = (val, stateName) => {
@@ -58,7 +60,19 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
         console.log(formValue)
         const { state_name, device_name } = formValue
         if (state_name === "firstDeviceName") {
+            let data = {
+                first_device_name: device_name
+            }
+            UserService.insertUpdateControlData(device_id, userID, data)
+                .then((res) => {
+                    console.log('res', res)
+                })
+                .catch((error) => {
+                    console.log(error)
+                    //   { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+                });
             setfirstDeviceName(device_name)
+
         } if (state_name === "secondDeviceName") {
             setsecondDeviceName(device_name)
         } if (state_name === "thirdDeviceName") {
@@ -831,7 +845,7 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             "CM-1-On-Off": switchVal
         }]
         console.log("data", stepOne)
-        UserService.postControlData(device_id,"mode1-manual",data)
+        UserService.postControlData(device_id, "mode1-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
             }).catch(err => {
@@ -851,17 +865,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmTimer: false,
                 confirmAlarm: false,
             })
-            let data =[{
+            let data = [{
                 "CM-1-Mode": 20,
                 "CM-1-Temp-SP": setPointsVal,
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode1-hvac",data)
-            .then((res) => {
-                console.log("get HVAC data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode1-hvac", data)
+                .then((res) => {
+                    console.log("get HVAC data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Set Points can't be empty!")
         }
@@ -877,18 +891,18 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             confirmAlarm: false,
         })
         console.log(stepOne)
-        let data =[{
+        let data = [{
             "CM-1-Mode": 30,
             "CM-1-T-ON": stepOne.turnOn,
             "CM-1-T-OFF": stepOne.turnOff,
         }]
         console.log(data)
-        UserService.postControlData(device_id,"mode1-timer",data)
-        .then((res) => {
-            console.log("get Timer data------------------", res.data)
-        }).catch(err => {
-            console.log(err)
-        })
+        UserService.postControlData(device_id, "mode1-timer", data)
+            .then((res) => {
+                console.log("get Timer data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
     }
     const stepOneAlarmCfmHandler = () => {
         let alarmVal = stepOne.setAlarm
@@ -904,17 +918,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmAlarm: true,
             })
             console.log(stepOne)
-            let data =[{
+            let data = [{
                 "CM-1-Mode": 40,
                 "CM1-ALM": stepOne.setAlarm
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode1-alarm",data)
-            .then((res) => {
-                console.log("get Alarm data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode1-alarm", data)
+                .then((res) => {
+                    console.log("get Alarm data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Alarm val can't empty!")
         }
@@ -938,13 +952,13 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             "CM-2-On-Off": switchVal
         }]
         console.log("data", stepTwo)
-        UserService.postControlData(device_id,"mode2-manual",data)
+        UserService.postControlData(device_id, "mode2-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
             }).catch(err => {
                 console.log(err)
             })
-        
+
     }
     const stepTwoHVACCfmHandler = () => {
         let HVACVal = stepTwo.HAVC
@@ -958,17 +972,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmTimer: false,
                 confirmAlarm: false,
             })
-            let data =[{
+            let data = [{
                 "CM-2-Mode": 20,
                 "CM-2-Temp-SP": setPointsVal,
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode2-hvac",data)
-            .then((res) => {
-                console.log("get HVAC data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode2-hvac", data)
+                .then((res) => {
+                    console.log("get HVAC data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Set Points can't be empty!")
         }
@@ -984,18 +998,18 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             confirmAlarm: false,
         })
         console.log(stepTwo)
-        let data =[{
+        let data = [{
             "CM-2-Mode": 30,
             "CM-2-T-ON": stepTwo.turnOn,
             "CM-2-T-OFF": stepTwo.turnOff,
         }]
         console.log(data)
-        UserService.postControlData(device_id,"mode2-timer",data)
-        .then((res) => {
-            console.log("get Timer data------------------", res.data)
-        }).catch(err => {
-            console.log(err)
-        })
+        UserService.postControlData(device_id, "mode2-timer", data)
+            .then((res) => {
+                console.log("get Timer data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
     }
     const stepTwoAlarmCfmHandler = () => {
         let alarmVal = stepTwo.setAlarm
@@ -1011,17 +1025,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmAlarm: true,
             })
             console.log(stepTwo)
-            let data =[{
+            let data = [{
                 "CM-2-Mode": 40,
                 "CM2-ALM": stepTwo.setAlarm
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode2-alarm",data)
-            .then((res) => {
-                console.log("get Alarm data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode2-alarm", data)
+                .then((res) => {
+                    console.log("get Alarm data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Alarm val can't empty!")
         }
@@ -1045,7 +1059,7 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             "CM-3-On-Off": switchVal
         }]
         console.log("data", stepThree)
-        UserService.postControlData(device_id,"mode3-manual",data)
+        UserService.postControlData(device_id, "mode3-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
             }).catch(err => {
@@ -1064,17 +1078,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmTimer: false,
                 confirmAlarm: false,
             })
-            let data =[{
+            let data = [{
                 "CM-3-Mode": 20,
                 "CM-3-Temp-SP": setPointsVal,
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode3-hvac",data)
-            .then((res) => {
-                console.log("get HVAC data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode3-hvac", data)
+                .then((res) => {
+                    console.log("get HVAC data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Set Points can't be empty!")
         }
@@ -1090,18 +1104,18 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             confirmAlarm: false,
         })
         console.log(stepThree)
-        let data =[{
+        let data = [{
             "CM-3-Mode": 30,
             "CM-3-T-ON": stepThree.turnOn,
             "CM-3-T-OFF": stepThree.turnOff,
         }]
         console.log(data)
-        UserService.postControlData(device_id,"mode3-timer",data)
-        .then((res) => {
-            console.log("get Timer data------------------", res.data)
-        }).catch(err => {
-            console.log(err)
-        })
+        UserService.postControlData(device_id, "mode3-timer", data)
+            .then((res) => {
+                console.log("get Timer data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
     }
     const stepThreeAlarmCfmHandler = () => {
         let alarmVal = stepThree.setAlarm
@@ -1117,17 +1131,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmAlarm: true,
             })
             console.log(stepThree)
-            let data =[{
+            let data = [{
                 "CM-3-Mode": 40,
                 "CM3-ALM": stepThree.setAlarm
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode3-alarm",data)
-            .then((res) => {
-                console.log("get Alarm data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode3-alarm", data)
+                .then((res) => {
+                    console.log("get Alarm data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Alarm val can't empty!")
         }
@@ -1151,7 +1165,7 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             "CM-4-On-Off": switchVal
         }]
         console.log("data", stepFour)
-        UserService.postControlData(device_id,"mode4-manual",data)
+        UserService.postControlData(device_id, "mode4-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
             }).catch(err => {
@@ -1170,17 +1184,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmTimer: false,
                 confirmAlarm: false,
             })
-            let data =[{
+            let data = [{
                 "CM-4-Mode": 20,
                 "CM-4-Temp-SP": setPointsVal,
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode4-hvac",data)
-            .then((res) => {
-                console.log("get HVAC data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode4-hvac", data)
+                .then((res) => {
+                    console.log("get HVAC data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Set Points can't be empty!")
         }
@@ -1196,18 +1210,18 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             confirmAlarm: false,
         })
         console.log(stepFour)
-        let data =[{
+        let data = [{
             "CM-4-Mode": 30,
             "CM-4-T-ON": stepFour.turnOn,
             "CM-4-T-OFF": stepFour.turnOff,
         }]
         console.log(data)
-        UserService.postControlData(device_id,"mode4-timer",data)
-        .then((res) => {
-            console.log("get Timer data------------------", res.data)
-        }).catch(err => {
-            console.log(err)
-        })
+        UserService.postControlData(device_id, "mode4-timer", data)
+            .then((res) => {
+                console.log("get Timer data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
     }
     const stepFourAlarmCfmHandler = () => {
         let alarmVal = stepFour.setAlarm
@@ -1223,17 +1237,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmAlarm: true,
             })
             console.log(stepFour)
-            let data =[{
+            let data = [{
                 "CM-4-Mode": 40,
                 "CM4-ALM": stepFour.setAlarm
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode4-alarm",data)
-            .then((res) => {
-                console.log("get Alarm data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode4-alarm", data)
+                .then((res) => {
+                    console.log("get Alarm data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Alarm val can't empty!")
         }
@@ -1257,7 +1271,7 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             "CM-5-On-Off": switchVal
         }]
         console.log("data", stepFive)
-        UserService.postControlData(device_id,"mode5-manual",data)
+        UserService.postControlData(device_id, "mode5-manual", data)
             .then((res) => {
                 console.log("get Manual 5 data------------------", res.data)
             }).catch(err => {
@@ -1276,17 +1290,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmTimer: false,
                 confirmAlarm: false,
             })
-            let data =[{
+            let data = [{
                 "CM-5-Mode": 20,
                 "CM-5-Temp-SP": setPointsVal,
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode5-hvac",data)
-            .then((res) => {
-                console.log("get HVAC 5 data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode5-hvac", data)
+                .then((res) => {
+                    console.log("get HVAC 5 data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Set Points can't be empty!")
         }
@@ -1302,18 +1316,18 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
             confirmAlarm: false,
         })
         console.log(stepFive)
-        let data =[{
+        let data = [{
             "CM-5-Mode": 30,
             "CM-5-T-ON": stepFive.turnOn,
             "CM-5-T-OFF": stepFive.turnOff,
         }]
         console.log(data)
-        UserService.postControlData(device_id,"mode5-timer",data)
-        .then((res) => {
-            console.log("get Timer 5 data------------------", res.data)
-        }).catch(err => {
-            console.log(err)
-        })
+        UserService.postControlData(device_id, "mode5-timer", data)
+            .then((res) => {
+                console.log("get Timer 5 data------------------", res.data)
+            }).catch(err => {
+                console.log(err)
+            })
     }
     const stepFiveAlarmCfmHandler = () => {
         let alarmVal = stepFive.setAlarm
@@ -1329,17 +1343,17 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                 confirmAlarm: true,
             })
             console.log(stepFive)
-            let data =[{
+            let data = [{
                 "CM-5-Mode": 40,
                 "CM5-ALM": stepFive.setAlarm
             }]
             console.log(data)
-            UserService.postControlData(device_id,"mode5-alarm",data)
-            .then((res) => {
-                console.log("get Alarm 5 data------------------", res.data)
-            }).catch(err => {
-                console.log(err)
-            })
+            UserService.postControlData(device_id, "mode5-alarm", data)
+                .then((res) => {
+                    console.log("get Alarm 5 data------------------", res.data)
+                }).catch(err => {
+                    console.log(err)
+                })
         } else {
             alert("Alarm val can't empty!")
         }
@@ -1353,7 +1367,7 @@ const Control = ({ device_id, isSharedDevice, isDeviceStatus }) => {
                     <div className="col-md-2 mb-3" style={{ marginTop: 13 }}>
                         <ul className="nav nav-pills flex-column" id="myTab" role="tablist">
                             <li className="nav-item">
-                                <a  className={`nav-link active ${isSharedDevice == "true" ? 'disabled' : null}`} id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{firstDeviceName}</a>
+                                <a className={`nav-link active ${isSharedDevice == "true" ? 'disabled' : null}`} id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{firstDeviceName}</a>
                                 <a className={`${isSharedDevice == "true" ? 'disabled' : null}`} onClick={() => onOpenModal(firstDeviceName, "firstDeviceName")} style={editButtonIcon}><i class="fa fa-edit"></i></a>
                             </li>
                             <li className="nav-item">
