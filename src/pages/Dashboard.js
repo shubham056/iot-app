@@ -133,7 +133,7 @@ const Dashboard = () => {
     };
 
     const handleClose = (action, props) => {
-      const { id, label, is_type, shared_by, is_shared_device  } = props
+      const { id, label, is_type, shared_by, is_shared_device } = props
       setAreaName(label)
       setRenameDeleteId(id)
       if (action == "Rename" && is_type == "area") {
@@ -197,11 +197,11 @@ const Dashboard = () => {
         setIsAddArea(false)
         setshowGraph(false)
         setshowWelcomeDiv(false)
-      }if (action == "addUsers") {
+      } if (action == "addUsers") {
         console.log("addUsers")
-        setValue9("user_id",userID)
-        setValue9("device_id",props.device_id)
-        setValue9("device_name",props.label)
+        setValue9("user_id", userID)
+        setValue9("device_id", props.device_id)
+        setValue9("device_name", props.label)
         SetIsAddDeviceTouser(true)
         SetIsMoveDevice(false)
         setIsForgotDevice(false)
@@ -267,7 +267,7 @@ const Dashboard = () => {
               //let areaName = parent.split("/").pop()
 
               //console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
-              io.current.emit("liveStatsData", { device_id: device_id, objectName: "T_power", dataType: null }); // sent to socket server
+              io.current.emit("liveStatsData", { user_id: userID, device_id: device_id, objectName: "T_power", dataType: null }); // sent to socket server
               io.current.emit("liveGraphData", { user_id: userID, device_id: device_id, objectName: "T_power_A", dataType: null }); // sent to socket server
               io.current.emit("checkDeviceStatus", { device_id: device_id })
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
@@ -318,23 +318,23 @@ const Dashboard = () => {
           props.is_type != 'user'
             ?
             props.is_shared_device == "true" ?
-            null
-            :
-            <Menu
-              open={contextMenu.mouseX !== null}
-              onClose={handleClose}
-              anchorReference="anchorPosition"
-              anchorPosition={
-                contextMenu.mouseX !== null
-                  ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                  : undefined
-              }
-            >
-              <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
-              <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
-              {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
-              {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("addUsers", props)}>Share {props.label}</MenuItem> : null}
-            </Menu>
+              null
+              :
+              <Menu
+                open={contextMenu.mouseX !== null}
+                onClose={handleClose}
+                anchorReference="anchorPosition"
+                anchorPosition={
+                  contextMenu.mouseX !== null
+                    ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                    : undefined
+                }
+              >
+                <MenuItem onClick={() => handleClose("Rename", props)}>Rename {props.label}</MenuItem>
+                <MenuItem onClick={() => handleClose("Delete", props)}>Delete {props.label}</MenuItem>
+                {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("Move", props)}>Move {props.label}</MenuItem> : null}
+                {props.is_type == 'device' ? <MenuItem onClick={() => handleClose("addUsers", props)}>Share {props.label}</MenuItem> : null}
+              </Menu>
             :
             null
         }
@@ -543,7 +543,7 @@ const Dashboard = () => {
   // start date for date range
   useEffect(() => {
     keyRef.current = Date.now();
-    
+
     if (isstartDate) {
       setisInitialDateData({
         ...isInitialDateData,
@@ -571,6 +571,8 @@ const Dashboard = () => {
 
       let userIds = { "user_id": userID, "device_id": isDeviceID };
       io.current.emit("user_connected", userIds);
+
+    
 
       //--------------------------- Stats Data -------------------------------------
       io.current.on('received_stats_data', (data) => {
@@ -658,14 +660,14 @@ const Dashboard = () => {
               //setpowerDataFromDB(data)
               settempetureDataFromDB(data)
 
-            } 
+            }
           }
 
         }
       })
       //---------------------- Check device status -------------------------
       io.current.on('received_device_status_data', (data, device_id) => {
-        console.log("!!!!--- Live Device Status ---!!!!",data, device_id)
+        console.log("!!!!--- Live Device Status ---!!!!", data.device_id, data.device_status)
         if (isDeviceID == device_id) {
           const { device_status, device_status_timestamp_diff } = data
           if (device_status == 1 && device_status_timestamp_diff <= 20) {
@@ -685,7 +687,7 @@ const Dashboard = () => {
 
     })
     return () => io.current.disconnect();
-  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature,io.current]);
+  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature, io.current]);
 
 
 
@@ -1254,55 +1256,55 @@ const Dashboard = () => {
   //Add device to users
   const onSubmitaddDeviceToUser = formValue => {
     //return false
-    const {email, user_id, device_id, device_name} = formValue
-      Swal.fire({
-        title: 'Are you sure ?',
-        text: "want to add this device!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, add it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-         
-          setisaddDeviceToUser(true)
-          let data ={
-            user_id,
-            device_id,
-            device_name
-          }
-          UserService.assignDeviceTousers(email,data)
-            .then((res) => {
-              setisaddDeviceToUser(false)
-              if(res.data.message === "Not_found"){
-                toast.info('This user is not registered with us,sent a email to sign our plateform!', { toastId: 4524 })
-              }if(res.data.message === "successfully_added_shared_device"){
-                toast.success('Device successfully shared.', { toastId: 4224 })
-              }if(res.data.message === "already_added_shared_device"){
-                toast.info('Device already shared.', { toastId: 4024 })
-              }
+    const { email, user_id, device_id, device_name } = formValue
+    Swal.fire({
+      title: 'Are you sure ?',
+      text: "want to add this device!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, add it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
 
-              // if (res.data.data.error == false) {
-              //   toast.success('Device successfully moved!', { toastId: 4464676867878 })
-              //   setisUpdateData(res.data.data.updatedId)
-              //   setisaddDeviceToUser(false)
-              // } else {
-              //   toast.error('Internal server error, please try after some time!', { toastId: 4164676867878 })
-              // }
-            })
-            .catch((error) => {
-              setisaddDeviceToUser(false)
-              console.log(error)
-              { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
-            });
-         
-
-        } else {
-          setisaddDeviceToUser(false)
+        setisaddDeviceToUser(true)
+        let data = {
+          user_id,
+          device_id,
+          device_name
         }
-      })
-    
+        UserService.assignDeviceTousers(email, data)
+          .then((res) => {
+            setisaddDeviceToUser(false)
+            if (res.data.message === "Not_found") {
+              toast.info('This user is not registered with us,sent a email to sign our plateform!', { toastId: 4524 })
+            } if (res.data.message === "successfully_added_shared_device") {
+              toast.success('Device successfully shared.', { toastId: 4224 })
+            } if (res.data.message === "already_added_shared_device") {
+              toast.info('Device already shared.', { toastId: 4024 })
+            }
+
+            // if (res.data.data.error == false) {
+            //   toast.success('Device successfully moved!', { toastId: 4464676867878 })
+            //   setisUpdateData(res.data.data.updatedId)
+            //   setisaddDeviceToUser(false)
+            // } else {
+            //   toast.error('Internal server error, please try after some time!', { toastId: 4164676867878 })
+            // }
+          })
+          .catch((error) => {
+            setisaddDeviceToUser(false)
+            console.log(error)
+            { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+          });
+
+
+      } else {
+        setisaddDeviceToUser(false)
+      }
+    })
+
   }
 
   const onSubmitStepOne = formValue => {
@@ -2066,8 +2068,8 @@ const Dashboard = () => {
                   }
                   {
                     isAddDeviceTouser
-                    ?
-                    <div className="welcome_wraper" id='step2'>
+                      ?
+                      <div className="welcome_wraper" id='step2'>
                         <div className="section-heading text-center">
                           <section className="login_wraper">
                             <div className="container">
@@ -2077,23 +2079,23 @@ const Dashboard = () => {
                                     <h4 className="text-uppercase text-center">Add Device To User</h4>
                                     <form onSubmit={handleSubmit9(onSubmitaddDeviceToUser)}>
                                       <div className="form-group">
-                                        <input 
-                                        type="hidden"
-                                        {...register9("device_name")}
+                                        <input
+                                          type="hidden"
+                                          {...register9("device_name")}
                                         />
-                                        <input 
-                                        type="hidden"
-                                        {...register9("user_id")}
+                                        <input
+                                          type="hidden"
+                                          {...register9("user_id")}
                                         />
-                                        <input 
-                                        type="hidden"
-                                        {...register9("device_id")}
+                                        <input
+                                          type="hidden"
+                                          {...register9("device_id")}
                                         />
-                                        <input 
-                                        type="text"
-                                        {...register9("email")}
-                                        className={`form-control ${errors9.email ? 'is-invalid' : ''}`}
-                                        placeholder="Enter User Email ID"
+                                        <input
+                                          type="text"
+                                          {...register9("email")}
+                                          className={`form-control ${errors9.email ? 'is-invalid' : ''}`}
+                                          placeholder="Enter User Email ID"
                                         />
                                         <span style={{ color: 'red', float: 'left' }}>{errors9.email?.message}</span>
                                       </div>
@@ -2117,8 +2119,8 @@ const Dashboard = () => {
                           </section>
                         </div>
                       </div>
-                    :
-                    null
+                      :
+                      null
                   }
                   {/* ---------------------- Add new device section ------------------------- */}
 
@@ -2959,7 +2961,7 @@ const Dashboard = () => {
                                     }).catch(err => {
                                       console.log(err)
                                     })
-                                    io.current.emit("liveStatsData", { device_id: isDeviceID, objectName: "T_power", dataType: null }); // sent to socket server
+                                    io.current.emit("liveStatsData", { user_id: userID, device_id: isDeviceID, objectName: "T_power", dataType: null }); // sent to socket server
                                     io.current.emit("liveGraphData", { user_id: userID, device_id: isDeviceID, objectName: "temperature", dataType: null }); // sent to socket server
                                     io.current.emit("checkDeviceStatus", { device_id: isDeviceID })
 
