@@ -581,11 +581,11 @@ const Dashboard = () => {
         // console.log("isPowerPhase3", isPowerPhase3)
         //console.log('power graph with device id', isDeviceID, data)
         if (isDeviceID == data.device_id) {
-          console.log(`!!!=== Device(${data.device_id}) stats data ===!!!`, data)
+          console.log(`!!!+++++ Device stats +++++!!!`, data)
 
 
           if (isPower && isPowerTotal || isTemperature) {
-            console.log("power total -------------")
+            //console.log("power total -------------")
             const { T_voltage, T_current, T_power, T_energy, temperature } = data
 
             setisStaticValue1(T_voltage) // T_voltage
@@ -595,7 +595,7 @@ const Dashboard = () => {
             setisStaticTemperature(temperature) // temperature
 
           } if (isPower && isPowerPhase1) {
-            console.log("power phase 1")
+            //console.log("power phase 1")
             const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1, temperature } = data
             setisStaticValue1(l1_voltage)
             setisStaticValue2(l1_current)
@@ -604,7 +604,7 @@ const Dashboard = () => {
             setisStaticTemperature(temperature) // temperature
 
           } if (isPower && isPowerPhase2) {
-            console.log("power phase 2")
+            //console.log("power phase 2")
             const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2, temperature } = data
             setisStaticValue1(l2_voltage)
             setisStaticValue2(l2_current)
@@ -613,7 +613,7 @@ const Dashboard = () => {
             setisStaticTemperature(temperature) // temperature
 
           } if (isPower && isPowerPhase3) {
-            console.log("power phase 3")
+            //console.log("power phase 3")
             const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3, temperature } = data
             setisStaticValue1(l3_voltage)
             setisStaticValue2(l3_current)
@@ -626,7 +626,7 @@ const Dashboard = () => {
 
       //---------------------------- Graph Data -----------------------------------
       io.current.on('received_graph_data', (data, device_id, objectName, dataType) => {
-        console.log(`!!!*** Graph data of Device(${device_id}) ***!!!`, device_id, objectName, dataType)
+        console.log(`!!!*** Graph data of Device ***!!!`, device_id, objectName, dataType)
 
         if (isDeviceID == device_id) {
           console.log("data from socket server", data)
@@ -637,24 +637,24 @@ const Dashboard = () => {
           } else {
             //console.log("wothout switch")
             if (isPower && isPowerTotal && objectName == "T_power_A") {
-              console.log("----------- power graph total--------------")
+              //console.log("----------- power graph total--------------")
               setpowerDataFromDB(data)
 
             } if (isPower && isPowerPhase1 && objectName == "L1_Power_A") {
-              console.log("power graph phase 1")
+              //console.log("power graph phase 1")
               setpowerDataFromDB(data)
 
             } if (isPower && isPowerPhase2 && objectName == "L2_Power_A") {
-              console.log("power graph phase 2")
+              //console.log("power graph phase 2")
               setpowerDataFromDB(data)
 
             } if (isPower && isPowerPhase3 && objectName == "L3_Power_A") {
-              console.log("power graph phase 3")
+              //console.log("power graph phase 3")
               setpowerDataFromDB(data)
             }
             //For Temperature 
             if (isTemperature && objectName == "temperature") {
-              console.log("----------- temperature graph data--------------")
+              //console.log("----------- temperature graph data--------------")
               //setpowerDataFromDB(data)
               settempetureDataFromDB(data)
 
