@@ -267,15 +267,9 @@ const Dashboard = () => {
               //let areaName = parent.split("/").pop()
 
               //console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
-              io.current.emit("liveStatsData", { device_id: device_id, objectName: "T_power", dataType: null }, (response) => {
-                console.log(response.status); // ok
-              }); // sent to socket server
-              io.current.emit("liveGraphData", { device_id: device_id, objectName: "T_power_A", dataType: null }, (response) => {
-                console.log(response.status); // ok
-              }); // sent to socket server
-              io.current.emit("checkDeviceStatus", { device_id: device_id }, (response) => {
-                console.log(response.status); // ok
-              })
+              io.current.emit("liveStatsData", { device_id: device_id, objectName: "T_power", dataType: null }); // sent to socket server
+              io.current.emit("liveGraphData", { user_id: userID, device_id: device_id, objectName: "T_power_A", dataType: null }); // sent to socket server
+              io.current.emit("checkDeviceStatus", { device_id: device_id })
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
                   setpowerDataFromDB(res.data.data.deviceData)
@@ -636,7 +630,7 @@ const Dashboard = () => {
 
         if (isDeviceID == device_id) {
           console.log("data from socket server", data)
-          console.log(isActiveRangeSwitch)
+          //console.log(isActiveRangeSwitch)
           if (isActiveRangeSwitch != null) {
             console.log("with switch")
 
@@ -671,8 +665,9 @@ const Dashboard = () => {
       })
       //---------------------- Check device status -------------------------
       io.current.on('received_device_status_data', (data, device_id) => {
-        console.log("------------------ Live Device Status --------------------",data, device_id)
+        console.log("!!!!------------------ Live Device Status --------------------!!!!",data, device_id)
         if (isDeviceID == device_id) {
+          console.log('Enter in live stats',isDeviceID)
           const { device_status, device_status_timestamp_diff } = data
           if (device_status == 1 && device_status_timestamp_diff <= 20) {
             setisDeviceStatus('green')
@@ -1637,7 +1632,7 @@ const Dashboard = () => {
                                       io.current.emit("liveStatsData", { device_id: device_id, objectName: "T_power", dataType: null }, (response) => {
                                         console.log(response.status); // ok
                                       }); // sent to socket server
-                                      io.current.emit("liveGraphData", { device_id: device_id, objectName: "T_power_A", dataType: null }, (response) => {
+                                      io.current.emit("liveGraphData", { user_id: userID, device_id: device_id, objectName: "T_power_A", dataType: null }, (response) => {
                                         console.log(response.status); // ok
                                       }); // sent to socket server
                                       io.current.emit("checkDeviceStatus", { device_id: device_id }, (response) => {
@@ -2365,7 +2360,7 @@ const Dashboard = () => {
                                             console.log(err)
                                           })
                                           //socket event emit
-                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "T_power_A", dataType: null }, (response) => {
+                                          io.current.emit("liveGraphData", { user_id: userID, device_id: isDeviceID, objectName: "T_power_A", dataType: null }, (response) => {
                                             console.log(response.status); // ok
                                           }); // sent to socket server
 
@@ -2415,7 +2410,7 @@ const Dashboard = () => {
                                             console.log(err)
                                           })
                                           //socket event emit
-                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L1_Power_A", dataType: null }, (response) => {
+                                          io.current.emit("liveGraphData", { user_id: userID, device_id: isDeviceID, objectName: "L1_Power_A", dataType: null }, (response) => {
                                             console.log(response.status); // ok
                                           }); // sent to socket server
 
@@ -2462,7 +2457,7 @@ const Dashboard = () => {
                                             console.log(err)
                                           })
                                           //socket event emit
-                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L2_Power_A", dataType: null }, (response) => {
+                                          io.current.emit("liveGraphData", { user_id: userID, device_id: isDeviceID, objectName: "L2_Power_A", dataType: null }, (response) => {
                                             console.log(response.status); // ok
                                           }); // sent to socket server
 
@@ -2509,7 +2504,7 @@ const Dashboard = () => {
                                             console.log(err)
                                           })
                                           //socket event emit
-                                          io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "L3_Power_A", dataType: null }, (response) => {
+                                          io.current.emit("liveGraphData", { user_id: userID, device_id: isDeviceID, objectName: "L3_Power_A", dataType: null }, (response) => {
                                             console.log(response.status); // ok
                                           }); // sent to socket server
 
@@ -2963,15 +2958,9 @@ const Dashboard = () => {
                                     }).catch(err => {
                                       console.log(err)
                                     })
-                                    io.current.emit("liveStatsData", { device_id: isDeviceID, objectName: "T_power", dataType: null }, (response) => {
-                                      console.log(response.status); // ok
-                                    }); // sent to socket server
-                                    io.current.emit("liveGraphData", { device_id: isDeviceID, objectName: "temperature", dataType: null }, (response) => {
-                                      console.log(response.status); // ok
-                                    }); // sent to socket server
-                                    io.current.emit("checkDeviceStatus", { device_id: isDeviceID }, (response) => {
-                                      console.log(response.status); // ok
-                                    })
+                                    io.current.emit("liveStatsData", { device_id: isDeviceID, objectName: "T_power", dataType: null }); // sent to socket server
+                                    io.current.emit("liveGraphData", { user_id: userID, device_id: isDeviceID, objectName: "temperature", dataType: null }); // sent to socket server
+                                    io.current.emit("checkDeviceStatus", { device_id: isDeviceID })
 
                                   }}
                                   style={{ cursor: 'pointer' }}
