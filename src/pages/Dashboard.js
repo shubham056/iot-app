@@ -686,7 +686,9 @@ const Dashboard = () => {
 
     })
     return () => io.current.disconnect();
-  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3]);
+  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature,io.current]);
+
+
 
 
   //socket 
