@@ -583,7 +583,7 @@ const Dashboard = () => {
         // console.log("isPowerPhase3", isPowerPhase3)
         //console.log('power graph with device id', isDeviceID, data)
         if (isDeviceID == data.device_id) {
-          console.log(`!!!+++++ Device stats +++++!!!`, data)
+          console.log(`!!!!!!!+++++ Device stats +++++!!!!!!!`, data)
 
 
           if (isPower && isPowerTotal || isTemperature) {
@@ -1826,7 +1826,7 @@ const Dashboard = () => {
                                     <form onSubmit={handleSubmit4(onSubmitForgotDevice)}>
                                       <div className="form-group">
                                         <select
-                                          {...register5("device_id")}
+                                          {...register4("device_id")}
                                           className={`form-control ${errors4.device_id ? 'is-invalid' : ''}`}
                                         >
                                           <option value="">--------------------------- Select Device Name ---------------------------</option>
