@@ -28,8 +28,8 @@ const tzone = "Asia/Amman";
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
-  "force new connection": true,
-  "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
+  //"force new connection": true,
+  //"reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
   "timeout": 10000, //before connect_error and connect_timeout are emitted.
   "transports": ["websocket"]
 };
@@ -95,13 +95,14 @@ const Dashboard = () => {
   const [isStaticValue2, setisStaticValue2] = useState('---')
   const [isStaticValue3, setisStaticValue3] = useState('---')
   const [isStaticValue4, setisStaticValue4] = useState('---')
-  const [isStaticTemperature, setisStaticTemperature] = useState('---')
+  const [isStaticTemperature, setisStaticTemperature] = useState('0')
 
   const [isGraphLabelTxt, setisGraphLabelTxt] = useState('Total Power')
   const [isDeviceStatus, setisDeviceStatus] = useState('yellow');
   const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
   const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
-
+  const [isUpdateUseEffectSocket, setisUpdateUseEffectSocket] = useState(0);
+  
   const [rootTreeViewData, setRootTreeViewData] = useState([])
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
   const [tempetureDataFromDB, settempetureDataFromDB] = useState([])
@@ -571,6 +572,9 @@ const Dashboard = () => {
 
       let userIds = { "user_id": userID, "device_id": isDeviceID };
       io.current.emit("user_connected", userIds);
+      io.current.on("user_connected",(data)=>{
+        console.log('----------user_connected--------:',data)
+      })
 
     
 
@@ -686,8 +690,14 @@ const Dashboard = () => {
 
 
     })
-    return () => io.current.disconnect();
-  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature, io.current]);
+    return () =>{
+      io.current.disconnect()
+      setTimeout(()=>{
+        setisUpdateUseEffectSocket(Math.random())
+        console.log("calll after 2 sec",isUpdateUseEffectSocket)
+      },2000)
+    }
+  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature]);
 
 
 
