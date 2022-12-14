@@ -102,7 +102,7 @@ const Dashboard = () => {
   const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
   const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
   const [isUpdateUseEffectSocket, setisUpdateUseEffectSocket] = useState(0);
-  
+
   const [rootTreeViewData, setRootTreeViewData] = useState([])
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
   const [tempetureDataFromDB, settempetureDataFromDB] = useState([])
@@ -268,9 +268,31 @@ const Dashboard = () => {
               //let areaName = parent.split("/").pop()
 
               //console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
-              io.current.emit("liveStatsData", { user_id: userID, device_id: device_id, objectName: "T_power", dataType: null }); // sent to socket server
-              io.current.emit("liveGraphData", { user_id: userID, device_id: device_id, objectName: "T_power_A", dataType: null }); // sent to socket server
               io.current.emit("checkDeviceStatus", { device_id: device_id })
+              io.current.emit("liveStatsData", { user_id: userID, device_id: device_id, objectName: "T_power", dataType: null });
+              io.current.emit("liveGraphData", { user_id: userID, device_id: device_id, objectName: "T_power_A", dataType: null });
+
+              UserService.GetLinkedDeviceStatus(device_id)
+                .then((res) => {
+
+                  if (res.data.message != "data_not_found") {
+                    //console.log('!!!!!!!!!!!! device status: ', res.data.data.deviceData[0])
+                    const {device_status, device_status_timestamp_diff} = res.data.data.deviceData[0]
+                    if (device_status == 1 && device_status_timestamp_diff <= 20) {
+                      setisDeviceStatus('green')
+                    } else if (device_status == 0 && device_status_timestamp_diff >= 21 && device_status_timestamp_diff <= 39) {
+                      setisDeviceStatus('yellow')
+                    } else if (device_status == 0 && device_status_timestamp_diff >= 40) {
+                      setisDeviceStatus('red')
+                    } else if (device_status == 0 && device_status_timestamp_diff == 0) {
+                      setisDeviceStatus('yellow')
+                    } else {
+                      setisDeviceStatus('yellow')
+                    }
+                  }
+
+                }).catch(err => console.log(err))
+
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
                   setpowerDataFromDB(res.data.data.deviceData)
@@ -285,6 +307,7 @@ const Dashboard = () => {
               UserService.GetLatestDeviceStatsData(device_id).then((res) => {
                 setTimeout(() => {
                   setisGraphStatsLoading(false)
+                  setisUpdateUseEffectSocket(Math.random())
                 }, 1000)
                 if (res.data.data.error) {
                   setisStaticValue1("0.00")
@@ -568,19 +591,19 @@ const Dashboard = () => {
     io.current = socketClient(SocketServer, connectionOptions);
 
     io.current.on('connect', () => {
-      
+
 
       let userIds = { "user_id": userID, "device_id": isDeviceID };
-      if(isDeviceID){
-        
+      if (isDeviceID) {
+
         io.current.emit("user_connected", userIds);
       }
-      io.current.on("user_connected",(userIds,soketid)=>{
+      io.current.on("user_connected", (userIds, soketid) => {
         //console.log('----------user_connected--------:',data)
         console.log(`I'm(${isDeviceID}) connected with socket id ${soketid} from the back-end`);
       })
 
-    
+
 
       //--------------------------- Stats Data -------------------------------------
       io.current.on('received_stats_data', (data) => {
@@ -669,7 +692,7 @@ const Dashboard = () => {
               settempetureDataFromDB(data)
 
             }
-          } 
+          }
 
         }
       })
@@ -694,14 +717,10 @@ const Dashboard = () => {
 
 
     })
-    return () =>{
+    return () => {
       io.current.disconnect()
-      setTimeout(()=>{
-        setisUpdateUseEffectSocket(Math.random())
-        console.log("calll after 2 sec",isUpdateUseEffectSocket)
-      },2000)
     }
-  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature]);
+  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature, isUpdateUseEffectSocket]);
 
 
 

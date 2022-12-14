@@ -46,6 +46,10 @@ const GetLinkedDeviceData = (deviceID,Type,dataFormat=null,startDate=null,endDat
     return axios.get(`users/getLinkedDeviceData/${deviceID}/${Type}/${dataFormat}/${startDate}/${endDate}`, { headers: authHeader() });
 };
 
+const GetLinkedDeviceStatus = (deviceID) => {
+    return axios.get(`users/getLinkedDeviceStatus/${deviceID}`, { headers: authHeader() });
+};
+
 const GetLinkedDeviceTemperatureData = (deviceID,Type,dataFormat=null,startDate=null,endDate=null) => {
     return axios.get(`users/getLinkedDeviceTempetrueData/${deviceID}/${Type}/${dataFormat}/${startDate}/${endDate}`, { headers: authHeader() });
 };
@@ -229,6 +233,7 @@ const userService = {
     checkAlreadyAddedDevice,
     forgotDeviceID,
     GetLinkedDeviceData,
+    GetLinkedDeviceStatus,
     GetLinkedDeviceTemperatureData,
     GetLatestDeviceStatsData,
     GetDeviceGraphData,
