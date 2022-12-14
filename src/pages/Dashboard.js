@@ -568,12 +568,16 @@ const Dashboard = () => {
     io.current = socketClient(SocketServer, connectionOptions);
 
     io.current.on('connect', () => {
-      console.log(`I'm(${isDeviceID}) connected with socket id ${io.current.id} from the back-end`);
+      
 
       let userIds = { "user_id": userID, "device_id": isDeviceID };
-      io.current.emit("user_connected", userIds);
-      io.current.on("user_connected",(data)=>{
-        console.log('----------user_connected--------:',data)
+      if(isDeviceID){
+        
+        io.current.emit("user_connected", userIds);
+      }
+      io.current.on("user_connected",(userIds,soketid)=>{
+        //console.log('----------user_connected--------:',data)
+        console.log(`I'm(${isDeviceID}) connected with socket id ${soketid} from the back-end`);
       })
 
     
@@ -665,7 +669,7 @@ const Dashboard = () => {
               settempetureDataFromDB(data)
 
             }
-          }
+          } 
 
         }
       })
