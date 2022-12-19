@@ -1020,7 +1020,7 @@ const Dashboard = () => {
               console.log("forgot device res--", res)
               if (res.data.data.error == false) {
                 toast.success('Device successfully forgot.', { toastId: 3446467686787 })
-                isUpdateData(res.data.data.updatedId);
+                setContentDevice(res.data.data.updatedId);
                 setisAddDeviceLoading(res.data.data.updatedId)
                 setforgotisLoading(false)
                 setIsForgotDevice(false)
@@ -1028,6 +1028,7 @@ const Dashboard = () => {
                 setIsAddArea(false)
                 setshowGraph(false)
                 setshowWelcomeDiv(true)
+                window.location.reload()
               } else {
                 toast.error('Please select a device!', { toastId: 234534464676867878 })
                 setforgotisLoading(false)
@@ -1072,6 +1073,7 @@ const Dashboard = () => {
                 toast.success('Area successfully deleted!', { toastId: 4464676867878 })
                 setisUpdateData(res.data.data.updatedId)
                 setdeleteAreaisLoading(false)
+                window.location.reload()
               } else if (res.data.data.error == "not_found") {
                 toast.error('Refresh page and then select a area!', { toastId: 4488676867878 })
                 setisUpdateData(res.data.data.updatedId)
@@ -1093,10 +1095,10 @@ const Dashboard = () => {
                       .then((res) => {
                         //console.log("ressss", res)
                         toast.success('Area successfully deleted!', { toastId: 4564676867878 })
+                        window.location.reload()
                         setisUpdateData(res.data.data.updatedId)
-                        //setisGetDeviceLoading(res.data.data.updatedId)
-                        setisgetDeviceLoading(true)
                         setdeleteAreaisLoading(false)
+                       
                       }).catch(err => {
                         console.log(err)
                         setdeleteAreaisLoading(false)
@@ -1526,7 +1528,8 @@ const Dashboard = () => {
   ));
 
   let addedDevices = Object.values(contentDevice).map((v, i) => (
-    <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
+    // <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
+    <option value={v.id} >{v.label}</option>
   ));
 
   let addedAreas = Object.values(contentArea).map((v, i) => (
