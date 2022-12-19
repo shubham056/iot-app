@@ -1094,7 +1094,8 @@ const Dashboard = () => {
                         //console.log("ressss", res)
                         toast.success('Area successfully deleted!', { toastId: 4564676867878 })
                         setisUpdateData(res.data.data.updatedId)
-                        setisGetDeviceLoading(res.data.data.updatedId)
+                        //setisGetDeviceLoading(res.data.data.updatedId)
+                        setisgetDeviceLoading(true)
                         setdeleteAreaisLoading(false)
                       }).catch(err => {
                         console.log(err)
