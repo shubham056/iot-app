@@ -1020,7 +1020,7 @@ const Dashboard = () => {
               console.log("forgot device res--", res)
               if (res.data.data.error == false) {
                 toast.success('Device successfully forgot.', { toastId: 3446467686787 })
-                setContentDevice(res.data.data.updatedId);
+                isUpdateData(res.data.data.updatedId);
                 setisAddDeviceLoading(res.data.data.updatedId)
                 setforgotisLoading(false)
                 setIsForgotDevice(false)
@@ -1094,6 +1094,7 @@ const Dashboard = () => {
                         //console.log("ressss", res)
                         toast.success('Area successfully deleted!', { toastId: 4564676867878 })
                         setisUpdateData(res.data.data.updatedId)
+                        setisGetDeviceLoading(res.data.data.updatedId)
                         setdeleteAreaisLoading(false)
                       }).catch(err => {
                         console.log(err)
