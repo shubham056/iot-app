@@ -268,6 +268,9 @@ const Dashboard = () => {
               //let areaName = parent.split("/").pop()
 
               //console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
+              let userIds = { "user_id": userID, "device_id": device_id };
+              console.log("device id ", device_id)
+              io.current.emit("user_connected", userIds);
               io.current.emit("checkDeviceStatus", { device_id: device_id })
               io.current.emit("liveStatsData", { user_id: userID, device_id: device_id, objectName: "T_power", dataType: null });
               io.current.emit("liveGraphData", { user_id: userID, device_id: device_id, objectName: "T_power_A", dataType: null });
@@ -277,7 +280,7 @@ const Dashboard = () => {
 
                   if (res.data.message != "data_not_found") {
                     //console.log('!!!!!!!!!!!! device status: ', res.data.data.deviceData[0])
-                    const {device_status, device_status_timestamp_diff} = res.data.data.deviceData[0]
+                    const { device_status, device_status_timestamp_diff } = res.data.data.deviceData[0]
                     if (device_status == 1 && device_status_timestamp_diff <= 20) {
                       setisDeviceStatus('green')
                     } else if (device_status == 0 && device_status_timestamp_diff >= 21 && device_status_timestamp_diff <= 39) {
@@ -307,7 +310,6 @@ const Dashboard = () => {
               UserService.GetLatestDeviceStatsData(device_id).then((res) => {
                 setTimeout(() => {
                   setisGraphStatsLoading(false)
-                  setisUpdateUseEffectSocket(Math.random())
                 }, 1000)
                 if (res.data.data.error) {
                   setisStaticValue1("0.00")
@@ -587,140 +589,133 @@ const Dashboard = () => {
 
   const io = useRef();
 
+  //Connect socket once from server
   useEffect(() => {
     io.current = socketClient(SocketServer, connectionOptions);
-
+    //connect
     io.current.on('connect', () => {
-
-
-      let userIds = { "user_id": userID, "device_id": isDeviceID };
-      if (isDeviceID) {
-
-        io.current.emit("user_connected", userIds);
-      }
+      console.log("Socket connected!")
       io.current.on("user_connected", (userIds, soketid) => {
         //console.log('----------user_connected--------:',data)
-        console.log(`I'm(${isDeviceID}) connected with socket id ${soketid} from the back-end`);
+        console.log(`I'm(${userIds.device_id}) connected with socket id ${soketid} from the back-end`);
       })
-
-
-
-      //--------------------------- Stats Data -------------------------------------
-      io.current.on('received_stats_data', (data) => {
-        // console.log("power", isPower)
-        // console.log("total power", isPowerTotal)
-        // console.log("isPowerPhase1", isPowerPhase1)
-        // console.log("isPowerPhase2", isPowerPhase2)
-        // console.log("isPowerPhase3", isPowerPhase3)
-        //console.log('power graph with device id', isDeviceID, data)
-        if (isDeviceID == data.device_id) {
-          console.log(`!!!!!!!+++++ Device stats +++++!!!!!!!`, data)
-
-
-          if (isPower && isPowerTotal || isTemperature) {
-            //console.log("power total -------------")
-            const { T_voltage, T_current, T_power, T_energy, temperature } = data
-
-            setisStaticValue1(T_voltage) // T_voltage
-            setisStaticValue2(T_current) // T_current
-            setisStaticValue3(T_power) // T_Power
-            setisStaticValue4(T_energy) // T_Energy
-            setisStaticTemperature(temperature) // temperature
-
-          } if (isPower && isPowerPhase1) {
-            //console.log("power phase 1")
-            const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1, temperature } = data
-            setisStaticValue1(l1_voltage)
-            setisStaticValue2(l1_current)
-            setisStaticValue3(AP_power_l1)
-            setisStaticValue4(T_Energy_L1)
-            setisStaticTemperature(temperature) // temperature
-
-          } if (isPower && isPowerPhase2) {
-            //console.log("power phase 2")
-            const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2, temperature } = data
-            setisStaticValue1(l2_voltage)
-            setisStaticValue2(l2_current)
-            setisStaticValue3(AP_power_l2)
-            setisStaticValue4(T_Energy_L2)
-            setisStaticTemperature(temperature) // temperature
-
-          } if (isPower && isPowerPhase3) {
-            //console.log("power phase 3")
-            const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3, temperature } = data
-            setisStaticValue1(l3_voltage)
-            setisStaticValue2(l3_current)
-            setisStaticValue3(AP_power_l3)
-            setisStaticValue4(T_Energy_L3)
-            setisStaticTemperature(temperature) // temperature
-          }
-        }
-      })
-
-      //---------------------------- Graph Data -----------------------------------
-      io.current.on('received_graph_data', (data, device_id, objectName, dataType) => {
-        console.log(`!!!*** Graph data of Device ***!!!`, device_id, objectName, dataType)
-
-        if (isDeviceID == device_id) {
-          console.log("data from socket server", data)
-          //console.log(isActiveRangeSwitch)
-          if (isActiveRangeSwitch != null) {
-            console.log("with switch")
-
-          } else {
-            //console.log("wothout switch")
-            if (isPower && isPowerTotal && objectName == "T_power_A") {
-              //console.log("----------- power graph total--------------")
-              setpowerDataFromDB(data)
-
-            } if (isPower && isPowerPhase1 && objectName == "L1_Power_A") {
-              //console.log("power graph phase 1")
-              setpowerDataFromDB(data)
-
-            } if (isPower && isPowerPhase2 && objectName == "L2_Power_A") {
-              //console.log("power graph phase 2")
-              setpowerDataFromDB(data)
-
-            } if (isPower && isPowerPhase3 && objectName == "L3_Power_A") {
-              //console.log("power graph phase 3")
-              setpowerDataFromDB(data)
-            }
-            //For Temperature 
-            if (isTemperature && objectName == "temperature") {
-              //console.log("----------- temperature graph data--------------")
-              //setpowerDataFromDB(data)
-              settempetureDataFromDB(data)
-
-            }
-          }
-
-        }
-      })
-      //---------------------- Check device status -------------------------
-      io.current.on('received_device_status_data', (data, device_id) => {
-        console.log("!!!!--- Live Device Status ---!!!!", data.device_id, data.device_status)
-        if (isDeviceID == device_id) {
-          const { device_status, device_status_timestamp_diff } = data
-          if (device_status == 1 && device_status_timestamp_diff <= 20) {
-            setisDeviceStatus('green')
-          } else if (device_status == 0 && device_status_timestamp_diff >= 21 && device_status_timestamp_diff <= 39) {
-            setisDeviceStatus('yellow')
-          } else if (device_status == 0 && device_status_timestamp_diff >= 40) {
-            setisDeviceStatus('red')
-          } else if (device_status == 0 && device_status_timestamp_diff == 0) {
-            setisDeviceStatus('yellow')
-          } else {
-            setisDeviceStatus('yellow')
-          }
-        }
-      })
-
-
-    })
+    });
+    //disconnect
+    io.current.on('disconnect', () => {
+      console.log("socket disconnected")
+    });
     return () => {
+      io.current.off('connect');
+      io.current.off('disconnect');
       io.current.disconnect()
     }
-  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature, isUpdateUseEffectSocket]);
+  }, []);
+
+
+  useEffect(() => {
+    console.log("call use effect")
+    //---------------------- Check device status -------------------------
+    io.current.on('received_device_status_data', (data, device_id) => {
+      console.log("!!!!--- Live Device Status ---!!!!", data)
+      const { device_status, device_status_timestamp_diff } = data
+      if (isDeviceID == data.device_id) {
+        if (device_status == 1 && device_status_timestamp_diff <= 20) {
+          setisDeviceStatus('green')
+        } else if (device_status == 0 && device_status_timestamp_diff >= 21 && device_status_timestamp_diff <= 39) {
+          setisDeviceStatus('yellow')
+        } else if (device_status == 0 && device_status_timestamp_diff >= 40) {
+          setisDeviceStatus('red')
+        } else if (device_status == 0 && device_status_timestamp_diff == 0) {
+          setisDeviceStatus('yellow')
+        } else {
+          setisDeviceStatus('yellow')
+        }
+      }
+    })
+    //--------------------------- Stats Data -------------------------------------
+    io.current.on('received_stats_data', (data) => {
+      // console.log("power", isPower)
+      // console.log("total power", isPowerTotal)
+      // console.log("isPowerPhase1", isPowerPhase1)
+      // console.log("isPowerPhase2", isPowerPhase2)
+      // console.log("isPowerPhase3", isPowerPhase3)
+      //console.log('power graph with device id', isDeviceID, data)
+      if (isDeviceID == data.device_id) {
+        console.log(`!!!!!!!+++++ Device stats +++++!!!!!!!`, data)
+
+
+        if (isPower && isPowerTotal || isTemperature) {
+          //console.log("power total -------------")
+          const { T_voltage, T_current, T_power, T_energy, temperature } = data
+
+          setisStaticValue1(T_voltage) // T_voltage
+          setisStaticValue2(T_current) // T_current
+          setisStaticValue3(T_power) // T_Power
+          setisStaticValue4(T_energy) // T_Energy
+          setisStaticTemperature(temperature) // temperature
+
+        } if (isPower && isPowerPhase1) {
+          //console.log("power phase 1")
+          const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1, temperature } = data
+          setisStaticValue1(l1_voltage)
+          setisStaticValue2(l1_current)
+          setisStaticValue3(AP_power_l1)
+          setisStaticValue4(T_Energy_L1)
+          setisStaticTemperature(temperature) // temperature
+
+        } if (isPower && isPowerPhase2) {
+          //console.log("power phase 2")
+          const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2, temperature } = data
+          setisStaticValue1(l2_voltage)
+          setisStaticValue2(l2_current)
+          setisStaticValue3(AP_power_l2)
+          setisStaticValue4(T_Energy_L2)
+          setisStaticTemperature(temperature) // temperature
+
+        } if (isPower && isPowerPhase3) {
+          //console.log("power phase 3")
+          const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3, temperature } = data
+          setisStaticValue1(l3_voltage)
+          setisStaticValue2(l3_current)
+          setisStaticValue3(AP_power_l3)
+          setisStaticValue4(T_Energy_L3)
+          setisStaticTemperature(temperature) // temperature
+        }
+      }
+    })
+
+    //---------------------------- Graph Data -----------------------------------
+    io.current.on('received_graph_data', (data, device_id, objectName, dataType) => {
+      console.log(`!!!*** Graph data of Device ***!!!`, device_id, objectName, dataType)
+
+      if (isDeviceID == device_id) {
+          if (isPower && isPowerTotal && objectName == "T_power_A" ) {
+            console.log("----------- power graph total--------------")
+            setpowerDataFromDB(data)
+
+          } if (isPower && isPowerPhase1 && objectName == "L1_Power_A") {
+            console.log("power graph phase 1")
+            setpowerDataFromDB(data)
+
+          } if (isPower && isPowerPhase2 && objectName == "L2_Power_A") {
+            console.log("power graph phase 2")
+            setpowerDataFromDB(data)
+
+          } if (isPower && isPowerPhase3 && objectName == "L3_Power_A") {
+            console.log("power graph phase 3")
+            setpowerDataFromDB(data)
+          }
+          //For Temperature 
+          if (isTemperature && objectName == "temperature") {
+            //console.log("----------- temperature graph data--------------")
+            //setpowerDataFromDB(data)
+            settempetureDataFromDB(data)
+
+          }
+
+      }
+    })
+  }, [isDeviceID, isPower, isPowerTotal, isPowerPhase1, isPowerPhase2, isPowerPhase3, isTemperature]);
 
 
 
