@@ -1526,13 +1526,11 @@ const Dashboard = () => {
   ));
 
   let addedDevices = Object.values(contentDevice).map((v, i) => (
-    // <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
-    <option value={v.id} >{v.label}</option>
+    <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
   ));
 
   let addedAreas = Object.values(contentArea).map((v, i) => (
-    // <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
-    <option value={v.id} >{v.label}</option>
+    <option value={v.id} selected={renameDeleteId === v.id}>{v.label}</option>
   ));
 
 
