@@ -32,7 +32,7 @@ export const ChartComponent = props => {
         timeScale: {
           timeVisible: true,
           secondsVisible: true,
-          minBarSpacing: 2,
+          //minBarSpacing: 2,
           // rightBarStaysOnScroll: true,
           //borderColor: "#2B2B43"
         }
