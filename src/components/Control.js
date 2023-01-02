@@ -167,37 +167,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         isDisableconfirmAlarm: true,
     })
 
-    //------------------ UseEffects ---------------------
-    useEffect(() => {
-        UserService.GetControlDeviceData(device_id, userID)
-            .then(res => {
-                let controlData = res.data.data.deviceInfo
-                console.log("controlDeviceData", controlData)
-                if (controlData.length > 0) {
-                    controlData.map(item => {
-                        if (item.device_row_type == 'first') {
-                            setfirstDeviceName(item.device_name)
-                            setstepOne({
-                                manual: item.is_manual,
-                                switch: item.is_switch,
-                                confirmManual: item.is_manual_confirm,
-                            })
-                        } if (item.device_row_type == 'second') {
-                            setsecondDeviceName(item.device_name)
-                        } if (item.device_row_type == 'third') {
-                            setthirdDeviceName(item.device_name)
-                        } if (item.device_row_type == 'four') {
-                            setfourthDeviceName(item.device_name)
-                        } if (item.device_row_type == 'five') {
-                            setfivethhDeviceName(item.device_name)
-                        }
-                    })
-                }
-
-            }).catch(err => {
-                console.log('err', err)
-            })
-    }, [])
+    //------------------ UseEffects --------------------
     useEffect(() => {
         let dataOne = {
             device_name: "Device 1",
@@ -261,6 +231,36 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             });
     }, [device_id, userID])
 
+    useEffect(() => {
+        UserService.GetControlDeviceData(device_id, userID)
+            .then(res => {
+                let controlData = res.data.data.deviceInfo
+                console.log("controlDeviceData", controlData)
+                if (controlData.length > 0) {
+                    controlData.map(item => {
+                        if (item.device_row_type == 'first') {
+                            setfirstDeviceName(item.device_name)
+                            setstepOne({
+                                manual: item.is_manual,
+                                switch: item.is_switch,
+                                confirmManual: item.is_manual_confirm,
+                            })
+                        } if (item.device_row_type == 'second') {
+                            setsecondDeviceName(item.device_name)
+                        } if (item.device_row_type == 'third') {
+                            setthirdDeviceName(item.device_name)
+                        } if (item.device_row_type == 'four') {
+                            setfourthDeviceName(item.device_name)
+                        } if (item.device_row_type == 'five') {
+                            setfivethhDeviceName(item.device_name)
+                        }
+                    })
+                }
+
+            }).catch(err => {
+                console.log('err', err)
+            })
+    }, [])
 
     useEffect(() => {
         if (isDeviceStatus != 'green') {
