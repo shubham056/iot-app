@@ -10,6 +10,7 @@ import moment from 'moment-timezone';
 import { useEffect } from 'react';
 import UserService from '../services/user.service';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2'
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -25,65 +26,6 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
     const [thirdDeviceName, setthirdDeviceName] = useState("Device 3")
     const [fourthDeviceName, setfourthDeviceName] = useState("Device 4")
     const [fivethhDeviceName, setfivethhDeviceName] = useState("Device 5")
-
-    useEffect(() => {
-        if (isDeviceStatus != 'green') {
-            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
-        } if (isDeviceStatus == 'green') {
-            toast.success("Device is online now.", { toastId: 2 })
-        }
-    }, [isDeviceStatus])
-
-    const [open, setOpen] = useState(false);
-    const onOpenModal = (val, stateName) => {
-        setOpen(true);
-        setValue("state_name", stateName)
-        setValue("device_name", val)
-    }
-    const onCloseModal = () => setOpen(false);
-
-    const profileSchema = Yup.object().shape({
-        device_name: Yup.string().required('Device name is required.'),
-    });
-    const formOptions = { resolver: yupResolver(profileSchema) }
-    const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, } = useForm(formOptions);
-
-    //Step One 
-    const setpointsSchema = Yup.object().shape({
-        set_points: Yup.string().required('Set Points is required.'),
-    });
-    const setPointsformOptions = { resolver: yupResolver(setpointsSchema) }
-    const { register: register1, setValue: setValue1, formState: { errors: errors1, isSubmitting: isSubmitting1 }, handleSubmit: handleSubmit1, } = useForm(setPointsformOptions);
-
-    //submit handler
-    const onSubmit = formValue => {
-        console.log(formValue)
-        const { state_name, device_name } = formValue
-        if (state_name === "firstDeviceName") {
-            let data = {
-                first_device_name: device_name
-            }
-            UserService.insertUpdateControlData(device_id, userID, data)
-                .then((res) => {
-                    console.log('res', res)
-                })
-                .catch((error) => {
-                    console.log(error)
-                    //   { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
-                });
-            setfirstDeviceName(device_name)
-
-        } if (state_name === "secondDeviceName") {
-            setsecondDeviceName(device_name)
-        } if (state_name === "thirdDeviceName") {
-            setthirdDeviceName(device_name)
-        } if (state_name === "fourthDeviceName") {
-            setfourthDeviceName(device_name)
-        } if (state_name === "fivethhDeviceName") {
-            setfivethhDeviceName(device_name)
-        }
-        setOpen(false)
-    }
     const [stepOne, setstepOne] = useState({
         manual: false,
         switch: false,
@@ -224,6 +166,167 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         isDisableconfirmTimer: true,
         isDisableconfirmAlarm: true,
     })
+
+    //------------------ UseEffects ---------------------
+    useEffect(() => {
+        UserService.GetControlDeviceData(device_id, userID)
+            .then(res => {
+                let controlData = res.data.data.deviceInfo
+                console.log("controlDeviceData", controlData)
+                if (controlData.length > 0) {
+                    controlData.map(item => {
+                        if (item.device_row_type == 'first') {
+                            setfirstDeviceName(item.device_name)
+                            setstepOne({
+                                manual: item.is_manual,
+                                switch: item.is_switch,
+                                confirmManual: item.is_manual_confirm,
+                            })
+                        } if (item.device_row_type == 'second') {
+                            setsecondDeviceName(item.device_name)
+                        } if (item.device_row_type == 'third') {
+                            setthirdDeviceName(item.device_name)
+                        } if (item.device_row_type == 'four') {
+                            setfourthDeviceName(item.device_name)
+                        } if (item.device_row_type == 'five') {
+                            setfivethhDeviceName(item.device_name)
+                        }
+                    })
+                }
+
+            }).catch(err => {
+                console.log('err', err)
+            })
+    }, [])
+    useEffect(() => {
+        let dataOne = {
+            device_name: "Device 1",
+            device_row_type: "first"
+        }
+        let dataTwo = {
+            device_name: "Device 2",
+            device_row_type: "second"
+        }
+        let dataThree = {
+            device_name: "Device 3",
+            device_row_type: "third"
+        }
+        let dataFour = {
+            device_name: "Device 4",
+            device_row_type: "four"
+        }
+        let dataFive = {
+            device_name: "Device 5",
+            device_row_type: "five"
+        }
+        //for device 1
+        UserService.insertControlData(device_id, userID, dataOne)
+            .then((res) => {
+                console.log('res', res)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        //for device 2
+        UserService.insertControlData(device_id, userID, dataTwo)
+            .then((res) => {
+                console.log('res', res)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        //for device 3
+        UserService.insertControlData(device_id, userID, dataThree)
+            .then((res) => {
+                console.log('res', res)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        //for device 4
+        UserService.insertControlData(device_id, userID, dataFour)
+            .then((res) => {
+                console.log('res', res)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        //for device 5
+        UserService.insertControlData(device_id, userID, dataFive)
+            .then((res) => {
+                console.log('res', res)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }, [device_id, userID])
+
+
+    useEffect(() => {
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+        } if (isDeviceStatus == 'green') {
+            toast.success("Device is online now.", { toastId: 2 })
+        }
+    }, [isDeviceStatus])
+
+    const [open, setOpen] = useState(false);
+    const onOpenModal = (val, stateName) => {
+        setOpen(true);
+        setValue("state_name", stateName)
+        setValue("device_name", val)
+    }
+    const onCloseModal = () => setOpen(false);
+
+    const profileSchema = Yup.object().shape({
+        device_name: Yup.string().required('Device name is required.'),
+    });
+    const formOptions = { resolver: yupResolver(profileSchema) }
+    const { register, setValue, formState: { errors, isSubmitting }, handleSubmit, } = useForm(formOptions);
+
+    //Step One 
+    const setpointsSchema = Yup.object().shape({
+        set_points: Yup.string().required('Set Points is required.'),
+    });
+    const setPointsformOptions = { resolver: yupResolver(setpointsSchema) }
+    const { register: register1, setValue: setValue1, formState: { errors: errors1, isSubmitting: isSubmitting1 }, handleSubmit: handleSubmit1, } = useForm(setPointsformOptions);
+
+    //submit handler
+    const onSubmit = formValue => {
+        console.log(formValue)
+        const { state_name, device_name } = formValue
+        let data = { device_name: device_name }
+
+        if (state_name === "firstDeviceName") {
+            console.log("first Device")
+            data.device_row_type = "first";
+            setfirstDeviceName(device_name)
+        } if (state_name === "secondDeviceName") {
+            data.device_row_type = "second";
+            setsecondDeviceName(device_name)
+        } if (state_name === "thirdDeviceName") {
+            data.device_row_type = "third";
+            setthirdDeviceName(device_name)
+        } if (state_name === "fourthDeviceName") {
+            data.device_row_type = "four";
+            setfourthDeviceName(device_name)
+        } if (state_name === "fivethhDeviceName") {
+            data.device_row_type = "five";
+            setfivethhDeviceName(device_name)
+        }
+        UserService.insertUpdateControlData(device_id, userID, data)
+            .then((res) => {
+                console.log('res', res)
+                { res.data.error == false && toast.success(res.data.message, { toastId: 2345364676 }) }
+            })
+            .catch((error) => {
+                console.log(error)
+                { error && toast.info(error.response.data.message, { toastId: 234536467686787 }) }
+            });
+
+        setOpen(false)
+    }
+
 
     //StepOne tab handler
     const oneManualHandler = () => {
@@ -842,12 +945,72 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         console.log("switchVal", switchVal)
         let data = [{
             "CM-1-Mode": 10,
-            "CM-1-On-Off": switchVal
+            "CM-1-On-Off": switchVal,
         }]
         console.log("data", stepOne)
-        UserService.postControlData(device_id, "mode1-manual", data)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+
+        UserService.postControlData(device_id, userID, 'first', "mode1-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> manual) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 manual")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "first")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -870,9 +1033,68 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM-1-Temp-SP": setPointsVal,
             }]
             console.log(data)
-            UserService.postControlData(device_id, "mode1-hvac", data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+
+            UserService.postControlData(device_id, userID, 'first', "mode1-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 HVAC")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "first")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -897,9 +1119,68 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-1-T-OFF": stepOne.turnOff,
         }]
         console.log(data)
-        UserService.postControlData(device_id, "mode1-timer", data)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+
+        UserService.postControlData(device_id, userID, 'first', "mode1-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "first")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -923,6 +1204,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM1-ALM": stepOne.setAlarm
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${firstDeviceName}</b> alarm) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode1-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
@@ -952,6 +1271,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-2-On-Off": switchVal
         }]
         console.log("data", stepTwo)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${secondDeviceName}</b> manual) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode2-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
@@ -977,6 +1334,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM-2-Temp-SP": setPointsVal,
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${secondDeviceName}</b> HVAC) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode2-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
@@ -1004,6 +1399,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-2-T-OFF": stepTwo.turnOff,
         }]
         console.log(data)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${secondDeviceName}</b> timer) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode2-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
@@ -1030,6 +1463,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM2-ALM": stepTwo.setAlarm
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${secondDeviceName}</b> alarm) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode2-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
@@ -1059,6 +1530,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-3-On-Off": switchVal
         }]
         console.log("data", stepThree)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> manual) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode3-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
@@ -1083,6 +1592,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM-3-Temp-SP": setPointsVal,
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> HVAC) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode3-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
@@ -1110,6 +1657,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-3-T-OFF": stepThree.turnOff,
         }]
         console.log(data)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> timer) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode3-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
@@ -1136,6 +1721,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM3-ALM": stepThree.setAlarm
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> alarm) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode3-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
@@ -1165,6 +1788,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-4-On-Off": switchVal
         }]
         console.log("data", stepFour)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> manual) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode4-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
@@ -1189,6 +1850,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM-4-Temp-SP": setPointsVal,
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> HVAC) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode4-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
@@ -1216,6 +1915,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-4-T-OFF": stepFour.turnOff,
         }]
         console.log(data)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> timer) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode4-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
@@ -1242,6 +1979,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM4-ALM": stepFour.setAlarm
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> alarm) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode4-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
@@ -1271,6 +2046,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-5-On-Off": switchVal
         }]
         console.log("data", stepFive)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> manual) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode5-manual", data)
             .then((res) => {
                 console.log("get Manual 5 data------------------", res.data)
@@ -1292,9 +2105,47 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             })
             let data = [{
                 "CM-5-Mode": 20,
-                "CM-5-Temp-SP": setPointsVal,
+                "CM-5-Temp_SP": setPointsVal,
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> HVAC) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode5-hvac", data)
                 .then((res) => {
                     console.log("get HVAC 5 data------------------", res.data)
@@ -1322,6 +2173,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             "CM-5-T-OFF": stepFive.turnOff,
         }]
         console.log(data)
+        if (isDeviceStatus != 'green') {
+            toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+            return false
+        }
+        let timerInterval
+        Swal.fire({
+            title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> timer) from the device terminal.`,
+            html: 'It will be close in <b></b> seconds.',
+            icon: 'info',
+            timer: 60000,
+            timerProgressBar: true,
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: "Exit",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('b')
+                        .textContent = (Swal.getTimerLeft() / 1000)
+                            .toFixed(0)
+                }, 100)
+            },
+            willClose: () => {
+                Swal.fire(
+                    'Acknowledgement not received, Please try again!',
+                    '',
+                    'error'
+                )
+                clearInterval(timerInterval)
+                clearInterval(interval);
+            }
+        })
+
+        const interval = setInterval(() => {
+            console.log("call check acknoledgement")
+        }, 5000)
         UserService.postControlData(device_id, "mode5-timer", data)
             .then((res) => {
                 console.log("get Timer 5 data------------------", res.data)
@@ -1348,6 +2237,44 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 "CM5-ALM": stepFive.setAlarm
             }]
             console.log(data)
+            if (isDeviceStatus != 'green') {
+                toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
+                return false
+            }
+            let timerInterval
+            Swal.fire({
+                title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> alarmkhjgynfytrfewdecf) from the device terminal.`,
+                html: 'It will be close in <b></b> seconds.',
+                icon: 'info',
+                timer: 60000,
+                timerProgressBar: true,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: "Exit",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        Swal.getHtmlContainer().querySelector('b')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                    }, 100)
+                },
+                willClose: () => {
+                    Swal.fire(
+                        'Acknowledgement not received, Please try again!',
+                        '',
+                        'error'
+                    )
+                    clearInterval(timerInterval)
+                    clearInterval(interval);
+                }
+            })
+
+            const interval = setInterval(() => {
+                console.log("call check acknoledgement")
+            }, 5000)
             UserService.postControlData(device_id, "mode5-alarm", data)
                 .then((res) => {
                     console.log("get Alarm 5 data------------------", res.data)

@@ -62,6 +62,10 @@ const GetLatestDeviceStatsData = (deviceID,Type,dataFormat=null) => {
     return axios.get(`users/getLatestDeviceStatsData/${deviceID}`, { headers: authHeader() });
 };
 
+const GetControlDeviceData = (deviceID,userID,type=null) => {
+    return axios.get(`users/get_control_device_data/${deviceID}/${userID}/${type}`, { headers: authHeader() });
+};
+
 const AddNewArea = (userId,data) => {
     return axios({
         method: "post",
@@ -84,6 +88,15 @@ const insertUpdateControlData = (deviceID,userId,data) => {
     return axios({
         method: "post",
         url:`users/insert_update_control_device_data/${deviceID}/${userId}`,
+        data,
+        headers: authHeader()
+    })
+};
+
+const insertControlData = (deviceID,userId,data) => {
+    return axios({
+        method: "post",
+        url:`users/insert_control_device_data/${deviceID}/${userId}`,
         data,
         headers: authHeader()
     })
@@ -200,10 +213,10 @@ const resetPassword = (data) => {
 };
 
 //------------------------------------------------ Control Page API --------------------------------------------
-const postControlData = (deviceID,type,data) =>{
+const postControlData = (deviceID,user_id,device_row_type,type,data) =>{
     return axios({
         method: "post",
-        url:`users/get_device_certificates/${deviceID}/${type}`,
+        url:`users/get_device_certificates/${deviceID}/${user_id}/${device_row_type}/${type}`,
         data,
         headers: authHeader()
     })
@@ -249,5 +262,7 @@ const userService = {
     assignDeviceTousers,
     postControlData,
     insertUpdateControlData,
+    insertControlData,
+    GetControlDeviceData
 };
 export default userService;

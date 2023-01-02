@@ -25,6 +25,8 @@ import Control from '../components/Control';
 import DeviceStats from '../components/DeviceStats';
 const tzone = "Asia/Amman";
 
+
+
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
@@ -332,10 +334,10 @@ const Dashboard = () => {
                 setisGraphStatsLoading(false)
               })
             }
-            //setActiveItemId(item.id);
+            //setActiveItemId(id);
             // if you want after click do expand/collapse comment this two line
-            event.stopPropagation();
-            event.preventDefault();
+            // event.stopPropagation();
+            // event.preventDefault();
           }}
         >
           {props.label}
@@ -689,29 +691,29 @@ const Dashboard = () => {
       console.log(`!!!*** Graph data of Device ***!!!`, device_id, objectName, dataType)
 
       if (isDeviceID == device_id) {
-          if (isPower && isPowerTotal && objectName == "T_power_A" ) {
-            console.log("----------- power graph total--------------")
-            setpowerDataFromDB(data)
+        if (isPower && isPowerTotal && objectName == "T_power_A") {
+          console.log("----------- power graph total--------------")
+          setpowerDataFromDB(data)
 
-          } if (isPower && isPowerPhase1 && objectName == "L1_Power_A") {
-            console.log("power graph phase 1")
-            setpowerDataFromDB(data)
+        } if (isPower && isPowerPhase1 && objectName == "L1_Power_A") {
+          console.log("power graph phase 1")
+          setpowerDataFromDB(data)
 
-          } if (isPower && isPowerPhase2 && objectName == "L2_Power_A") {
-            console.log("power graph phase 2")
-            setpowerDataFromDB(data)
+        } if (isPower && isPowerPhase2 && objectName == "L2_Power_A") {
+          console.log("power graph phase 2")
+          setpowerDataFromDB(data)
 
-          } if (isPower && isPowerPhase3 && objectName == "L3_Power_A") {
-            console.log("power graph phase 3")
-            setpowerDataFromDB(data)
-          }
-          //For Temperature 
-          if (isTemperature && objectName == "temperature") {
-            //console.log("----------- temperature graph data--------------")
-            //setpowerDataFromDB(data)
-            settempetureDataFromDB(data)
+        } if (isPower && isPowerPhase3 && objectName == "L3_Power_A") {
+          console.log("power graph phase 3")
+          setpowerDataFromDB(data)
+        }
+        //For Temperature 
+        if (isTemperature && objectName == "temperature") {
+          //console.log("----------- temperature graph data--------------")
+          //setpowerDataFromDB(data)
+          settempetureDataFromDB(data)
 
-          }
+        }
 
       }
     })
@@ -1098,7 +1100,7 @@ const Dashboard = () => {
                         window.location.reload()
                         setisUpdateData(res.data.data.updatedId)
                         setdeleteAreaisLoading(false)
-                       
+
                       }).catch(err => {
                         console.log(err)
                         setdeleteAreaisLoading(false)
@@ -1601,6 +1603,7 @@ const Dashboard = () => {
                     <HelpOutlineOutlined className='help-icon' />
                   </Tooltip>
                   <TreeView
+                    //className={classes.root}
                     aria-label="rich object"
                     defaultCollapseIcon={<ExpandMore />}
                     defaultExpanded={["root"]}
@@ -3025,7 +3028,12 @@ const Dashboard = () => {
                             {
                               isControl
                                 ?
-                                <Control device_id={isDeviceID} userID={userID} isSharedDevice={isSharedDevice} isDeviceStatus={isDeviceStatus} />
+                                <Control
+                                  device_id={isDeviceID}
+                                  userID={userID}
+                                  isSharedDevice={isSharedDevice}
+                                  isDeviceStatus={isDeviceStatus}
+                                />
                                 :
                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                   <div className="row">
@@ -3106,7 +3114,7 @@ const Dashboard = () => {
                                                   id="basic-menu"
                                                   anchorEl={anchorEl}
                                                   open={open}
-                                                  // onClose={handleCloseMenu}
+                                                  onClose={handleCloseMenu}
                                                   MenuListProps={{
                                                     'aria-labelledby': 'basic-button',
                                                   }}

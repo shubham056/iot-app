@@ -58,7 +58,7 @@ export const ChartComponent = props => {
       function dateToString(date) {
         var dateFormat = new Date(date);
         var dateString = moment.unix(date).tz(tzone).format("D MMM YYYY");
-        console.log("dateFormat", dateString)
+        //console.log("dateFormat", dateString)
         return dateString
         return `${date.year} - ${date.month} - ${date.day}`;
       }
@@ -73,7 +73,7 @@ export const ChartComponent = props => {
       toolTip.style.background = 'darkcyan';
       toolTip.style.color = 'white';
       toolTip.style.borderColor = 'rgba( 38, 166, 154, 1)';
-      console.log("container", container)
+      //console.log("container", container)
       container[0].appendChild(toolTip);
 
       // update tooltip
@@ -90,7 +90,7 @@ export const ChartComponent = props => {
         } else {
 
           const dateStr = dateToString(param.time);
-          console.log("date time", param.time)
+          //console.log("date time", param.time)
           toolTip.style.display = 'block';
           const price = param.seriesPrices.get(newSeries);
           toolTip.innerHTML = `<div style="color: ${'rgb(255, 255, 255)'}">Total Power</div><div style="font-size: 24px; margin: 0px 0px; color: ${'white'}">

@@ -3484,11 +3484,13 @@ nav.navbar.navbar-expand-lg>.container-fluid {
     margin-bottom: 15px;
     background: linear-gradient(90deg, rgb(51, 164, 165) 13%, rgb(60, 135, 174) 40%, rgb(79, 111, 141) 100%);
 }
+
 a.disabled {
     pointer-events: none;
     cursor: default;
-  }
-.nav-pills .nav-link{
+}
+
+.nav-pills .nav-link {
     color: white !important;
 }
 
@@ -3523,7 +3525,8 @@ a.disabled {
 .active-dc-btn {
     background-color: #ff9d0ac9 !important;
 }
-.active-confirm-btn{
+
+.active-confirm-btn {
     background-color: #1e4a75 !important;
 }
 
@@ -3542,12 +3545,15 @@ a.disabled {
     border-radius: .25rem;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-.react-ios-time-picker-container{
+
+.react-ios-time-picker-container {
     background-color: white !important;
 }
-.react-ios-time-picker-selected-overlay{
+
+.react-ios-time-picker-selected-overlay {
     background-color: #1e4a75 !important;
 }
+
 .react-ios-time-picker-btn-container {
     background-color: darkcyan !important;
 }
@@ -3555,6 +3561,8 @@ a.disabled {
 .react-ios-time-picker-btn-container button {
     color: white !important;
 }
-..react-ios-time-picker{
+
+.react-ios-time-picker {
     margin-bottom: 200px !important;
 }
+
