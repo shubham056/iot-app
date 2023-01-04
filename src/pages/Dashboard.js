@@ -98,12 +98,14 @@ const Dashboard = () => {
   const [isStaticValue3, setisStaticValue3] = useState('---')
   const [isStaticValue4, setisStaticValue4] = useState('---')
   const [isStaticTemperature, setisStaticTemperature] = useState('0')
+  const [isFilterGraphData, setIsFilterGraphData] = useState(false);
 
   const [isGraphLabelTxt, setisGraphLabelTxt] = useState('Total Power')
   const [isDeviceStatus, setisDeviceStatus] = useState('yellow');
   const [isActiveRangeSwitch, setisActiveRangeSwitch] = useState(null);
   const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
   const [isUpdateUseEffectSocket, setisUpdateUseEffectSocket] = useState(0);
+
 
   const [rootTreeViewData, setRootTreeViewData] = useState([])
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
@@ -431,8 +433,13 @@ const Dashboard = () => {
       UserService.GetLinkedDeviceTemperatureData(isDeviceID, "temperature", format, startDate, endDate)
         .then((res) => {
           console.log("get device temperature data res--", res.data.data.deviceData)
+          setIsFilterGraphData(true)
           settempetureDataFromDB(res.data.data.deviceData)
+          setTimeout(() => {
+            setIsFilterGraphData(false)
+          }, 2000)
         }).catch(err => {
+          setIsFilterGraphData(false)
           console.log(err)
         })
     }
@@ -441,8 +448,13 @@ const Dashboard = () => {
       console.log("power total")
       UserService.GetLinkedDeviceData(isDeviceID, "T_power_A", format, startDate, endDate)
         .then((res) => {
+          setIsFilterGraphData(true)
           setpowerDataFromDB(res.data.data.deviceData)
+          setTimeout(() => {
+            setIsFilterGraphData(false)
+          }, 2000)
         }).catch(err => {
+          setIsFilterGraphData(false)
           console.log(err)
         })
 
@@ -450,8 +462,13 @@ const Dashboard = () => {
       console.log("power phase 1")
       UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A", format, startDate, endDate)
         .then((res) => {
+          setIsFilterGraphData(true)
           setpowerDataFromDB(res.data.data.deviceData)
+          setTimeout(() => {
+            setIsFilterGraphData(false)
+          }, 2000)
         }).catch(err => {
+          setIsFilterGraphData(false)
           console.log(err)
         })
 
@@ -459,8 +476,13 @@ const Dashboard = () => {
       console.log("power phase 2")
       UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A", format, startDate, endDate)
         .then((res) => {
+          setIsFilterGraphData(true)
           setpowerDataFromDB(res.data.data.deviceData)
+          setTimeout(() => {
+            setIsFilterGraphData(false)
+          }, 2000)
         }).catch(err => {
+          setIsFilterGraphData(false)
           console.log(err)
         })
 
@@ -468,8 +490,13 @@ const Dashboard = () => {
       console.log("power phase 3")
       UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A", format, startDate, endDate)
         .then((res) => {
+          setIsFilterGraphData(true)
           setpowerDataFromDB(res.data.data.deviceData)
+          setTimeout(() => {
+            setIsFilterGraphData(false)
+          }, 2000)
         }).catch(err => {
+          setIsFilterGraphData(false)
           console.log(err)
         })
 
@@ -3158,6 +3185,7 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <PowerCharts
+                                                isFilterGraphData={isFilterGraphData}
                                                 device_id={isDeviceID}
                                                 powerDataFromDB={powerDataFromDB}
                                               />

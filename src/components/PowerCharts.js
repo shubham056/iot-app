@@ -20,6 +20,7 @@ const ChartComponent = props => {
   const {
     data,
     device_id,
+    isFilterGraphData,
     colors: {
       backgroundColor = 'white',
       lineColor = '#2962FF',
@@ -159,12 +160,49 @@ const ChartComponent = props => {
 
   useCustomCompareEffect(
     () => {
+      console.log("filter data:", isFilterGraphData)
+      let filterData = []
       if (data.length > 0) {
+        let myData;
+        if (typeof (data) != "undefined") {
+          myData = Object.keys(data).map(key => {
+            return data[key];
+          })
+        } else {
+          myData = []
+        }
+
+
+        if (isFilterGraphData) {
+          filterData = myData
+          console.log("filterData array:", filterData)
+          if (filterData.length > 0) {
+            console.log("call update data with filter in graph first con")
+            candlestickSeriesRef.current.setData(filterData)
+          } else {
+            console.log("call set data in graph", myData)
+            candlestickSeriesRef.current.setData(myData)
+          }
+
+        } else {
+          if (filterData.length > 0) {
+            console.log("call update data with filter in graph")
+            candlestickSeriesRef.current.update(filterData.slice(-1)[0])
+          } else {
+            console.log("call update data with nomarl way in graph")
+            candlestickSeriesRef.current.update(data.slice(-1)[0])
+          }
+        }
+
+
+
+
         //console.log("data", data.slice(-1)[0])
-        candlestickSeriesRef.current.update(data.slice(-1)[0])
+
+
       }
     },
-    [data, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
+    [data, isFilterGraphData, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
     (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
   );
 
@@ -191,7 +229,7 @@ const MemoizedSubComponent = React.memo(ChartComponent);
 
 function App(props) {
   //console.log("app props data", props)
-  const { powerDataFromDB, device_id } = props
+  const { powerDataFromDB, device_id, isFilterGraphData } = props
   let myData;
   if (typeof (powerDataFromDB) != "undefined") {
     myData = Object.keys(powerDataFromDB).map(key => {
@@ -207,6 +245,7 @@ function App(props) {
       {...props}
       data={myData}
       device_id={device_id}
+      isFilterGraphData={isFilterGraphData}
       colors={{
         backgroundColor: 'white',
         lineColor: '#2962FF',
