@@ -1,14 +1,23 @@
 import { useCustomCompareEffect } from "use-custom-compare";
 import isEqual from "lodash/isEqual";
+import UserService from "../services/user.service";
 import { createChart, ColorType } from 'lightweight-charts';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment-timezone';
 const tzone = "Asia/Amman";
 
 
+
 const ChartComponent = props => {
+  const elRef = useRef();
+  const chartRef = useRef()
+  const candlestickSeriesRef = useRef()
+  const [initCandles, setInitCandles] = useState([])
+  const [lastCandle, setLastCandle] = useState({})
+
   const {
     data,
+    device_id,
     colors: {
       backgroundColor = 'white',
       lineColor = '#2962FF',
@@ -20,13 +29,37 @@ const ChartComponent = props => {
   } = props;
   const chartContainerRef = useRef();
 
-  useCustomCompareEffect(
+  useEffect(() => {
+    // get initial data from API
+    if (device_id) {
+      UserService.GetLinkedDeviceData(device_id, "T_power_A")
+        .then((res) => {
+          let powerDataFromDB = res.data.data.deviceData
+          let myData
+          if (typeof (powerDataFromDB) != "undefined") {
+            myData = Object.keys(powerDataFromDB).map(key => {
+              return powerDataFromDB[key];
+            })
+          } else {
+            myData = []
+          }
+          setInitCandles(myData)
+        }).catch(err => {
+          console.log(err)
+        })
+    }
+  }, [device_id])
+
+
+  useEffect(
     () => {
+
+
       const handleResize = () => {
-        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+        chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
       };
 
-      const chart = createChart(chartContainerRef.current, {
+      chartRef.current = createChart(chartContainerRef.current, {
         layout: {
           // background: { type: ColorType.Solid, color: backgroundColor },
           // textColor,
@@ -43,12 +76,12 @@ const ChartComponent = props => {
         }
       });
 
-      chart.timeScale().fitContent()
-    
 
-      const newSeries = chart.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
-      newSeries.setData(data);
 
+
+      candlestickSeriesRef.current = chartRef.current.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      candlestickSeriesRef.current.setData(initCandles);
+      chartRef.current.timeScale().fitContent()
 
       const container = document.getElementsByClassName('tv-lightweight-charts');
 
@@ -74,7 +107,7 @@ const ChartComponent = props => {
       container[0].appendChild(toolTip);
 
       // update tooltip
-      chart.subscribeCrosshairMove(param => {
+      chartRef.current.subscribeCrosshairMove(param => {
         if (
           param.point === undefined ||
           !param.time ||
@@ -89,7 +122,7 @@ const ChartComponent = props => {
           const dateStr = dateToString(param.time);
           //console.log("date time", param.time)
           toolTip.style.display = 'block';
-          const price = param.seriesPrices.get(newSeries);
+          const price = param.seriesPrices.get(candlestickSeriesRef.current);
           toolTip.innerHTML = `<div style="color: ${'rgb(255, 255, 255)'}">Total Power</div><div style="font-size: 24px; margin: 0px 0px; color: ${'white'}">
 			${Math.round(100 * price) / 100}
 			</div><div style="">
@@ -115,12 +148,22 @@ const ChartComponent = props => {
       return () => {
         window.removeEventListener('resize', handleResize);
 
-        chart.remove();
+        chartRef.current.remove();
       };
+    }, [initCandles]);
+
+  useCustomCompareEffect(
+    () => {
+      if (data.length > 0) {
+        console.log("data", data.slice(-1)[0])
+        candlestickSeriesRef.current.update(data.slice(-1)[0])
+      }
     },
     [data, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
     (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
   );
+
+
 
   return (
     <div
@@ -137,7 +180,7 @@ const MemoizedSubComponent = React.memo(ChartComponent);
 
 function App(props) {
   //console.log("app props data", props)
-  const { powerDataFromDB } = props
+  const { powerDataFromDB, device_id } = props
   let myData;
   if (typeof (powerDataFromDB) != "undefined") {
     myData = Object.keys(powerDataFromDB).map(key => {
@@ -152,6 +195,7 @@ function App(props) {
     <MemoizedSubComponent
       {...props}
       data={myData}
+      device_id={device_id}
       colors={{
         backgroundColor: 'white',
         lineColor: '#2962FF',

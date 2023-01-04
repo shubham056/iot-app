@@ -1587,7 +1587,6 @@ const Dashboard = () => {
     }
   }
 
-
   return (
     <div>
       <Header />
@@ -3159,6 +3158,7 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <PowerCharts
+                                                device_id={isDeviceID}
                                                 powerDataFromDB={powerDataFromDB}
                                               />
                                               :
