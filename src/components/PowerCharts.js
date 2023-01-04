@@ -69,7 +69,7 @@ export const ChartComponent = props => {
 
       // Create and style the tooltip html element
       const toolTip = document.createElement('div');
-      toolTip.style = `height: auto; position: absolute; display: none; padding: 8px; box-sizing: border-box; font-size: 13px; text-align: left; z-index: 1000; top: 12px; left: 12px; pointer-events: none; border: 1px solid; border-radius: 2px;font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;`;
+      toolTip.style = `height: auto; position: absolute; display: none; padding: 4px; box-sizing: border-box; font-size: 13px; text-align: left; z-index: 1000; top: 12px; left: 12px; pointer-events: none; border: 1px solid; border-radius: 2px;font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;`;
       toolTip.style.background = 'darkcyan';
       toolTip.style.color = 'white';
       toolTip.style.borderColor = 'rgba( 38, 166, 154, 1)';
@@ -95,8 +95,7 @@ export const ChartComponent = props => {
           const price = param.seriesPrices.get(newSeries);
           toolTip.innerHTML = `<div style="color: ${'rgb(255, 255, 255)'}">Total Power</div><div style="font-size: 24px; margin: 0px 0px; color: ${'white'}">
 			${Math.round(100 * price) / 100}
-			</div><div style="color: ${'white'}; font-size: 10px; margin-top: -3px; margin-bottom: -5px;">
-			${dateStr}
+			</div><div style="">
 			</div>`;
 
           const y = param.point.y;
