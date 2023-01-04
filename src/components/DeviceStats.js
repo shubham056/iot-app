@@ -3,7 +3,7 @@ import { Card, CardContent, Grid, Typography } from '@mui/material'
 import Skeleton from 'react-loading-skeleton';
 
 const DeviceStats = (props) => {
-  const { isStaticTxtValue1, isStaticTxtValue2, isStaticTxtValue3, isStaticTxtValue4, isStaticValue1, isStaticValue2, isStaticValue3, isStaticValue4, isGraphStatsLoading} = props
+  const { isStaticTxtValue1, isStaticTxtValue2, isStaticTxtValue3, isStaticTxtValue4, isStaticValue1, isStaticValue2, isStaticValue3, isStaticValue4, isGraphStatsLoading } = props
   return (
     <Grid
       container
@@ -19,11 +19,11 @@ const DeviceStats = (props) => {
           }
         }}>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue1}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1px solid #1d9b9c", padding: 12 }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${parseFloat(isStaticValue1).toFixed(1)} V`}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}> {parseFloat(isStaticValue1).toFixed(1)} </span> V </span>}
             </Typography>
           </CardContent>
         </Card>
@@ -35,11 +35,11 @@ const DeviceStats = (props) => {
           }
         }}>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue2}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1px solid #1d9b9c", padding: 12 }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${isStaticValue2} A`}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}> {isStaticValue2} </span> A </span>}
             </Typography>
           </CardContent>
         </Card>
@@ -51,11 +51,11 @@ const DeviceStats = (props) => {
           }
         }}>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue3}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1px solid #1d9b9c", padding: 12 }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${parseFloat(isStaticValue3).toFixed(1)} Kw`}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}>{parseFloat(isStaticValue3).toFixed(1)} </span> Kw </span>}
             </Typography>
           </CardContent>
         </Card>
@@ -67,11 +67,11 @@ const DeviceStats = (props) => {
           }
         }}>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center' }}>
+            <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue4}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1px solid #1d9b9c", padding: 12 }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : `${isStaticValue4} kwh`}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}>{isStaticValue4} </span> kwh</span>}
             </Typography>
           </CardContent>
         </Card>
