@@ -3,6 +3,7 @@ import isEqual from "lodash/isEqual";
 import UserService from "../services/user.service";
 import { createChart, ColorType } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import moment from 'moment-timezone';
 const tzone = "Asia/Amman";
 
@@ -14,6 +15,7 @@ const ChartComponent = props => {
   const candlestickSeriesRef = useRef()
   const [initCandles, setInitCandles] = useState([])
   const [lastCandle, setLastCandle] = useState({})
+  const [isLoadingGraph, setisLoadingGraph] = useState(false)
 
   const {
     data,
@@ -32,6 +34,7 @@ const ChartComponent = props => {
   useEffect(() => {
     // get initial data from API
     if (device_id) {
+      setisLoadingGraph(true)
       UserService.GetLinkedDeviceData(device_id, "T_power_A")
         .then((res) => {
           let powerDataFromDB = res.data.data.deviceData
@@ -44,7 +47,9 @@ const ChartComponent = props => {
             myData = []
           }
           setInitCandles(myData)
+          setisLoadingGraph(false)
         }).catch(err => {
+          setisLoadingGraph(false)
           console.log(err)
         })
     }
@@ -155,7 +160,7 @@ const ChartComponent = props => {
   useCustomCompareEffect(
     () => {
       if (data.length > 0) {
-        console.log("data", data.slice(-1)[0])
+        //console.log("data", data.slice(-1)[0])
         candlestickSeriesRef.current.update(data.slice(-1)[0])
       }
     },
@@ -164,11 +169,17 @@ const ChartComponent = props => {
   );
 
 
-
   return (
-    <div
-      ref={chartContainerRef}
-    />
+    <>
+      {
+        isLoadingGraph
+          ?
+          <p style={{ textAlign: 'center', padding: 108 }}>Loading...</p>
+          :
+          <div ref={chartContainerRef} />
+      }
+    </>
+
   );
 };
 
