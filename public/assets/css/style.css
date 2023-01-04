@@ -3456,9 +3456,10 @@ nav.navbar.navbar-expand-lg>.container-fluid {
 }
 
 .MuiCardContent-root {
-    padding-bottom: 15px !important;
-    padding-top: 20px !important;
+    padding-bottom: 12px !important;
+    padding-top: 11px !important;
 }
+
 
 .daterangepicker td.active,
 .daterangepicker td.active:hover {

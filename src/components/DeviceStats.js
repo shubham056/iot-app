@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardContent, Grid, Typography } from '@mui/material'
 import Skeleton from 'react-loading-skeleton';
 
-const DeviceStats = (props) => {
+const DeviceStats = React.memo((props) => {
   const { isStaticTxtValue1, isStaticTxtValue2, isStaticTxtValue3, isStaticTxtValue4, isStaticValue1, isStaticValue2, isStaticValue3, isStaticValue4, isGraphStatsLoading } = props
   return (
     <Grid
@@ -79,6 +79,6 @@ const DeviceStats = (props) => {
 
     </Grid>
   )
-}
+})
 
 export default DeviceStats

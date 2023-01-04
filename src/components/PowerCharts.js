@@ -1,9 +1,12 @@
+import { useCustomCompareEffect } from "use-custom-compare";
+import isEqual from "lodash/isEqual";
 import { createChart, ColorType } from 'lightweight-charts';
 import React, { useEffect, useRef } from 'react';
 import moment from 'moment-timezone';
 const tzone = "Asia/Amman";
 
-export const ChartComponent = props => {
+
+const ChartComponent = props => {
   const {
     data,
     colors: {
@@ -17,7 +20,7 @@ export const ChartComponent = props => {
   } = props;
   const chartContainerRef = useRef();
 
-  useEffect(
+  useCustomCompareEffect(
     () => {
       const handleResize = () => {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
@@ -34,20 +37,14 @@ export const ChartComponent = props => {
         timeScale: {
           timeVisible: true,
           secondsVisible: true,
-          //minBarSpacing: 2,
+          minBarSpacing: -20,
           // rightBarStaysOnScroll: true,
           //borderColor: "#2B2B43"
         }
       });
 
-      chart.timeScale().fitContent();
-      // if (data.length == 1 && data[0].value == 0) {
-      //   chart.timeScale().fitContent();
-      // } else {
-      //   let randomValue = Math.floor(Math.random() * (10 - 2 + 1) + 2)
-      //   chart.timeScale().scrollToPosition(-randomValue, false);
-      // }
-
+      chart.timeScale().fitContent()
+    
 
       const newSeries = chart.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
       newSeries.setData(data);
@@ -121,7 +118,8 @@ export const ChartComponent = props => {
         chart.remove();
       };
     },
-    [data, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor]
+    [data, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
+    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
   );
 
   return (
@@ -130,6 +128,8 @@ export const ChartComponent = props => {
     />
   );
 };
+
+const MemoizedSubComponent = React.memo(ChartComponent);
 
 // const initialData = [ 
 //   { time: '2018-12-22', value: 32.51 },
@@ -149,7 +149,7 @@ function App(props) {
 
   //console.log("final data", myData)
   return (
-    <ChartComponent
+    <MemoizedSubComponent
       {...props}
       data={myData}
       colors={{
@@ -160,9 +160,9 @@ function App(props) {
         areaTopColor: '#2962FF',
         areaBottomColor: 'rgba(41, 98, 255, 0.28)',
       }}
-    ></ChartComponent>
+    ></MemoizedSubComponent>
   );
 }
 
-export default App
+export default App;
 
