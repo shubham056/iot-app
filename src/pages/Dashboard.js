@@ -25,6 +25,8 @@ import Control from '../components/Control';
 import DeviceStats from '../components/DeviceStats';
 const tzone = "Asia/Amman";
 
+
+
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
@@ -107,7 +109,6 @@ const Dashboard = () => {
 
   const [rootTreeViewData, setRootTreeViewData] = useState([])
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
-  const [powerDataFromSocket, setpowerDataFromSocket] = useState([])
   const [tempetureDataFromDB, settempetureDataFromDB] = useState([])
   const [energyDataFromDB, setenergyDataFromDB] = useState([])
   const [isDeviceID, setisDeviceID] = useState('')
@@ -234,7 +235,6 @@ const Dashboard = () => {
             const { id, is_type, device_id, label, shared_by, is_shared_device } = props
             //console.log("device ++++++++++++++++++++++++",props)
             if (is_type == "device") {
-              setpowerDataFromSocket([])
               setIsSharedDevice(is_shared_device)
               setisDeviceID(device_id)
               setisPower(true)
@@ -720,19 +720,19 @@ const Dashboard = () => {
       if (isDeviceID == device_id) {
         if (isPower && isPowerTotal && objectName == "T_power_A") {
           console.log("----------- power graph total--------------")
-          setpowerDataFromSocket(data)
+          setpowerDataFromDB(data)
 
         } if (isPower && isPowerPhase1 && objectName == "L1_Power_A") {
           console.log("power graph phase 1")
-          setpowerDataFromSocket(data)
+          setpowerDataFromDB(data)
 
         } if (isPower && isPowerPhase2 && objectName == "L2_Power_A") {
           console.log("power graph phase 2")
-          setpowerDataFromSocket(data)
+          setpowerDataFromDB(data)
 
         } if (isPower && isPowerPhase3 && objectName == "L3_Power_A") {
           console.log("power graph phase 3")
-          setpowerDataFromSocket(data)
+          setpowerDataFromDB(data)
         }
         //For Temperature 
         if (isTemperature && objectName == "temperature") {
@@ -3188,7 +3188,6 @@ const Dashboard = () => {
                                                 isFilterGraphData={isFilterGraphData}
                                                 device_id={isDeviceID}
                                                 powerDataFromDB={powerDataFromDB}
-                                                powerDataFromSocket={powerDataFromSocket}
                                               />
                                               :
                                               null

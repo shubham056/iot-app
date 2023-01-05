@@ -20,7 +20,6 @@ const ChartComponent = props => {
   const {
     data,
     device_id,
-    powerDataFromSocket,
     isFilterGraphData,
     colors: {
       backgroundColor = 'white',
@@ -190,16 +189,20 @@ const ChartComponent = props => {
             console.log("call update data with filter in graph")
             candlestickSeriesRef.current.update(filterData.slice(-1)[0])
           } else {
-            console.log("call update data with nomarl way in graph", powerDataFromSocket)
-            if (powerDataFromSocket.length > 0) {
-              candlestickSeriesRef.current.update(powerDataFromSocket.slice(-1)[0])
-            }
+            console.log("call update data with nomarl way in graph")
+            candlestickSeriesRef.current.update(data.slice(-1)[0])
           }
         }
+
+
+
+
         //console.log("data", data.slice(-1)[0])
+
+
       }
     },
-    [powerDataFromSocket, data, isFilterGraphData, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
+    [data, isFilterGraphData, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
     (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
   );
 
@@ -226,7 +229,7 @@ const MemoizedSubComponent = React.memo(ChartComponent);
 
 function App(props) {
   //console.log("app props data", props)
-  const { powerDataFromDB, device_id, isFilterGraphData, powerDataFromSocket } = props
+  const { powerDataFromDB, device_id, isFilterGraphData } = props
   let myData;
   if (typeof (powerDataFromDB) != "undefined") {
     myData = Object.keys(powerDataFromDB).map(key => {
@@ -242,7 +245,6 @@ function App(props) {
       {...props}
       data={myData}
       device_id={device_id}
-      powerDataFromSocket={powerDataFromSocket}
       isFilterGraphData={isFilterGraphData}
       colors={{
         backgroundColor: 'white',
