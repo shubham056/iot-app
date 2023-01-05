@@ -22,8 +22,8 @@ const DeviceStats = React.memo((props) => {
             <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue1}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}> {parseFloat(isStaticValue1).toFixed(1)} </span> V </span>}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8 }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}> {parseFloat(isStaticValue1).toFixed(1)} </span> V </span>}
             </Typography>
           </CardContent>
         </Card>
@@ -38,8 +38,8 @@ const DeviceStats = React.memo((props) => {
             <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue2}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}> {isStaticValue2} </span> A </span>}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8 }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}> {isStaticValue2} </span> A </span>}
             </Typography>
           </CardContent>
         </Card>
@@ -54,8 +54,8 @@ const DeviceStats = React.memo((props) => {
             <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue3}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}>{parseFloat(isStaticValue3).toFixed(1)} </span> Kw </span>}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8 }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}>{parseFloat(isStaticValue3).toFixed(1)} </span> Kw </span>}
             </Typography>
           </CardContent>
         </Card>
@@ -70,8 +70,8 @@ const DeviceStats = React.memo((props) => {
             <Typography gutterBottom variant="h5" component="div" style={{ textAlign: 'center', fontSize: 14 }}>
               {isStaticTxtValue4}
             </Typography>
-            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8, margin: '0 20px' }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 25 }}><span style={{ color: "rgb(0, 176, 136)" }}>{isStaticValue4} </span> kwh</span>}
+            <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8 }}>
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}>{isStaticValue4} </span> kwh</span>}
             </Typography>
           </CardContent>
         </Card>
