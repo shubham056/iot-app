@@ -173,26 +173,29 @@ const ChartComponent = props => {
         }
 
 
-        if (isFilterGraphData) {
-          filterData = myData
-          console.log("filterData array:", filterData)
-          if (filterData.length > 0) {
-            console.log("call update data with filter in graph first con")
-            candlestickSeriesRef.current.setData(filterData)
-          } else {
-            console.log("call set data in graph", myData)
-            candlestickSeriesRef.current.setData(myData)
-          }
+        candlestickSeriesRef.current.setData(myData)
 
-        } else {
-          if (filterData.length > 0) {
-            console.log("call update data with filter in graph")
-            candlestickSeriesRef.current.update(filterData.slice(-1)[0])
-          } else {
-            console.log("call update data with nomarl way in graph")
-            candlestickSeriesRef.current.update(data.slice(-1)[0])
-          }
-        }
+
+        // if (isFilterGraphData) {
+        //   filterData = myData
+        //   console.log("filterData array:", filterData)
+        //   if (filterData.length > 0) {
+        //     console.log("call update data with filter in graph first con")
+        //     candlestickSeriesRef.current.setData(filterData)
+        //   } else {
+        //     console.log("call set data in graph", myData)
+        //     candlestickSeriesRef.current.setData(myData)
+        //   }
+
+        // } else {
+        //   if (filterData.length > 0) {
+        //     console.log("call update data with filter in graph")
+        //     candlestickSeriesRef.current.update(filterData.slice(-1)[0])
+        //   } else {
+        //     console.log("call update data with nomarl way in graph")
+        //     candlestickSeriesRef.current.update(data.slice(-1)[0])
+        //   }
+        // }
 
 
 
