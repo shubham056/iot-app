@@ -3,7 +3,6 @@ import isEqual from "lodash/isEqual";
 import UserService from "../services/user.service";
 import { createChart, ColorType } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import moment from 'moment-timezone';
 const tzone = "Asia/Amman";
 
@@ -18,9 +17,11 @@ const ChartComponent = props => {
   const [isLoadingGraph, setisLoadingGraph] = useState(false)
 
   const {
-    data,
-    device_id,
     isFilterGraphData,
+    graphDataFromFilter,
+    isGraphDataFromSocket,
+    graphDataFromSocket,
+    device_id,
     colors: {
       backgroundColor = 'white',
       lineColor = '#2962FF',
@@ -35,9 +36,11 @@ const ChartComponent = props => {
   useEffect(() => {
     // get initial data from API
     if (device_id) {
+      console.log("!!!!!call power initial use effect!!!!!!!!!!")
       setisLoadingGraph(true)
       UserService.GetLinkedDeviceData(device_id, "T_power_A")
         .then((res) => {
+          console.log("power initial res:", res.data.data.deviceData)
           let powerDataFromDB = res.data.data.deviceData
           let myData
           if (typeof (powerDataFromDB) != "undefined") {
@@ -81,9 +84,6 @@ const ChartComponent = props => {
           //borderColor: "#2B2B43"
         }
       });
-
-
-
 
       candlestickSeriesRef.current = chartRef.current.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
       candlestickSeriesRef.current.setData(initCandles);
@@ -160,52 +160,51 @@ const ChartComponent = props => {
 
   useCustomCompareEffect(
     () => {
-      console.log("filter data:", isFilterGraphData)
-      let filterData = []
-      if (data.length > 0) {
+      console.log("is filter data:", isFilterGraphData, "is socket data:", isGraphDataFromSocket)
+      //Filter data
+      if (isFilterGraphData) {
+        console.log("filter data:", graphDataFromFilter)
         let myData;
-        if (typeof (data) != "undefined") {
-          myData = Object.keys(data).map(key => {
-            return data[key];
+        if (typeof (graphDataFromFilter) != "undefined") {
+          myData = Object.keys(graphDataFromFilter).map(key => {
+            return graphDataFromFilter[key];
           })
         } else {
           myData = []
         }
-
-
         candlestickSeriesRef.current.setData(myData)
+      }
+      //Socket data
+      if (isGraphDataFromSocket) {
+        console.log("Graph data from socket:", graphDataFromSocket)
+        console.log("Graph data from socket data len:", graphDataFromSocket)
+        //check for empty object
+        if (Object.keys(graphDataFromSocket).length != 0) {
+          console.log("in update", graphDataFromSocket[0])
+          candlestickSeriesRef.current.update(graphDataFromSocket[0])
 
+          //check for len 1 object
+          // if (Object.keys(graphDataFromSocket).length === 1) {
+          //   console.log("in update", graphDataFromSocket[0])
+          //   candlestickSeriesRef.current.update(graphDataFromSocket[0])
+          // } else {
 
-        // if (isFilterGraphData) {
-        //   filterData = myData
-        //   console.log("filterData array:", filterData)
-        //   if (filterData.length > 0) {
-        //     console.log("call update data with filter in graph first con")
-        //     candlestickSeriesRef.current.setData(filterData)
-        //   } else {
-        //     console.log("call set data in graph", myData)
-        //     candlestickSeriesRef.current.setData(myData)
-        //   }
-
-        // } else {
-        //   if (filterData.length > 0) {
-        //     console.log("call update data with filter in graph")
-        //     candlestickSeriesRef.current.update(filterData.slice(-1)[0])
-        //   } else {
-        //     console.log("call update data with nomarl way in graph")
-        //     candlestickSeriesRef.current.update(data.slice(-1)[0])
-        //   }
-        // }
-
-
-
-
-        //console.log("data", data.slice(-1)[0])
-
+          //   let myData;
+          //   if (typeof (graphDataFromFilter) != "undefined") {
+          //     myData = Object.keys(graphDataFromFilter).map(key => {
+          //       return graphDataFromFilter[key];
+          //     })
+          //   } else {
+          //     myData = []
+          //   }
+          //   console.log("in set data", myData)
+          //   candlestickSeriesRef.current.setData(myData)
+          // }
+        }
 
       }
     },
-    [data, isFilterGraphData, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
+    [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
     (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
   );
 
@@ -231,24 +230,15 @@ const MemoizedSubComponent = React.memo(ChartComponent);
 // ];
 
 function App(props) {
-  //console.log("app props data", props)
-  const { powerDataFromDB, device_id, isFilterGraphData } = props
-  let myData;
-  if (typeof (powerDataFromDB) != "undefined") {
-    myData = Object.keys(powerDataFromDB).map(key => {
-      return powerDataFromDB[key];
-    })
-  } else {
-    myData = []
-  }
-
-  //console.log("final data", myData)
+  const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props
   return (
     <MemoizedSubComponent
       {...props}
-      data={myData}
-      device_id={device_id}
       isFilterGraphData={isFilterGraphData}
+      graphDataFromFilter={graphDataFromFilter}
+      isGraphDataFromSocket={isGraphDataFromSocket}
+      graphDataFromSocket={graphDataFromSocket}
+      device_id={device_id}
       colors={{
         backgroundColor: 'white',
         lineColor: '#2962FF',

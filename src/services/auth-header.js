@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 
 export default function authHeader() {
   const parseJwt = (token) => {
@@ -13,14 +12,13 @@ export default function authHeader() {
   if (user && user.token) {
     const decodedJwt = parseJwt(user.token);
     if (decodedJwt.exp * 1000 < Date.now()) {
-      console.log('exp token')
-      return <Navigate to="/" />
+      console.log('expired JWT token')
+      return { expiredToken: true }
     } else {
       return { Authorization: 'Bearer ' + user.token };
     }
 
   } else {
-    //return {};
-    return <Navigate to="/" />
+    return {};
   }
 }

@@ -1714,16 +1714,16 @@ section {
 }
 
 #main-footer {
-    padding: 44px 0px 10px;
+    padding: 25px 0px 10px;
 }
 
 .footer-menu2 {
-    padding-top: 20px;
+    padding-top: 5px;
 }
 
-#main-footer hr {
-    margin: 40px 0px;
-}
+/* #main-footer hr {
+    margin: 10px 0px;
+} */
 
 .footer-color .footer-logo p,
 .footer-color .footer-btm p {

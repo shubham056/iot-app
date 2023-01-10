@@ -1,9 +1,27 @@
+import { useCustomCompareEffect } from "use-custom-compare";
+import isEqual from "lodash/isEqual";
+import UserService from "../services/user.service";
 import { createChart, ColorType } from 'lightweight-charts';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import moment from 'moment-timezone';
+const tzone = "Asia/Amman";
 
-export const ChartComponent = props => {
+
+
+const ChartComponent = props => {
+  const elRef = useRef();
+  const chartRef = useRef()
+  const candlestickSeriesRef = useRef()
+  const [initCandles, setInitCandles] = useState([])
+  const [lastCandle, setLastCandle] = useState({})
+  const [isLoadingGraph, setisLoadingGraph] = useState(false)
+
   const {
-    data,
+    isFilterTemData,
+    tempetureDataFromFilter,
+    istempetureDataFromSocket,
+    tempetureDataFromSocket,
+    device_id,
     colors: {
       backgroundColor = 'white',
       lineColor = '#2962FF',
@@ -15,13 +33,40 @@ export const ChartComponent = props => {
   } = props;
   const chartContainerRef = useRef();
 
+  useEffect(() => {
+    // get initial temp data from API
+    if (device_id) {
+      setisLoadingGraph(true)
+      UserService.GetLinkedDeviceTemperatureData(device_id, "temperature")
+        .then((res) => {
+          let tempetureDataFromDB = res.data.data.deviceData
+          let myData
+          if (typeof (tempetureDataFromDB) != "undefined") {
+            myData = Object.keys(tempetureDataFromDB).map(key => {
+              return tempetureDataFromDB[key];
+            })
+          } else {
+            myData = []
+          }
+          setInitCandles(myData)
+          setisLoadingGraph(false)
+        }).catch(err => {
+          setisLoadingGraph(false)
+          console.log(err)
+        })
+    }
+  }, [device_id])
+
+
   useEffect(
     () => {
+
+
       const handleResize = () => {
-        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+        chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
       };
 
-      const chart = createChart(chartContainerRef.current, {
+      chartRef.current = createChart(chartContainerRef.current, {
         layout: {
           // background: { type: ColorType.Solid, color: backgroundColor },
           // textColor,
@@ -32,65 +77,139 @@ export const ChartComponent = props => {
         timeScale: {
           timeVisible: true,
           secondsVisible: true,
-          //minBarSpacing: 16,
+          minBarSpacing: -1,
           // rightBarStaysOnScroll: true,
           //borderColor: "#2B2B43"
         }
       });
-      chart.timeScale().fitContent();
-    //   console.log("dddddddddddddddddddd", data)
-    //   if (data.length == 1 && data[0].value == 0) {
-    //     console.log("no0000000000000000000000000000000")
-    //     chart.timeScale().fitContent();
-    //   } else {
-    //     console.log('yyyyyyyyyyyyyyyyyyyyyyyy')
-    //     let randomValue = Math.floor(Math.random() * (10 - 2 + 1) + 2)
-    //     chart.timeScale().scrollToPosition(-randomValue, false);
-    //   }
 
 
-      const newSeries = chart.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
-      newSeries.setData(data);
+
+
+      candlestickSeriesRef.current = chartRef.current.addBaselineSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      candlestickSeriesRef.current.setData(initCandles);
+      chartRef.current.timeScale().fitContent()
+
+      const container = document.getElementsByClassName('tv-lightweight-charts');
+
+      function dateToString(date) {
+        var dateFormat = new Date(date);
+        var dateString = moment.unix(date).tz(tzone).format("D MMM YYYY");
+        //console.log("dateFormat", dateString)
+        return dateString
+        return `${date.year} - ${date.month} - ${date.day}`;
+      }
+
+      const toolTipWidth = 80;
+      const toolTipHeight = 80;
+      const toolTipMargin = 15;
+
+      // Create and style the tooltip html element
+      const toolTip = document.createElement('div');
+      toolTip.style = `height: auto; position: absolute; display: none; padding: 4px; box-sizing: border-box; font-size: 13px; text-align: left; z-index: 1000; top: 12px; left: 12px; pointer-events: none; border: 1px solid; border-radius: 2px;font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;`;
+      toolTip.style.background = 'darkcyan';
+      toolTip.style.color = 'white';
+      toolTip.style.borderColor = 'rgba( 38, 166, 154, 1)';
+      //console.log("container", container)
+      container[0].appendChild(toolTip);
+
+      // update tooltip
+      chartRef.current.subscribeCrosshairMove(param => {
+        if (
+          param.point === undefined ||
+          !param.time ||
+          param.point.x < 0 ||
+          param.point.x > container.clientWidth ||
+          param.point.y < 0 ||
+          param.point.y > container.clientHeight
+        ) {
+          toolTip.style.display = 'none';
+        } else {
+
+          const dateStr = dateToString(param.time);
+          //console.log("date time", param.time)
+          toolTip.style.display = 'block';
+          const price = param.seriesPrices.get(candlestickSeriesRef.current);
+          toolTip.innerHTML = `<div style="color: ${'rgb(255, 255, 255)'}">Total Power</div><div style="font-size: 24px; margin: 0px 0px; color: ${'white'}">
+			${Math.round(100 * price) / 100}
+			</div><div style="">
+			</div>`;
+
+          const y = param.point.y;
+          let left = param.point.x + toolTipMargin;
+          if (left > container.clientWidth - toolTipWidth) {
+            left = param.point.x - toolTipMargin - toolTipWidth;
+          }
+
+          let top = y + toolTipMargin;
+          if (top > container.clientHeight - toolTipHeight) {
+            top = y - toolTipHeight - toolTipMargin;
+          }
+          toolTip.style.left = left + 'px';
+          toolTip.style.top = top + 'px';
+        }
+      });
 
       window.addEventListener('resize', handleResize);
 
       return () => {
         window.removeEventListener('resize', handleResize);
 
-        chart.remove();
+        chartRef.current.remove();
       };
+    }, [initCandles]);
+
+  useCustomCompareEffect(
+    () => {
+      //filter data
+      if (isFilterTemData) {
+        console.log("filter data:", tempetureDataFromFilter)
+        let myData;
+        if (typeof (tempetureDataFromFilter) != "undefined") {
+          myData = Object.keys(tempetureDataFromFilter).map(key => {
+            return tempetureDataFromFilter[key];
+          })
+        } else {
+          myData = []
+        }
+        candlestickSeriesRef.current.setData(myData)
+
+      }
+      //Socket data
+      if (istempetureDataFromSocket) {
+        console.log("Tem data from socket:", tempetureDataFromSocket)
+        candlestickSeriesRef.current.update(tempetureDataFromSocket)
+      }
     },
-    [data, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor]
+    [isFilterTemData, tempetureDataFromFilter, istempetureDataFromSocket, tempetureDataFromSocket, isFilterTemData, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
+    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
   );
 
   return (
-    <div
-      ref={chartContainerRef}
-    />
+    <>
+      {
+        isLoadingGraph
+          ?
+          <p style={{ textAlign: 'center', padding: 108 }}>Loading...</p>
+          :
+          <div ref={chartContainerRef} />
+      }
+    </>
   );
 };
 
-// const initialData = [
-//   { time: '2018-12-22', value: 32.51 },
-// ];
+const MemoizedSubComponent = React.memo(ChartComponent);
 
 function App(props) {
-  //console.log("app props data", props)
-  const { tempetureDataFromDB } = props
-  let myData;
-  if (typeof (tempetureDataFromDB) != "undefined") {
-    myData = Object.keys(tempetureDataFromDB).map(key => {
-      return tempetureDataFromDB[key];
-    })
-  } else {
-    myData = []
-  }
-
-  console.log("final tempeture  data", myData)
+  const { istempetureDataFromSocket, tempetureDataFromSocket, isFilterTemData, tempetureDataFromFilter, device_id } = props
   return (
-    <ChartComponent
+    <MemoizedSubComponent
       {...props}
-      data={myData}
+      isFilterTemData={isFilterTemData}
+      tempetureDataFromFilter={tempetureDataFromFilter}
+      istempetureDataFromSocket={istempetureDataFromSocket}
+      tempetureDataFromSocket={tempetureDataFromSocket}
+      device_id={device_id}
       colors={{
         backgroundColor: 'white',
         lineColor: '#2962FF',
@@ -99,9 +218,9 @@ function App(props) {
         areaTopColor: '#2962FF',
         areaBottomColor: 'rgba(41, 98, 255, 0.28)',
       }}
-    ></ChartComponent>
+    ></MemoizedSubComponent>
   );
 }
 
-export default App
+export default App;
 
