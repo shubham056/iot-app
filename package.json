@@ -17,6 +17,7 @@
     "axios": "^0.27.2",
     "chakra-ui-steps": "^1.7.4",
     "i": "^0.3.7",
+    "jwt-decode": "^3.1.2",
     "kaktana-react-lightweight-charts": "^2.0.0",
     "lightweight-charts": "^3.8.0",
     "moment-timezone": "^0.5.38",
