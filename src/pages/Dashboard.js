@@ -25,8 +25,6 @@ import Control from '../components/Control';
 import DeviceStats from '../components/DeviceStats';
 const tzone = "Asia/Amman";
 
-
-
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
@@ -38,6 +36,7 @@ const connectionOptions = {
 
 const Dashboard = () => {
   //set states start here
+  const [isstartDateChange, setIsstartDateChange] = useState("")
   const [isstartDate, setIsstartDate] = useState("")
   const [isEnergyTxt, setisEnergyTxt] = useState("Energy")
   const [isUpdateData, setisUpdateData] = useState("")
@@ -312,9 +311,11 @@ const Dashboard = () => {
 
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
+                  console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                   setIsFilterGraphData(true)
                   setgraphDataFromFilter(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
+                  setIsstartDateChange(new Date().getTime().toString() + Math.floor(Math.random() * 1000000))
                   setTimeout(() => {
                     setIsFilterGraphData(false)
                   }, 1000)
@@ -462,7 +463,7 @@ const Dashboard = () => {
       console.log("power total")
       UserService.GetLinkedDeviceData(isDeviceID, "T_power_A", format, startDate, endDate)
         .then((res) => {
-          console.log("filter:",res.data.data.deviceData)
+          console.log("filter:", res.data.data.deviceData)
           setIsFilterGraphData(true)
           setgraphDataFromFilter(res.data.data.deviceData)
           setTimeout(() => {
@@ -614,12 +615,15 @@ const Dashboard = () => {
   useEffect(() => {
     keyRef.current = Date.now();
 
+    console.log("!!!!!!!!!!call set start date in filter !!!!!!!!")
     if (isstartDate) {
       setisInitialDateData({
         ...isInitialDateData,
         startDate: isstartDate,
         minDate: isstartDate,
       })
+
+      console.log("!!!!!!!!!!call set start date in filter !!!!!!!!", isstartDate, isInitialDateData)
     }
     if (isstartDate == undefined) {
       setisInitialDateData({
@@ -628,7 +632,7 @@ const Dashboard = () => {
         minDate: today,
       })
     }
-  }, [isstartDate, isInitialDateData.startDate]);
+  }, [isstartDateChange, isstartDate, isInitialDateData.startDate]);
 
 
   const io = useRef();
@@ -2266,7 +2270,8 @@ const Dashboard = () => {
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
-                                              setpowerDataFromDB(res.data.data.deviceData)
+                                              setIsstartDate(res.data.data.deviceData[0].date)
+                                              setIsstartDateChange(new Date().getTime().toString() + Math.floor(Math.random() * 1000000))
                                               setTimeout(() => {
                                                 setIsFilterGraphData(false)
                                               }, 1000)
@@ -2320,10 +2325,12 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A")
                                             .then((res) => {
+                                              console.log("phase 1 data", res.data.data.deviceData[0].date)
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
-                                              setpowerDataFromDB(res.data.data.deviceData)
+                                              setIsstartDate(res.data.data.deviceData[0].date)
+                                              setIsstartDateChange(new Date().getTime().toString() + Math.floor(Math.random() * 1000000))
                                               setTimeout(() => {
                                                 setIsFilterGraphData(false)
                                               }, 1000)
@@ -2378,7 +2385,8 @@ const Dashboard = () => {
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
-                                              setpowerDataFromDB(res.data.data.deviceData)
+                                              setIsstartDate(res.data.data.deviceData[0].date)
+                                              setIsstartDateChange(new Date().getTime().toString() + Math.floor(Math.random() * 1000000))
                                               setTimeout(() => {
                                                 setIsFilterGraphData(false)
                                               }, 1000)
@@ -2432,7 +2440,8 @@ const Dashboard = () => {
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
-                                              setpowerDataFromDB(res.data.data.deviceData)
+                                              setIsstartDate(res.data.data.deviceData[0].date)
+                                              setIsstartDateChange(new Date().getTime().toString() + Math.floor(Math.random() * 1000000))
                                               setTimeout(() => {
                                                 setIsFilterGraphData(false)
                                               }, 1000)
@@ -2893,6 +2902,7 @@ const Dashboard = () => {
                                         setIstempetureDataFromSocket(false)
                                         settempetureDataFromFilter(res.data.data.deviceData)
                                         setIsstartDate(res.data.data.deviceData[0].date)
+                                        setIsstartDateChange(new Date().getTime().toString() + Math.floor(Math.random() * 1000000))
                                       }).catch(err => {
                                         console.log(err)
                                       })
@@ -2981,9 +2991,11 @@ const Dashboard = () => {
 
                                                     UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
                                                       .then((res) => {
+                                                        setIsGraphDataFromSocket(false)
                                                         setIsFilterGraphData(true)
                                                         setgraphDataFromFilter(res.data.data.deviceData)
-                                                        setpowerDataFromDB(res.data.data.deviceData)
+                                                        setIsstartDate(res.data.data.deviceData[0].date)
+                                                        setIsstartDateChange(new Date().getTime().toString() + Math.floor(Math.random() * 1000000))
                                                         setTimeout(() => {
                                                           setIsFilterGraphData(false)
                                                         }, 1000)
@@ -3090,7 +3102,7 @@ const Dashboard = () => {
                                                 device_id={isDeviceID}
                                                 isFilterTemData={isFilterTemData}
                                                 tempetureDataFromFilter={tempetureDataFromFilter}
-                                                
+
                                                 istempetureDataFromSocket={istempetureDataFromSocket}
                                                 tempetureDataFromSocket={tempetureDataFromSocket}
                                               />
