@@ -2890,6 +2890,7 @@ const Dashboard = () => {
                                     UserService.GetLinkedDeviceTemperatureData(isDeviceID, "temperature")
                                       .then((res) => {
                                         console.log("get device temperature data res--", res.data.data.deviceData)
+                                        setIstempetureDataFromSocket(false)
                                         settempetureDataFromFilter(res.data.data.deviceData)
                                         setIsstartDate(res.data.data.deviceData[0].date)
                                       }).catch(err => {
@@ -3089,6 +3090,7 @@ const Dashboard = () => {
                                                 device_id={isDeviceID}
                                                 isFilterTemData={isFilterTemData}
                                                 tempetureDataFromFilter={tempetureDataFromFilter}
+                                                
                                                 istempetureDataFromSocket={istempetureDataFromSocket}
                                                 tempetureDataFromSocket={tempetureDataFromSocket}
                                               />
