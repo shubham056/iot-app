@@ -75,7 +75,7 @@ const ChartComponent = props => {
           fontSize
         },
         width: 900,
-        height: 370,
+        height: 350,
         timeScale: {
           timeVisible: true,
           secondsVisible: true,
@@ -181,7 +181,8 @@ const ChartComponent = props => {
         //check for empty object
         if (Object.keys(graphDataFromSocket).length != 0) {
           console.log("in update", graphDataFromSocket[0])
-          candlestickSeriesRef.current.update(graphDataFromSocket[0])
+          candlestickSeriesRef.current.setData(graphDataFromSocket)
+          //candlestickSeriesRef.current.update(graphDataFromSocket[0])
 
           //check for len 1 object
           // if (Object.keys(graphDataFromSocket).length === 1) {

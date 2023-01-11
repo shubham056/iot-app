@@ -1714,7 +1714,7 @@ section {
 }
 
 #main-footer {
-    padding: 25px 0px 10px;
+    padding: 15px 0px 10px;
 }
 
 .footer-menu2 {
@@ -2994,8 +2994,8 @@ header {
 }
 
 .widget_categories.right-widget.top_heding {
-    margin-top: 7px;
-    margin-bottom: 7px;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .top_tag a:first-child {

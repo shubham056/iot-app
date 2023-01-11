@@ -463,6 +463,7 @@ const Dashboard = () => {
       console.log("power total")
       UserService.GetLinkedDeviceData(isDeviceID, "T_power_A", format, startDate, endDate)
         .then((res) => {
+          setIsGraphDataFromSocket(false)
           console.log("filter:", res.data.data.deviceData)
           setIsFilterGraphData(true)
           setgraphDataFromFilter(res.data.data.deviceData)

@@ -73,7 +73,7 @@ const ChartComponent = props => {
           fontSize
         },
         width: 1200,
-        height: 370,
+        height: 350,
         timeScale: {
           timeVisible: true,
           secondsVisible: true,

@@ -13,7 +13,6 @@ export const Footer = () => {
           <div className="footer-menu2">
             <ul>
               <li>06 Highley St, Victoria,california Australia.</li>
-              <li>Highley St, park-Victoria, Australia.</li>
               <li>+566-7798093435</li>
               <li>emailbox@email.com</li>
             </ul>
@@ -27,7 +26,6 @@ export const Footer = () => {
               <li><Link to="/">Social Marketing</Link></li>
               <li><Link to="/">Keyword Alanytics</Link></li>
               <li><Link to="/">Site Optimization</Link></li>
-              <li><Link to="/">Pay per click</Link></li>
             </ul>
           </div>
         </div>
@@ -39,7 +37,6 @@ export const Footer = () => {
               <li><Link to="/">Terms &amp; Conditions</Link></li>
               <li><Link to="/">FAQ</Link></li>
               <li><Link to="/">Affiliates</Link></li>
-              <li><Link to="/">Help Center</Link></li>
             </ul>
           </div>
         </div>
@@ -51,7 +48,6 @@ export const Footer = () => {
               <li><Link to="/">Terms &amp; Conditions</Link></li>
               <li><Link to="/">FAQ</Link></li>
               <li><Link to="/">Affiliates</Link></li>
-              <li><Link to="/">Help Center</Link></li>
             </ul>
           </div>
         </div>
