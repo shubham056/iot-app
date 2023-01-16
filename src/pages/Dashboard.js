@@ -124,6 +124,8 @@ const Dashboard = () => {
   let today = moment().tz(tzone).format('YYYY/MM/DD')
   let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YYYY/MM/DD')
   const NodeWithContextMenu = (props) => {
+
+    console.log("deive props:", props)
     const [contextMenu, setContextMenu] = React.useState({
       mouseX: null,
       mouseY: null,
@@ -312,7 +314,7 @@ const Dashboard = () => {
 
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
-                 // console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
+                  // console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                   setIsFilterGraphData(true)
                   setgraphDataFromFilter(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
@@ -646,7 +648,7 @@ const Dashboard = () => {
     io.current.on('connect', () => {
       console.log("Socket connected!")
       io.current.on("user_connected", (userIds, soketid) => {
-        console.log('----------user_connected-------- from socket:',userIds)
+        console.log('----------user_connected-------- from socket:', userIds)
         console.log(`I'm(${userIds.device_id}) connected with socket id ${soketid} from the back-end`);
       })
     });
