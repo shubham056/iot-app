@@ -107,7 +107,6 @@ const Dashboard = () => {
   const [isGraphStatsLoading, setisGraphStatsLoading] = useState(true);
   const [isUpdateUseEffectSocket, setisUpdateUseEffectSocket] = useState(0);
 
-
   const [rootTreeViewData, setRootTreeViewData] = useState([])
   const [powerDataFromDB, setpowerDataFromDB] = useState([])
   const [tempetureDataFromFilter, settempetureDataFromFilter] = useState([])
@@ -305,6 +304,8 @@ const Dashboard = () => {
                     } else {
                       setisDeviceStatus('yellow')
                     }
+                  } else {
+                    setisDeviceStatus('red')
                   }
 
                 }).catch(err => console.log(err))
