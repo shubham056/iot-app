@@ -124,8 +124,6 @@ const Dashboard = () => {
   let today = moment().tz(tzone).format('YYYY/MM/DD')
   let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YYYY/MM/DD')
   const NodeWithContextMenu = (props) => {
-
-    console.log("deive props:", props)
     const [contextMenu, setContextMenu] = React.useState({
       mouseX: null,
       mouseY: null,
@@ -239,7 +237,8 @@ const Dashboard = () => {
       >
         <Typography
           onClick={event => {
-            const { id, is_type, device_id, label, shared_by, is_shared_device } = props
+            let { id, is_type, device_id: deviceID, label, shared_by, is_shared_device } = props
+            let device_id = deviceID.trim()
             //console.log("device ++++++++++++++++++++++++",props)
             if (is_type == "device") {
               //setIsFilterGraphData(true)
@@ -285,7 +284,7 @@ const Dashboard = () => {
               let userIds = { "user_id": userID, "device_id": device_id };
               console.log("user connected emit to socket data :", userIds)
               io.current.emit("user_connected", userIds);
-              io.current.emit("checkDeviceStatus", { device_id: device_id })
+              io.current.emit("checkDeviceStatus", { device_id: device_id.trim() })
               io.current.emit("liveStatsData", { user_id: userID, device_id: device_id, objectName: "T_power", dataType: null });
               io.current.emit("liveGraphData", { user_id: userID, device_id: device_id, objectName: "T_power_A", dataType: null });
 
