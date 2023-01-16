@@ -281,7 +281,7 @@ const Dashboard = () => {
 
               //console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
               let userIds = { "user_id": userID, "device_id": device_id };
-              console.log("device id ", device_id)
+              console.log("user connected emit to socket data :", userIds)
               io.current.emit("user_connected", userIds);
               io.current.emit("checkDeviceStatus", { device_id: device_id })
               io.current.emit("liveStatsData", { user_id: userID, device_id: device_id, objectName: "T_power", dataType: null });
@@ -312,7 +312,7 @@ const Dashboard = () => {
 
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
-                  console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
+                 // console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                   setIsFilterGraphData(true)
                   setgraphDataFromFilter(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
@@ -617,7 +617,7 @@ const Dashboard = () => {
   useEffect(() => {
     keyRef.current = Date.now();
 
-    console.log("!!!!!!!!!!call set start date in filter !!!!!!!!")
+    //console.log("!!!!!!!!!!call set start date in filter !!!!!!!!")
     if (isstartDate) {
       setisInitialDateData({
         ...isInitialDateData,
@@ -625,7 +625,7 @@ const Dashboard = () => {
         minDate: isstartDate,
       })
 
-      console.log("!!!!!!!!!!call set start date in filter !!!!!!!!", isstartDate, isInitialDateData)
+      //console.log("!!!!!!!!!!call set start date in filter !!!!!!!!", isstartDate, isInitialDateData)
     }
     if (isstartDate == undefined) {
       setisInitialDateData({
@@ -646,7 +646,7 @@ const Dashboard = () => {
     io.current.on('connect', () => {
       console.log("Socket connected!")
       io.current.on("user_connected", (userIds, soketid) => {
-        //console.log('----------user_connected--------:',data)
+        console.log('----------user_connected-------- from socket:',userIds)
         console.log(`I'm(${userIds.device_id}) connected with socket id ${soketid} from the back-end`);
       })
     });

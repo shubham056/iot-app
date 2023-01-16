@@ -36,11 +36,11 @@ const ChartComponent = props => {
   useEffect(() => {
     // get initial data from API
     if (device_id) {
-      console.log("!!!!!call power initial use effect!!!!!!!!!!")
+      //console.log("!!!!!call power initial use effect!!!!!!!!!!")
       setisLoadingGraph(true)
       UserService.GetLinkedDeviceData(device_id, "T_power_A")
         .then((res) => {
-          console.log("power initial res:", res.data.data.deviceData)
+          //console.log("power initial res:", res.data.data.deviceData)
           let powerDataFromDB = res.data.data.deviceData
           let myData
           if (typeof (powerDataFromDB) != "undefined") {
