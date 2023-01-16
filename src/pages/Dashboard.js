@@ -282,7 +282,7 @@ const Dashboard = () => {
               //let areaName = parent.split("/").pop()
 
               //console.log("call device data api", { device_id: device_id, objectName: "T_power", dataType: null })
-              let userIds = { "user_id": userID, "device_id": device_id };
+              let userIds = { "user_id": userID.trim(), "device_id": device_id.trim() };
               console.log("user connected emit to socket data :", userIds)
               io.current.emit("user_connected", userIds);
               io.current.emit("checkDeviceStatus", { device_id: device_id })
