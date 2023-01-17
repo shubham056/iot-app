@@ -1393,10 +1393,19 @@ const Dashboard = () => {
     setstepTwo(true)
     return false
   }
-  const onSubmitSteptwo = formValue => {
+  const onSubmitSteptwo = formValues => {
+    const { parent_id, device_name: deviceName, device_id: deviceid } = formValues
+    let device_name = deviceName.trim();
+    let deviceID = deviceid.trim();
+    let formValue = {
+      parent_id,
+      device_name,
+      device_id: deviceID
+    }
+    //console.log("form value", formValue)
+
     //return false
     setstepTwoisLoading(true)
-    const deviceID = formValue.device_id
     //--------------------------------- Api for check valid device using device ID -------------------------
     UserService.checkDeviceID(deviceID)
       .then((res) => {
