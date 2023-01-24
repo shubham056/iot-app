@@ -3566,4 +3566,8 @@ a.disabled {
 .react-ios-time-picker {
     margin-bottom: 200px !important;
 }
+.MuiCollapse-vertical{
+    max-height: 150px;
+    overflow: auto;
+}
 
