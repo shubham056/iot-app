@@ -313,7 +313,7 @@ const Dashboard = () => {
 
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
-                  // console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
+                  console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                   setIsFilterGraphData(true)
                   setgraphDataFromFilter(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
@@ -983,40 +983,42 @@ const Dashboard = () => {
     // })
 
     async function createTreeView(location) {
-      var tree = [],
-        object = {},
-        parent,
-        child;
-      for (var i = 0; i < location.length; i++) {
-        parent = location[i];
-        object[parent.id] = parent;
-        object[parent.id]["children"] = [];
-      }
-      for (var id in object) {
-        if (object.hasOwnProperty(id)) {
-          child = object[id];
-          if (child.parent_id && object[child["parent_id"]]) {
-            //delete child.id
-            //
-            object[child["parent_id"]]["children"].push(child);
-            delete child.parent_id
-          } else {
-            //delete child.id
-            delete child.parent_id
-            tree.push(child);
+      if (location != undefined) {
+        var tree = [],
+          object = {},
+          parent,
+          child;
+        for (var i = 0; i < location.length; i++) {
+          parent = location[i];
+          object[parent.id] = parent;
+          object[parent.id]["children"] = [];
+        }
+        for (var id in object) {
+          if (object.hasOwnProperty(id)) {
+            child = object[id];
+            if (child.parent_id && object[child["parent_id"]]) {
+              //delete child.id
+              //
+              object[child["parent_id"]]["children"].push(child);
+              delete child.parent_id
+            } else {
+              //delete child.id
+              delete child.parent_id
+              tree.push(child);
+            }
           }
         }
+        return tree;
       }
-      return tree;
     }
     createTreeView(treeViewData[0]).then(data => {
-      //console.log("tree view final data *************************", data)
-      setRootTreeViewData(data[0])
+      //console.log("tree view final data ------------------", data)
+      if (data != undefined) {
+        //console.log("tree view final data *************************", data[0])
+        setRootTreeViewData(data[0])
+      }
     })
-    //setRootTreeViewData(createTreeView(treeViewData[0]))
-    //console.log("__________________Root_________________", createTreeView(locations))
-
-
+    
   }, [treeViewData]);
 
   const renderTree = (nodes) => (
