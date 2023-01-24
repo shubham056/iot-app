@@ -18,12 +18,22 @@ import TempetureChart from "../components/TempetureChart";
 import EnergyChart from '../components/EnergyChart';
 import socketClient from 'socket.io-client';
 import { Typography, Menu, MenuItem, Tooltip, Button, Stack } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
 import { ExpandMore, ChevronRight, HelpOutlineOutlined, DeviceThermostat, Power, ElectricBolt, KeyboardArrowDown, Devices } from "@mui/icons-material";
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import Control from '../components/Control';
 import DeviceStats from '../components/DeviceStats';
 const tzone = "Asia/Amman";
+
+const useStyles = makeStyles({
+  root: {
+    height: "50px",
+    flexGrow: 1,
+    maxWidth: 400,
+    overflow: "auto"
+  }
+});
 
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
@@ -35,6 +45,7 @@ const connectionOptions = {
 };
 
 const Dashboard = () => {
+  const classes = useStyles();
   //set states start here
   const [isstartDateChange, setIsstartDateChange] = useState("")
   const [isstartDate, setIsstartDate] = useState("")
@@ -233,7 +244,7 @@ const Dashboard = () => {
     return (
       <div
         onContextMenu={handleContextMenu}
-        style={{ cursor: "context-menu",maxHeight: 180,overflowY: 'scroll' }}
+        style={{ cursor: "context-menu", maxHeight: 180, overflowY: 'scroll' }}
       >
         <Typography
           onClick={event => {
@@ -1018,7 +1029,7 @@ const Dashboard = () => {
         setRootTreeViewData(data[0])
       }
     })
-    
+
   }, [treeViewData]);
 
   const renderTree = (nodes) => (
@@ -1611,7 +1622,7 @@ const Dashboard = () => {
                     <HelpOutlineOutlined className='help-icon' />
                   </Tooltip>
                   <TreeView
-                    //className={classes.root}
+                    className={classes.root}
                     aria-label="rich object"
                     defaultCollapseIcon={<ExpandMore />}
                     defaultExpanded={["root"]}
