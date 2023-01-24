@@ -177,31 +177,37 @@ const ChartComponent = props => {
       //Socket data
       if (isGraphDataFromSocket) {
         console.log("Graph data from socket:", graphDataFromSocket)
-        console.log("Graph data from socket data len:", graphDataFromSocket)
-        //check for empty object
-        if (Object.keys(graphDataFromSocket).length != 0) {
-          console.log("in update", graphDataFromSocket[0])
+        if (graphDataFromSocket.length > 0) {
           candlestickSeriesRef.current.setData(graphDataFromSocket)
-          //candlestickSeriesRef.current.update(graphDataFromSocket[0])
-
-          //check for len 1 object
-          // if (Object.keys(graphDataFromSocket).length === 1) {
-          //   console.log("in update", graphDataFromSocket[0])
-          //   candlestickSeriesRef.current.update(graphDataFromSocket[0])
-          // } else {
-
-          //   let myData;
-          //   if (typeof (graphDataFromFilter) != "undefined") {
-          //     myData = Object.keys(graphDataFromFilter).map(key => {
-          //       return graphDataFromFilter[key];
-          //     })
-          //   } else {
-          //     myData = []
-          //   }
-          //   console.log("in set data", myData)
-          //   candlestickSeriesRef.current.setData(myData)
-          // }
         }
+        
+
+
+        // console.log("Graph data from socket data len:", graphDataFromSocket)
+        // //check for empty object
+        // if (Object.keys(graphDataFromSocket).length != 0) {
+        //   console.log("in update", graphDataFromSocket[0])
+        //   candlestickSeriesRef.current.setData(graphDataFromSocket)
+        //   //candlestickSeriesRef.current.update(graphDataFromSocket[0])
+
+        //   //check for len 1 object
+        //   // if (Object.keys(graphDataFromSocket).length === 1) {
+        //   //   console.log("in update", graphDataFromSocket[0])
+        //   //   candlestickSeriesRef.current.update(graphDataFromSocket[0])
+        //   // } else {
+
+        //   //   let myData;
+        //   //   if (typeof (graphDataFromFilter) != "undefined") {
+        //   //     myData = Object.keys(graphDataFromFilter).map(key => {
+        //   //       return graphDataFromFilter[key];
+        //   //     })
+        //   //   } else {
+        //   //     myData = []
+        //   //   }
+        //   //   console.log("in set data", myData)
+        //   //   candlestickSeriesRef.current.setData(myData)
+        //   // }
+        //}
 
       }
     },
