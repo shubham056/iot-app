@@ -233,7 +233,7 @@ const Dashboard = () => {
     return (
       <div
         onContextMenu={handleContextMenu}
-        style={{ cursor: "context-menu" }}
+        style={{ cursor: "context-menu",maxHeight: 180,overflowY: 'scroll' }}
       >
         <Typography
           onClick={event => {
