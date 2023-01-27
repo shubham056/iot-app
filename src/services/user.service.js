@@ -154,6 +154,17 @@ const GetLatestDeviceStatsData = (deviceID, Type, dataFormat = null) => {
     return axios.get(`users/getLatestDeviceStatsData/${deviceID}`, { headers: authHeader() });
 };
 
+const GetLatestDeviceTempData = (deviceID, Type, dataFormat = null) => {
+    if (authHeader().expiredToken != undefined && authHeader().expiredToken) {
+        console.log("auth", authHeader())
+        toast.error("Token has been expired!", { toastId: 13 })
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000)
+    }
+    return axios.get(`users/getLatestDeviceTempData/${deviceID}`, { headers: authHeader() });
+};
+
 const GetControlDeviceData = (deviceID, userID, type = null) => {
     if (authHeader().expiredToken != undefined && authHeader().expiredToken) {
         console.log("auth", authHeader())
@@ -515,6 +526,7 @@ const userService = {
     GetLinkedDeviceStatus,
     GetLinkedDeviceTemperatureData,
     GetLatestDeviceStatsData,
+    GetLatestDeviceTempData,
     GetDeviceGraphData,
     deleteAreaName,
     deleteAllAreasandDevices,

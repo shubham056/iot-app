@@ -178,7 +178,7 @@ const ChartComponent = props => {
       //Socket data
       if (istempetureDataFromSocket) {
         console.log("Tem data from socket:", tempetureDataFromSocket)
-        candlestickSeriesRef.current.update(tempetureDataFromSocket)
+        candlestickSeriesRef.current.setData(tempetureDataFromSocket)
       }
     },
     [isFilterTemData, tempetureDataFromFilter, istempetureDataFromSocket, tempetureDataFromSocket, isFilterTemData, backgroundColor, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],

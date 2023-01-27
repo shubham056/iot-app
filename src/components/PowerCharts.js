@@ -6,7 +6,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment-timezone';
 const tzone = "Asia/Amman";
 
-
+function convertTZ(date, tzString) {
+  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", { timeZone: tzString }));
+}
 
 const ChartComponent = props => {
   const elRef = useRef();
@@ -167,11 +169,19 @@ const ChartComponent = props => {
         let myData;
         if (typeof (graphDataFromFilter) != "undefined") {
           myData = Object.keys(graphDataFromFilter).map(key => {
+            // console.log("new time", convertTZ(graphDataFromFilter[key].time, "Asia/kolkata"))
+            // return ({
+            //   time: moment(convertTZ(graphDataFromFilter[key].time, "Asia/kolkata")).unix(),
+            //   value: graphDataFromFilter[key].value
+            // })
+
             return graphDataFromFilter[key];
           })
         } else {
           myData = []
         }
+        console.log("filter array data: ", myData)
+
         candlestickSeriesRef.current.setData(myData)
       }
       //Socket data
@@ -180,7 +190,7 @@ const ChartComponent = props => {
         if (graphDataFromSocket.length > 0) {
           candlestickSeriesRef.current.setData(graphDataFromSocket)
         }
-        
+
 
 
         // console.log("Graph data from socket data len:", graphDataFromSocket)
