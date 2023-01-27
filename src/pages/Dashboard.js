@@ -352,6 +352,8 @@ const Dashboard = () => {
                   setisStaticValue3("0.00")
                   setisStaticValue4("0.00")
                 } else {
+                  console.log("process data",res.data.data.deviceData[0])
+
                   const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
 
                   setisStaticValue1(T_voltage)
