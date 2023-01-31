@@ -117,6 +117,7 @@ const Dashboard = () => {
   const [energyDataFromDB, setenergyDataFromDB] = useState([])
   const [monthlyenergyDataFromDB, setmonthlyenergyDataFromDB] = useState([])
   const [isDeviceID, setisDeviceID] = useState('')
+  const [isSocketConnected, setisSocketConnected] = useState(false)
   const { user } = useSelector((state) => state.auth);
   const userID = user.data.profile.id
   const keyRef = useRef(Date.now());
@@ -313,7 +314,7 @@ const Dashboard = () => {
 
               UserService.GetLinkedDeviceData(device_id, "T_power_A")
                 .then((res) => {
-                  console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
+                  // console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                   setIsFilterGraphData(true)
                   let myData;
                   if (typeof (res.data.data.deviceData) != "undefined") {
@@ -343,6 +344,7 @@ const Dashboard = () => {
               //get latest stats for total voltage, current, power and energy
               setisGraphStatsLoading(true)
               UserService.GetLatestDeviceStatsData(device_id).then((res) => {
+                console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                 setTimeout(() => {
                   setisGraphStatsLoading(false)
                 }, 1000)
@@ -352,7 +354,7 @@ const Dashboard = () => {
                   setisStaticValue3("0.00")
                   setisStaticValue4("0.00")
                 } else {
-                  console.log("process data",res.data.data.deviceData[0])
+                  console.log("!!!!!!!!!!!!process data", res.data.data.deviceData[0])
 
                   const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
 
@@ -676,6 +678,8 @@ const Dashboard = () => {
     //connect
     io.current.on('connect', () => {
       console.log("Socket connected!")
+      setisSocketConnected(true)
+
       io.current.on("user_connected", (userIds, soketid) => {
         console.log('----------user_connected-------- from socket:', userIds)
         console.log(`I'm(${userIds.device_id}) connected with socket id ${soketid} from the back-end`);
@@ -684,6 +688,7 @@ const Dashboard = () => {
     //disconnect
     io.current.on('disconnect', () => {
       console.log("socket disconnected")
+      setisSocketConnected(false)
     });
     return () => {
       io.current.off('connect');
@@ -691,6 +696,22 @@ const Dashboard = () => {
       io.current.disconnect()
     }
   }, []);
+
+  useEffect(() => {
+    console.log("!!!!!!!!!!!!!!!!!!!! is socket connectec:", isSocketConnected)
+    if (isSocketConnected) {
+      //socket connected
+      if (isDeviceID != '' && userID != '') {
+        //console.log("@@@@@@@@@@@ last open device id:", isDeviceID, userID)
+        let userIds = { "user_id": userID, "device_id": isDeviceID };
+        //console.log("user connected emit to socket data :", userIds)
+        io.current.emit("user_connected", userIds);
+        io.current.emit("checkDeviceStatus", { device_id: isDeviceID.trim() })
+        io.current.emit("liveStatsData", { user_id: userID, device_id: isDeviceID, objectName: "T_power", dataType: null });
+        io.current.emit("liveGraphData", { user_id: userID, device_id: isDeviceID, objectName: "T_power_A", dataType: null });
+      }
+    }
+  }, [isSocketConnected])
 
 
   useEffect(() => {
