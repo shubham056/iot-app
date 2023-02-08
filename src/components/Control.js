@@ -234,11 +234,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
     useEffect(() => {
         UserService.GetControlDeviceData(device_id, userID)
             .then(res => {
-                console.log("res control data!!!!!!:",res)
+                console.log("res control data!!!!!!:", res)
                 let controlData = res.data.data.deviceInfo
                 console.log("controlDeviceData", controlData)
                 if (controlData.length > 0) {
                     controlData.map(item => {
+                        //first device
                         if (item.device_row_type == 'first') {
                             setfirstDeviceName(item.device_name)
                             if (item.last_acknowledgement == 'manual') {
@@ -258,27 +259,188 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 })
                             } if (item.last_acknowledgement == 'timer') {
                                 console.log(typeof (Number(item.turn_on)), item.turn_on)
-                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("turn on:", item.turn_on)
+                                console.log("turn off:", item.turn_off)
                                 console.log("stepone before", stepOne)
-                                console.log("stepone before", item)
                                 setstepOne({
                                     ...stepOne,
                                     timer: item.is_timer,
-                                    turnOn: "12:00",
-                                    turnOff: "12:00",
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
                                 })
                                 console.log("stepone after", stepOne)
+                            } if (item.last_acknowledgement == 'alarm') {
+                                setstepOne({
+                                    ...stepOne,
+                                    alarm: item.is_alarm,
+                                    setAlarm: item.set_alarm,
+                                    confirmAlarm: item.is_confirm_alarm,
+                                })
                             }
-                        } if (item.device_row_type == 'second') {
+                        }
+                        //second device
+                        if (item.device_row_type == 'second') {
                             setsecondDeviceName(item.device_name)
-                        } if (item.device_row_type == 'third') {
+                            if (item.last_acknowledgement == 'manual') {
+                                console.log("item", JSON.parse(item.is_switch))
+                                setstepTwo({
+                                    ...stepTwo,
+                                    manual: item.is_manual,
+                                    switch: JSON.parse(item.is_switch),
+                                    confirmManual: item.is_manual_confirm
+                                })
+                            } if (item.last_acknowledgement == 'hvac') {
+                                setstepTwo({
+                                    ...stepTwo,
+                                    HAVC: item.is_hvac,
+                                    setPoints: item.set_points,
+                                    confirmHAVC: item.is_hvac_confirm,
+                                })
+                            } if (item.last_acknowledgement == 'timer') {
+                                console.log(typeof (Number(item.turn_on)), item.turn_on)
+                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("stepone before", stepTwo)
+                                setstepTwo({
+                                    ...stepTwo,
+                                    timer: item.is_timer,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    confirmTimer: item.is_timer_confirm,
+                                })
+                                console.log("stepone after", stepTwo)
+                            } if (item.last_acknowledgement == 'alarm') {
+                                setstepTwo({
+                                    ...stepTwo,
+                                    alarm: item.is_alarm,
+                                    setAlarm: item.set_alarm,
+                                    confirmAlarm: item.is_confirm_alarm,
+                                })
+                            }
+                        }
+                        //third device
+                        if (item.device_row_type == 'third') {
                             setthirdDeviceName(item.device_name)
-                        } if (item.device_row_type == 'four') {
+                            if (item.last_acknowledgement == 'manual') {
+                                console.log("item", JSON.parse(item.is_switch))
+                                setstepThree({
+                                    ...stepThree,
+                                    manual: item.is_manual,
+                                    switch: JSON.parse(item.is_switch),
+                                    confirmManual: item.is_manual_confirm
+                                })
+                            } if (item.last_acknowledgement == 'hvac') {
+                                setstepThree({
+                                    ...stepThree,
+                                    HAVC: item.is_hvac,
+                                    setPoints: item.set_points,
+                                    confirmHAVC: item.is_hvac_confirm,
+                                })
+                            } if (item.last_acknowledgement == 'timer') {
+                                console.log(typeof (Number(item.turn_on)), item.turn_on)
+                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("stepone before", stepThree)
+                                console.log("stepone before", item)
+                                setstepThree({
+                                    ...stepThree,
+                                    timer: item.is_timer,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    confirmTimer: item.is_timer_confirm,
+                                })
+                                console.log("stepone after", stepThree)
+                            } if (item.last_acknowledgement == 'alarm') {
+                                setstepThree({
+                                    ...stepThree,
+                                    alarm: item.is_alarm,
+                                    setAlarm: item.set_alarm,
+                                    confirmAlarm: item.is_confirm_alarm,
+                                })
+                            }
+                        }
+                        //fourth device
+                        if (item.device_row_type == 'four') {
                             setfourthDeviceName(item.device_name)
-                        } if (item.device_row_type == 'five') {
+                            if (item.last_acknowledgement == 'manual') {
+                                console.log("item", JSON.parse(item.is_switch))
+                                setstepFour({
+                                    ...stepFour,
+                                    manual: item.is_manual,
+                                    switch: JSON.parse(item.is_switch),
+                                    confirmManual: item.is_manual_confirm
+                                })
+                            } if (item.last_acknowledgement == 'hvac') {
+                                setstepFour({
+                                    ...stepFour,
+                                    HAVC: item.is_hvac,
+                                    setPoints: item.set_points,
+                                    confirmHAVC: item.is_hvac_confirm,
+                                })
+                            } if (item.last_acknowledgement == 'timer') {
+                                console.log(typeof (Number(item.turn_on)), item.turn_on)
+                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("stepone before", stepFour)
+                                console.log("stepone before", item)
+                                setstepFour({
+                                    ...stepFour,
+                                    timer: item.is_timer,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    confirmTimer: item.is_timer_confirm,
+                                })
+                                console.log("stepone after", stepFour)
+                            } if (item.last_acknowledgement == 'alarm') {
+                                setstepFour({
+                                    ...stepFour,
+                                    alarm: item.is_alarm,
+                                    setAlarm: item.set_alarm,
+                                    confirmAlarm: item.is_confirm_alarm,
+                                })
+                            }
+                        }
+                        //fiveth device
+                        if (item.device_row_type == 'five') {
                             setfivethhDeviceName(item.device_name)
+                            if (item.last_acknowledgement == 'manual') {
+                                console.log("item", JSON.parse(item.is_switch))
+                                setstepFive({
+                                    ...stepFive,
+                                    manual: item.is_manual,
+                                    switch: JSON.parse(item.is_switch),
+                                    confirmManual: item.is_manual_confirm
+                                })
+                            } if (item.last_acknowledgement == 'hvac') {
+                                setstepFive({
+                                    ...stepFive,
+                                    HAVC: item.is_hvac,
+                                    setPoints: item.set_points,
+                                    confirmHAVC: item.is_hvac_confirm,
+                                })
+                            } if (item.last_acknowledgement == 'timer') {
+                                console.log(typeof (Number(item.turn_on)), item.turn_on)
+                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
+                                console.log("stepone before", stepFive)
+                                console.log("stepone before", item)
+                                setstepFive({
+                                    ...stepFive,
+                                    timer: item.is_timer,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    confirmTimer: item.is_timer_confirm,
+                                })
+                                console.log("stepone after", stepFive)
+                            } if (item.last_acknowledgement == 'alarm') {
+                                setstepFive({
+                                    ...stepFive,
+                                    alarm: item.is_alarm,
+                                    setAlarm: item.set_alarm,
+                                    confirmAlarm: item.is_confirm_alarm,
+                                })
+                            }
                         }
                     })
                 }
@@ -741,6 +903,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             manual: false,
             timer: false,
             alarm: false,
+            confirmAlarm: false,
             isDisableManual: false,
             isDisableswitch: true,
             isDisableHAVC: false,
@@ -749,7 +912,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             isTurnOnDisable: true,
             isTurnOffDisable: true,
             isDisablealarm: false,
-            isSetAlarmDisable: true,
+            isSetAlarmDisable: false,
             isDisableconfirmManual: true,
             isDisableconfirmHAVC: false,
             isDisableconfirmTimer: true,
@@ -1234,6 +1397,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
+
             UserService.postControlData(device_id, userID, 'first', "mode1-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
@@ -1321,43 +1485,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${secondDeviceName}</b> manual) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode2-manual", data)
+        UserService.postControlData(device_id, userID, "second", "mode2-manual", data)
             .then((res) => {
-                console.log("get Manual data------------------", res.data)
+                console.log("get Alarm data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "second")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -1384,43 +1568,64 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${secondDeviceName}</b> HVAC) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
 
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode2-hvac", data)
+            UserService.postControlData(device_id, userID, 'second', "mode2-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 HVAC")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "second")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1438,7 +1643,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmTimer: true,
             confirmAlarm: false,
         })
-        console.log(stepTwo)
+        console.log("stepTwo---",stepTwo)
         let data = [{
             "CM-2-Mode": 30,
             "CM-2-T-ON": stepTwo.turnOn,
@@ -1449,43 +1654,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${secondDeviceName}</b> timer) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode2-timer", data)
+        UserService.postControlData(device_id, userID, 'second', "mode2-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "second")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -1513,43 +1738,64 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${secondDeviceName}</b> alarm) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
 
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode2-alarm", data)
+            UserService.postControlData(device_id, userID, 'second', "mode2-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 Timer")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "second")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1580,43 +1826,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> manual) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode3-manual", data)
+        UserService.postControlData(device_id, userID, "third", "mode3-manual", data)
             .then((res) => {
-                console.log("get Manual data------------------", res.data)
+                console.log("get Alarm data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "third")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -1642,43 +1908,64 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> HVAC) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
 
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode3-hvac", data)
+            UserService.postControlData(device_id, userID, 'third', "mode3-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 HVAC")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "third")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1707,43 +1994,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> timer) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode3-timer", data)
+        UserService.postControlData(device_id, userID, 'third', "mode3-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "third")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -1771,43 +2078,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${thirdDeviceName}</b> alarm) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
-
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode3-alarm", data)
+            UserService.postControlData(device_id, userID, 'third', "mode3-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 Timer")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "third")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1838,43 +2165,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> manual) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode4-manual", data)
+        UserService.postControlData(device_id, userID, "four", "mode4-manual", data)
             .then((res) => {
-                console.log("get Manual data------------------", res.data)
+                console.log("get Alarm data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "four")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -1900,43 +2247,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> HVAC) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
-
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode4-hvac", data)
+            UserService.postControlData(device_id, userID, 'four', "mode4-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 HVAC")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "four")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1965,43 +2332,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> timer) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode4-timer", data)
+        UserService.postControlData(device_id, userID, 'four', "mode4-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "four")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -2029,43 +2416,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${fourthDeviceName}</b> alarm) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
-
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode4-alarm", data)
+            UserService.postControlData(device_id, userID, 'four', "mode4-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 Timer")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "four")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2096,43 +2503,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> manual) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode5-manual", data)
+        UserService.postControlData(device_id, userID, "five", "mode5-manual", data)
             .then((res) => {
-                console.log("get Manual 5 data------------------", res.data)
+                console.log("get Alarm data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "five")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -2151,50 +2578,70 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             })
             let data = [{
                 "CM-5-Mode": 20,
-                "CM-5-Temp_SP": setPointsVal,
+                "CM-5-Temp-SP": setPointsVal,
             }]
             console.log(data)
             if (isDeviceStatus != 'green') {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> HVAC) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
-
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode5-hvac", data)
+            UserService.postControlData(device_id, userID, 'five', "mode5-hvac", data)
                 .then((res) => {
-                    console.log("get HVAC 5 data------------------", res.data)
+                    console.log("get HVAC data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 HVAC")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "five")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2223,43 +2670,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
             return false
         }
-        let timerInterval
-        Swal.fire({
-            title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> timer) from the device terminal.`,
-            html: 'It will be close in <b></b> seconds.',
-            icon: 'info',
-            timer: 60000,
-            timerProgressBar: true,
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: "Exit",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                    Swal.getHtmlContainer().querySelector('b')
-                        .textContent = (Swal.getTimerLeft() / 1000)
-                            .toFixed(0)
-                }, 100)
-            },
-            willClose: () => {
-                Swal.fire(
-                    'Acknowledgement not received, Please try again!',
-                    '',
-                    'error'
-                )
-                clearInterval(timerInterval)
-                clearInterval(interval);
-            }
-        })
-
-        const interval = setInterval(() => {
-            console.log("call check acknoledgement")
-        }, 5000)
-        UserService.postControlData(device_id, "mode5-timer", data)
+        UserService.postControlData(device_id, userID, 'five', "mode5-timer", data)
             .then((res) => {
-                console.log("get Timer 5 data------------------", res.data)
+                console.log("get Timer data------------------", res.data)
+                let timerInterval
+                Swal.fire({
+                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                    html: 'It will be close in <b></b> seconds.',
+                    icon: 'info',
+                    timer: 60000,
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Exit",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('b')
+                                .textContent = (Swal.getTimerLeft() / 1000)
+                                    .toFixed(0)
+                        }, 100)
+                    },
+                    willClose: () => {
+                        Swal.fire(
+                            'Acknowledgement not received, Please try again!',
+                            '',
+                            'error'
+                        )
+                        clearInterval(timerInterval)
+                        clearInterval(interval);
+                    }
+                })
+
+                const interval = setInterval(() => {
+                    console.log("call check acknoledgement for device 1 Timer")
+                    if (device_id != '' && userID != '') {
+                        UserService.GetControlDeviceData(device_id, userID, "five")
+                            .then(res => {
+                                let controlData = res.data.data.deviceInfo
+                                console.log("controlDeviceData", controlData)
+                                if (controlData.is_acknowledgement_updated == "true") {
+                                    console.log("got acknowledgement")
+                                    Swal.fire(
+                                        'Acknowledgement received successfully.',
+                                        '',
+                                        'success'
+                                    )
+                                    clearInterval(timerInterval)
+                                    clearInterval(interval);
+                                }
+
+                            }).catch(err => {
+                                console.log('err', err)
+                            })
+                    }
+                }, 5000)
             }).catch(err => {
                 console.log(err)
             })
@@ -2287,43 +2754,63 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 toast.info("Device is offline, make device online for use control commands!", { toastId: 1 })
                 return false
             }
-            let timerInterval
-            Swal.fire({
-                title: `Please send acknowledgement for (<b>${fivethhDeviceName}</b> alarmkhjgynfytrfewdecf) from the device terminal.`,
-                html: 'It will be close in <b></b> seconds.',
-                icon: 'info',
-                timer: 60000,
-                timerProgressBar: true,
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                cancelButtonText: "Exit",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    timerInterval = setInterval(() => {
-                        Swal.getHtmlContainer().querySelector('b')
-                            .textContent = (Swal.getTimerLeft() / 1000)
-                                .toFixed(0)
-                    }, 100)
-                },
-                willClose: () => {
-                    Swal.fire(
-                        'Acknowledgement not received, Please try again!',
-                        '',
-                        'error'
-                    )
-                    clearInterval(timerInterval)
-                    clearInterval(interval);
-                }
-            })
-
-            const interval = setInterval(() => {
-                console.log("call check acknoledgement")
-            }, 5000)
-            UserService.postControlData(device_id, "mode5-alarm", data)
+            UserService.postControlData(device_id, userID, 'five', "mode5-alarm", data)
                 .then((res) => {
-                    console.log("get Alarm 5 data------------------", res.data)
+                    console.log("get Alarm data------------------", res.data)
+                    let timerInterval
+                    Swal.fire({
+                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
+                        html: 'It will be close in <b></b> seconds.',
+                        icon: 'info',
+                        timer: 60000,
+                        timerProgressBar: true,
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "Exit",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                Swal.getHtmlContainer().querySelector('b')
+                                    .textContent = (Swal.getTimerLeft() / 1000)
+                                        .toFixed(0)
+                            }, 100)
+                        },
+                        willClose: () => {
+                            Swal.fire(
+                                'Acknowledgement not received, Please try again!',
+                                '',
+                                'error'
+                            )
+                            clearInterval(timerInterval)
+                            clearInterval(interval);
+                        }
+                    })
+
+                    const interval = setInterval(() => {
+                        console.log("call check acknoledgement for device 1 Timer")
+                        if (device_id != '' && userID != '') {
+                            UserService.GetControlDeviceData(device_id, userID, "five")
+                                .then(res => {
+                                    let controlData = res.data.data.deviceInfo
+                                    console.log("controlDeviceData", controlData)
+                                    if (controlData.is_acknowledgement_updated == "true") {
+                                        console.log("got acknowledgement")
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
+                                        clearInterval(timerInterval)
+                                        clearInterval(interval);
+                                    }
+
+                                }).catch(err => {
+                                    console.log('err', err)
+                                })
+                        }
+                    }, 5000)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2420,7 +2907,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepOne({
+                                                                    ...stepOne,
+                                                                    turnOn: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepOne.turnOn}
+                                                            placeholder='Enter start time'
+                                                            disabled={stepOne.isTurnOnDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepOne({
                                                                     ...stepOne,
@@ -2430,7 +2930,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepOne.turnOn}
                                                             className="form-control"
                                                             disabled={stepOne.isTurnOnDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -2438,7 +2938,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepOne({
+                                                                    ...stepOne,
+                                                                    turnOff: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepOne.turnOff}
+                                                            placeholder='Enter end time'
+                                                            disabled={stepOne.isTurnOffDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepOne({
                                                                     ...stepOne,
@@ -2448,7 +2961,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepOne.turnOff}
                                                             className="form-control"
                                                             disabled={stepOne.isTurnOffDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
 
@@ -2475,7 +2988,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                                     setAlarm: event.target.value
                                                                 })
                                                             }}
-                                                            clas
+                                                            value={stepOne.setAlarm}
                                                             className='form-control'
                                                             name='set_alarm'
                                                             placeholder='Enter alarm'
@@ -2525,6 +3038,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                                 })
                                                             }}
                                                             className='form-control' name='set_input'
+                                                            value={stepTwo.setPoints}
                                                             placeholder='Enter Points'
                                                             disabled={stepTwo.isSetPointsDisable ? true : false}
                                                         />
@@ -2545,7 +3059,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepTwo({
+                                                                    ...stepTwo,
+                                                                    turnOn: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepTwo.turnOn}
+                                                            placeholder='Enter start time'
+                                                            disabled={stepTwo.isTurnOnDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepTwo({
                                                                     ...stepTwo,
@@ -2555,7 +3082,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepTwo.turnOn}
                                                             className="form-control"
                                                             disabled={stepTwo.isTurnOnDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -2563,7 +3090,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepTwo({
+                                                                    ...stepTwo,
+                                                                    turnOff: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepTwo.turnOff}
+                                                            placeholder='Enter end time'
+                                                            disabled={stepTwo.isTurnOffDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepTwo({
                                                                     ...stepTwo,
@@ -2573,7 +3113,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepTwo.turnOff}
                                                             className="form-control"
                                                             disabled={stepTwo.isTurnOffDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
 
@@ -2600,7 +3140,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                                     setAlarm: event.target.value
                                                                 })
                                                             }}
-                                                            clas
+                                                            value={stepTwo.setAlarm}
                                                             className='form-control'
                                                             name='set_alarm'
                                                             placeholder='Enter alarm'
@@ -2650,6 +3190,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                                 })
                                                             }}
                                                             className='form-control' name='set_input'
+                                                            value={stepThree.setPoints}
                                                             placeholder='Enter Points'
                                                             disabled={stepThree.isSetPointsDisable ? true : false}
                                                         />
@@ -2670,7 +3211,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepThree({
+                                                                    ...stepThree,
+                                                                    turnOn: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepThree.turnOn}
+                                                            placeholder='Enter start time'
+                                                            disabled={stepThree.isTurnOnDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepThree({
                                                                     ...stepThree,
@@ -2680,7 +3234,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepThree.turnOn}
                                                             className="form-control"
                                                             disabled={stepThree.isTurnOnDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -2688,7 +3242,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepThree({
+                                                                    ...stepThree,
+                                                                    turnOff: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepThree.turnOff}
+                                                            placeholder='Enter end time'
+                                                            disabled={stepThree.isTurnOnDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepThree({
                                                                     ...stepThree,
@@ -2698,7 +3265,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepThree.turnOff}
                                                             className="form-control"
                                                             disabled={stepThree.isTurnOffDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
 
@@ -2725,7 +3292,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                                     setAlarm: event.target.value
                                                                 })
                                                             }}
-                                                            clas
+                                                            value={stepThree.setAlarm}
                                                             className='form-control'
                                                             name='set_alarm'
                                                             placeholder='Enter alarm'
@@ -2776,6 +3343,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             }}
                                                             className='form-control' name='set_input'
                                                             placeholder='Enter Points'
+                                                            value={stepFour.setPoints}
                                                             disabled={stepFour.isSetPointsDisable ? true : false}
                                                         />
                                                     </div>
@@ -2795,7 +3363,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepFour({
+                                                                    ...stepFour,
+                                                                    turnOn: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepFour.turnOn}
+                                                            placeholder='Enter start time'
+                                                            disabled={stepFour.isTurnOnDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepFour({
                                                                     ...stepFour,
@@ -2805,7 +3386,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepFour.turnOn}
                                                             className="form-control"
                                                             disabled={stepFour.isTurnOnDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -2813,7 +3394,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepFour({
+                                                                    ...stepFour,
+                                                                    turnOff: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepFour.turnOff}
+                                                            placeholder='Enter end time'
+                                                            disabled={stepFour.isTurnOffDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepFour({
                                                                     ...stepFour,
@@ -2823,7 +3417,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepFour.turnOff}
                                                             className="form-control"
                                                             disabled={stepFour.isTurnOffDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
 
@@ -2850,7 +3444,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                                     setAlarm: event.target.value
                                                                 })
                                                             }}
-                                                            clas
+                                                            value={stepFour.setAlarm}
                                                             className='form-control'
                                                             name='set_alarm'
                                                             placeholder='Enter alarm'
@@ -2901,6 +3495,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             }}
                                                             className='form-control' name='set_input'
                                                             placeholder='Enter Points'
+                                                            value={stepFive.setPoints}
                                                             disabled={stepFive.isSetPointsDisable ? true : false}
                                                         />
                                                     </div>
@@ -2920,7 +3515,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn On
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepFive({
+                                                                    ...stepFive,
+                                                                    turnOn: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepFive.turnOn}
+                                                            placeholder='Enter start time'
+                                                            disabled={stepFive.isTurnOnDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepFive({
                                                                     ...stepFive,
@@ -2930,7 +3538,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepFive.turnOn}
                                                             className="form-control"
                                                             disabled={stepFive.isTurnOnDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
                                                 <div className='row' style={{ marginTop: 5 }}>
@@ -2938,7 +3546,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                         Turn Off
                                                     </div>
                                                     <div className='col-md-9'>
-                                                        <TimePicker
+                                                        <input
+                                                            type="text"
+                                                            onChange={(event) => {
+                                                                setstepFive({
+                                                                    ...stepFive,
+                                                                    turnOff: event.target.value
+                                                                })
+                                                            }}
+                                                            className='form-control'
+                                                            value={stepFive.turnOff}
+                                                            placeholder='Enter end time'
+                                                            disabled={stepFive.isTurnOffDisable ? true : false}
+                                                        />
+                                                        {/* <TimePicker
                                                             onChange={(val) => {
                                                                 setstepFive({
                                                                     ...stepFive,
@@ -2948,7 +3569,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                             value={stepFive.turnOff}
                                                             className="form-control"
                                                             disabled={stepFive.isTurnOffDisable ? true : false}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
 
@@ -2975,7 +3596,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                                     setAlarm: event.target.value
                                                                 })
                                                             }}
-                                                            clas
+                                                            value={stepFive.setAlarm}
                                                             className='form-control'
                                                             name='set_alarm'
                                                             placeholder='Enter alarm'
