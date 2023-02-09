@@ -13,6 +13,7 @@ import { set, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
+//import PowerChart from '../components/PowerChart';
 import PowerCharts from '../components/PowerCharts';
 import TempetureChart from "../components/TempetureChart";
 import EnergyChart from '../components/EnergyChart';
@@ -316,19 +317,6 @@ const Dashboard = () => {
                 .then((res) => {
                   // console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                   setIsFilterGraphData(true)
-                  let myData;
-                  if (typeof (res.data.data.deviceData) != "undefined") {
-                    myData = Object.keys(res.data.data.deviceData).map(key => {
-                      return res.data.data.deviceData[key];
-                    })
-                  } else {
-                    myData = []
-                  }
-                  if (myData.length > 0) {
-                    setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-                  } else {
-                    setisStaticTemperature("0.00")
-                  }
 
                   setgraphDataFromFilter(res.data.data.deviceData)
                   setIsstartDate(res.data.data.deviceData[0].date)
@@ -353,15 +341,17 @@ const Dashboard = () => {
                   setisStaticValue2("0.00")
                   setisStaticValue3("0.00")
                   setisStaticValue4("0.00")
+                  setisStaticTemperature("0.00")
                 } else {
                   console.log("!!!!!!!!!!!!process data", res.data.data.deviceData[0])
 
-                  const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+                  const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
 
                   setisStaticValue1(T_voltage)
                   setisStaticValue2(T_current)
                   setisStaticValue3(T_power)
                   setisStaticValue4(T_energy)
+                  setisStaticTemperature(temperature)
                 }
 
               }).catch(err => {
@@ -568,11 +558,12 @@ const Dashboard = () => {
         })
       //get latest stats for total voltage, current, power and energy
       UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-        const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+        const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
         setisStaticValue1(T_voltage)
         setisStaticValue2(T_current)
         setisStaticValue3(T_power)
         setisStaticValue4(T_energy)
+        setisStaticTemperature(temperature) // temperature
       }).catch(err => {
         console.log(err)
       })
@@ -610,11 +601,12 @@ const Dashboard = () => {
         })
       //get latest stats for total voltage, current, power and energy
       UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-        const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+        const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
         setisStaticValue1(T_voltage)
         setisStaticValue2(T_current)
         setisStaticValue3(T_power)
         setisStaticValue4(T_energy)
+        setisStaticTemperature(temperature)
       }).catch(err => {
         console.log(err)
       })
@@ -740,36 +732,41 @@ const Dashboard = () => {
 
         if ((isPower && isPowerTotal) || (isEnergy && isEnergyTotal)) {
           //console.log("power total -------------")
-          const { T_voltage, T_current, T_power, T_energy } = data
+          const { T_voltage, T_current, T_power, T_energy, temperature } = data
 
           setisStaticValue1(T_voltage) // T_voltage
           setisStaticValue2(T_current) // T_current
           setisStaticValue3(T_power) // T_Power
           setisStaticValue4(T_energy) // T_Energy
+          setisStaticTemperature(temperature) // temperature
 
         } if ((isPower && isPowerPhase1) || (isEnergy && isEnergyPhase1)) {
           //console.log("power phase 1")
-          const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1 } = data
+          const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1, temperature } = data
           setisStaticValue1(l1_voltage)
           setisStaticValue2(l1_current)
           setisStaticValue3(AP_power_l1)
           setisStaticValue4(T_Energy_L1)
+          setisStaticTemperature(temperature) // temperature
 
         } if ((isPower && isPowerPhase2) || (isEnergy && isEnergyPhase2)) {
           //console.log("power phase 2")
-          const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2 } = data
+          const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2, temperature } = data
           setisStaticValue1(l2_voltage)
           setisStaticValue2(l2_current)
           setisStaticValue3(AP_power_l2)
           setisStaticValue4(T_Energy_L2)
+          setisStaticTemperature(temperature) // temperature
 
         } if ((isPower && isPowerPhase3) || (isEnergy && isEnergyPhase3)) {
           //console.log("power phase 3")
-          const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3 } = data
+          const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3, temperature } = data
           setisStaticValue1(l3_voltage)
           setisStaticValue2(l3_current)
           setisStaticValue3(AP_power_l3)
           setisStaticValue4(T_Energy_L3)
+          setisStaticTemperature(temperature) // temperature
+
         }
         //For Temperature 
         if (isTemperature) {
@@ -779,6 +776,7 @@ const Dashboard = () => {
           setisStaticValue2(T_current) // T_current
           setisStaticValue3(T_power) // T_Power
           setisStaticValue4(T_energy) // T_Energy
+          setisStaticTemperature(temperature) // temperature
         }
       }
     })
@@ -791,74 +789,25 @@ const Dashboard = () => {
         if (isPower && isPowerTotal && objectName == "T_power_A") {
           console.log("----------- power graph total--------------")
           setIsGraphDataFromSocket(true)
-          setpowerDataFromDB(data)
-          let myData;
-          if (typeof (data) != "undefined") {
-            myData = Object.keys(data).map(key => {
-              return data[key];
-            })
-          } else {
-            myData = []
-          }
-          if (myData.length > 0) {
-            setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-          } else {
-            setisStaticTemperature("0.00")
-          }
+
 
         } if (isPower && isPowerPhase1 && objectName == "L1_Power_A") {
           console.log("power graph phase 1")
           setIsGraphDataFromSocket(true)
           setpowerDataFromDB(data)
-          let myData;
-          if (typeof (data) != "undefined") {
-            myData = Object.keys(data).map(key => {
-              return data[key];
-            })
-          } else {
-            myData = []
-          }
-          if (myData.length > 0) {
-            setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-          } else {
-            setisStaticTemperature("0.00")
-          }
+
 
         } if (isPower && isPowerPhase2 && objectName == "L2_Power_A") {
           console.log("power graph phase 2")
           setIsGraphDataFromSocket(true)
           setpowerDataFromDB(data)
-          let myData;
-          if (typeof (data) != "undefined") {
-            myData = Object.keys(data).map(key => {
-              return data[key];
-            })
-          } else {
-            myData = []
-          }
-          if (myData.length > 0) {
-            setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-          } else {
-            setisStaticTemperature("0.00")
-          }
+
 
         } if (isPower && isPowerPhase3 && objectName == "L3_Power_A") {
           console.log("power graph phase 3")
           setIsGraphDataFromSocket(true)
           setpowerDataFromDB(data)
-          let myData;
-          if (typeof (data) != "undefined") {
-            myData = Object.keys(data).map(key => {
-              return data[key];
-            })
-          } else {
-            myData = []
-          }
-          if (myData.length > 0) {
-            setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-          } else {
-            setisStaticTemperature("0.00")
-          }
+
         }
         //For Temperature 
         if (isTemperature) {
@@ -867,19 +816,7 @@ const Dashboard = () => {
           let newData = { time: time, value: temperature }
           setIstempetureDataFromSocket(true)
           settempetureDataFromSocket(data)
-          let myData;
-          if (typeof (data) != "undefined") {
-            myData = Object.keys(data).map(key => {
-              return data[key];
-            })
-          } else {
-            myData = []
-          }
-          if (myData.length > 0) {
-            setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-          } else {
-            setisStaticTemperature("0.00")
-          }
+
         }
       }
     })
@@ -2397,19 +2334,7 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
                                             .then((res) => {
-                                              let myData;
-                                              if (typeof (res.data.data.deviceData) != "undefined") {
-                                                myData = Object.keys(res.data.data.deviceData).map(key => {
-                                                  return res.data.data.deviceData[key];
-                                                })
-                                              } else {
-                                                myData = []
-                                              }
-                                              if (myData.length > 0) {
-                                                setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-                                              } else {
-                                                setisStaticTemperature("0.00")
-                                              }
+
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
@@ -2425,11 +2350,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(T_voltage)
                                             setisStaticValue2(T_current)
                                             setisStaticValue3(T_power)
                                             setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2464,19 +2390,7 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L1_Power_A")
                                             .then((res) => {
-                                              let myData;
-                                              if (typeof (res.data.data.deviceData) != "undefined") {
-                                                myData = Object.keys(res.data.data.deviceData).map(key => {
-                                                  return res.data.data.deviceData[key];
-                                                })
-                                              } else {
-                                                myData = []
-                                              }
-                                              if (myData.length > 0) {
-                                                setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-                                              } else {
-                                                setisStaticTemperature("0.00")
-                                              }
+
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
@@ -2497,6 +2411,7 @@ const Dashboard = () => {
                                             setisStaticValue2(l1_current)
                                             setisStaticValue3(AP_power_l1)
                                             setisStaticValue4(T_Energy_L1)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2530,19 +2445,7 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L2_Power_A")
                                             .then((res) => {
-                                              let myData;
-                                              if (typeof (res.data.data.deviceData) != "undefined") {
-                                                myData = Object.keys(res.data.data.deviceData).map(key => {
-                                                  return res.data.data.deviceData[key];
-                                                })
-                                              } else {
-                                                myData = []
-                                              }
-                                              if (myData.length > 0) {
-                                                setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-                                              } else {
-                                                setisStaticTemperature("0.00")
-                                              }
+
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
@@ -2562,6 +2465,7 @@ const Dashboard = () => {
                                             setisStaticValue2(l2_current)
                                             setisStaticValue3(AP_power_l2)
                                             setisStaticValue4(T_Energy_L2)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2595,19 +2499,7 @@ const Dashboard = () => {
 
                                           UserService.GetLinkedDeviceData(isDeviceID, "L3_Power_A")
                                             .then((res) => {
-                                              let myData;
-                                              if (typeof (res.data.data.deviceData) != "undefined") {
-                                                myData = Object.keys(res.data.data.deviceData).map(key => {
-                                                  return res.data.data.deviceData[key];
-                                                })
-                                              } else {
-                                                myData = []
-                                              }
-                                              if (myData.length > 0) {
-                                                setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-                                              } else {
-                                                setisStaticTemperature("0.00")
-                                              }
+
                                               setIsGraphDataFromSocket(false)
                                               setIsFilterGraphData(true)
                                               setgraphDataFromFilter(res.data.data.deviceData)
@@ -2627,6 +2519,7 @@ const Dashboard = () => {
                                             setisStaticValue2(l3_current)
                                             setisStaticValue3(AP_power_l3)
                                             setisStaticValue4(T_Energy_L3)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2680,6 +2573,7 @@ const Dashboard = () => {
                                             setisStaticValue2(T_current)
                                             setisStaticValue3(T_power)
                                             setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2725,11 +2619,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1 } = res.data.data.deviceData[0]
+                                            const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(l1_voltage)
                                             setisStaticValue2(l1_current)
                                             setisStaticValue3(AP_power_l1)
                                             setisStaticValue4(T_Energy_L1)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2773,11 +2668,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2 } = res.data.data.deviceData[0]
+                                            const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(l2_voltage)
                                             setisStaticValue2(l2_current)
                                             setisStaticValue3(AP_power_l2)
                                             setisStaticValue4(T_Energy_L2)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2820,11 +2716,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3 } = res.data.data.deviceData[0]
+                                            const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(l3_voltage)
                                             setisStaticValue2(l3_current)
                                             setisStaticValue3(AP_power_l3)
                                             setisStaticValue4(T_Energy_L3)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2879,11 +2776,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+                                            const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(T_voltage)
                                             setisStaticValue2(T_current)
                                             setisStaticValue3(T_power)
                                             setisStaticValue4(T_energy)
+                                            setisStaticTemperature(temperature) // temperature
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2927,11 +2825,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1 } = res.data.data.deviceData[0]
+                                            const { l1_voltage, l1_current, AP_power_l1, T_Energy_L1, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(l1_voltage)
                                             setisStaticValue2(l1_current)
                                             setisStaticValue3(AP_power_l1)
                                             setisStaticValue4(T_Energy_L1)
+                                            setisStaticTemperature(temperature) 
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -2976,11 +2875,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2 } = res.data.data.deviceData[0]
+                                            const { l2_voltage, l2_current, AP_power_l2, T_Energy_L2, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(l2_voltage)
                                             setisStaticValue2(l2_current)
                                             setisStaticValue3(AP_power_l2)
                                             setisStaticValue4(T_Energy_L2)
+                                            setisStaticTemperature(temperature)
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -3025,11 +2925,12 @@ const Dashboard = () => {
                                             })
                                           //get latest stats for total voltage, current, power and energy
                                           UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
-                                            const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3 } = res.data.data.deviceData[0]
+                                            const { l3_voltage, l3_current, AP_power_l3, T_Energy_L3, temperature } = res.data.data.deviceData[0]
                                             setisStaticValue1(l3_voltage)
                                             setisStaticValue2(l3_current)
                                             setisStaticValue3(AP_power_l3)
                                             setisStaticValue4(T_Energy_L3)
+                                            setisStaticTemperature(temperature)
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -3129,19 +3030,7 @@ const Dashboard = () => {
                                     UserService.GetLinkedDeviceTemperatureData(isDeviceID, "temperature")
                                       .then((res) => {
                                         console.log("get device temperature data res--", res.data.data.deviceData)
-                                        let myData;
-                                        if (typeof (res.data.data.deviceData) != "undefined") {
-                                          myData = Object.keys(res.data.data.deviceData).map(key => {
-                                            return res.data.data.deviceData[key];
-                                          })
-                                        } else {
-                                          myData = []
-                                        }
-                                        if (myData.length > 0) {
-                                          setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-                                        } else {
-                                          setisStaticTemperature(0)
-                                        }
+
                                         setIstempetureDataFromSocket(false)
                                         settempetureDataFromFilter(res.data.data.deviceData)
                                         setIsstartDate(res.data.data.deviceData[0].date)
@@ -3152,12 +3041,12 @@ const Dashboard = () => {
                                     //get latest stats for total voltage, current, power and energy
                                     UserService.GetLatestDeviceStatsData(isDeviceID).then((res) => {
                                       console.log(res.data.data.deviceData[0])
-                                      const { T_voltage, T_current, T_power, T_energy } = res.data.data.deviceData[0]
+                                      const { T_voltage, T_current, T_power, T_energy, temperature } = res.data.data.deviceData[0]
                                       setisStaticValue1(T_voltage)
                                       setisStaticValue2(T_current)
                                       setisStaticValue3(T_power)
                                       setisStaticValue4(T_energy)
-
+                                      setisStaticTemperature(temperature)
                                     }).catch(err => {
                                       console.log(err)
                                     })
@@ -3236,19 +3125,7 @@ const Dashboard = () => {
 
                                                     UserService.GetLinkedDeviceData(isDeviceID, "T_power_A")
                                                       .then((res) => {
-                                                        let myData;
-                                                        if (typeof (res.data.data.deviceData) != "undefined") {
-                                                          myData = Object.keys(res.data.data.deviceData).map(key => {
-                                                            return res.data.data.deviceData[key];
-                                                          })
-                                                        } else {
-                                                          myData = []
-                                                        }
-                                                        if (myData.length > 0) {
-                                                          setisStaticTemperature(myData.slice(-1)[0].Temp_A)
-                                                        } else {
-                                                          setisStaticTemperature("0.00")
-                                                        }
+
                                                         setIsGraphDataFromSocket(false)
                                                         setIsFilterGraphData(true)
                                                         setgraphDataFromFilter(res.data.data.deviceData)
@@ -3268,6 +3145,7 @@ const Dashboard = () => {
                                                       setisStaticValue2(T_current)
                                                       setisStaticValue3(T_power)
                                                       setisStaticValue4(T_energy)
+                                                      setisStaticTemperature(temperature) // temperature
                                                     }).catch(err => {
                                                       console.log(err)
                                                     })
@@ -3340,14 +3218,25 @@ const Dashboard = () => {
                                           {
                                             isPower
                                               ?
-                                              <PowerCharts
-                                                device_id={isDeviceID}
-                                                isFilterGraphData={isFilterGraphData}
-                                                graphDataFromFilter={graphDataFromFilter}
+                                              <>
+                                                <PowerCharts
+                                                  device_id={isDeviceID}
+                                                  isFilterGraphData={isFilterGraphData}
+                                                  graphDataFromFilter={graphDataFromFilter}
 
-                                                isGraphDataFromSocket={isGraphDataFromSocket}
-                                                graphDataFromSocket={powerDataFromDB}
-                                              />
+                                                  isGraphDataFromSocket={isGraphDataFromSocket}
+                                                  graphDataFromSocket={powerDataFromDB}
+                                                />
+                                                {/* <PowerChart
+                                                 device_id={isDeviceID}
+                                                  isFilterGraphData={isFilterGraphData}
+                                                  graphDataFromFilter={graphDataFromFilter}
+
+                                                  isGraphDataFromSocket={isGraphDataFromSocket}
+                                                  graphDataFromSocket={powerDataFromDB}
+                                                /> */}
+                                              </>
+
                                               :
                                               null
                                           }
