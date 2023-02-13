@@ -23,7 +23,7 @@ const DeviceStats = React.memo((props) => {
               {isStaticTxtValue1}
             </Typography>
             <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8 }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}> {parseFloat(isStaticValue1).toFixed(1)} </span> V </span>}
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}> {parseFloat(isStaticValue1).toFixed(1)} </span> Hz </span>}
             </Typography>
           </CardContent>
         </Card>
@@ -39,7 +39,7 @@ const DeviceStats = React.memo((props) => {
               {isStaticTxtValue2}
             </Typography>
             <Typography variant="body2" color="text.secondary" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, border: "1.5px solid rgb(0, 176, 136)", padding: 8 }}>
-              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}> {isStaticValue2} </span> A </span>}
+              {isGraphStatsLoading ? <Skeleton height={15} width={100} /> : <span style={{ fontSize: 22 }}><span style={{ color: "rgb(0, 176, 136)" }}> {isStaticValue2} </span> % </span>}
             </Typography>
           </CardContent>
         </Card>
