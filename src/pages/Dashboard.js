@@ -13,7 +13,7 @@ import { set, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
-//import PowerChart from '../components/PowerChart';
+import PowerChart from '../components/PowerChart';
 import PowerCharts from '../components/PowerCharts';
 import TempetureChart from "../components/TempetureChart";
 import EnergyChart from '../components/EnergyChart';
@@ -3219,7 +3219,15 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <>
-                                                <PowerCharts
+                                                {/* <PowerCharts
+                                                  device_id={isDeviceID}
+                                                  isFilterGraphData={isFilterGraphData}
+                                                  graphDataFromFilter={graphDataFromFilter}
+
+                                                  isGraphDataFromSocket={isGraphDataFromSocket}
+                                                  graphDataFromSocket={powerDataFromDB}
+                                                /> */}
+                                                <PowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
@@ -3227,14 +3235,6 @@ const Dashboard = () => {
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
                                                 />
-                                                {/* <PowerChart
-                                                 device_id={isDeviceID}
-                                                  isFilterGraphData={isFilterGraphData}
-                                                  graphDataFromFilter={graphDataFromFilter}
-
-                                                  isGraphDataFromSocket={isGraphDataFromSocket}
-                                                  graphDataFromSocket={powerDataFromDB}
-                                                /> */}
                                               </>
 
                                               :
