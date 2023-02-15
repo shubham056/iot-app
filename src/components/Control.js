@@ -10,8 +10,10 @@ import moment from 'moment-timezone';
 import { useEffect } from 'react';
 import UserService from '../services/user.service';
 import { toast } from 'react-toastify';
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CircularProgress from '@mui/material/CircularProgress';
+import Stack from '@mui/material/Stack'
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 
@@ -53,6 +55,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         isDisableconfirmHAVC: true,
         isDisableconfirmTimer: true,
         isDisableconfirmAlarm: true,
+        isManualLoading: false,
+        isHVACLoading: false,
+        isTimerLoading: false,
+        isAlarmLoading: false,
     })
     const [stepTwo, setstepTwo] = useState({
         manual: false,
@@ -81,6 +87,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         isDisableconfirmHAVC: true,
         isDisableconfirmTimer: true,
         isDisableconfirmAlarm: true,
+        isManualLoading: false,
+        isHVACLoading: false,
+        isTimerLoading: false,
+        isAlarmLoading: false,
     })
     const [stepThree, setstepThree] = useState({
         manual: false,
@@ -109,6 +119,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         isDisableconfirmHAVC: true,
         isDisableconfirmTimer: true,
         isDisableconfirmAlarm: true,
+        isManualLoading: false,
+        isHVACLoading: false,
+        isTimerLoading: false,
+        isAlarmLoading: false,
     })
     const [stepFour, setstepFour] = useState({
         manual: false,
@@ -137,6 +151,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         isDisableconfirmHAVC: true,
         isDisableconfirmTimer: true,
         isDisableconfirmAlarm: true,
+        isManualLoading: false,
+        isHVACLoading: false,
+        isTimerLoading: false,
+        isAlarmLoading: false,
     })
     const [stepFive, setstepFive] = useState({
         manual: false,
@@ -165,6 +183,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         isDisableconfirmHAVC: true,
         isDisableconfirmTimer: true,
         isDisableconfirmAlarm: true,
+        isManualLoading: false,
+        isHVACLoading: false,
+        isTimerLoading: false,
+        isAlarmLoading: false,
     })
 
     //------------------ UseEffects --------------------
@@ -236,9 +258,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             .then(res => {
                 console.log("res control data!!!!!!:", res)
                 let controlData = res.data.data.deviceInfo
-                console.log("controlDeviceData", controlData)
+                console.log("controlDeviceData from useEffect", controlData)
                 if (controlData.length > 0) {
                     controlData.map(item => {
+
                         //first device
                         if (item.device_row_type == 'first') {
                             setfirstDeviceName(item.device_name)
@@ -248,36 +271,62 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     ...stepOne,
                                     manual: item.is_manual,
                                     switch: JSON.parse(item.is_switch),
-                                    confirmManual: item.is_manual_confirm
+                                    confirmManual: item.is_manual_confirm,
+
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'hvac') {
+                            } else if (item.last_acknowledgement == 'hvac') {
                                 setstepOne({
                                     ...stepOne,
                                     HAVC: item.is_hvac,
                                     setPoints: item.set_points,
                                     confirmHAVC: item.is_hvac_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'timer') {
-                                console.log(typeof (Number(item.turn_on)), item.turn_on)
-                                console.log("turn on:", item.turn_on)
-                                console.log("turn off:", item.turn_off)
-                                console.log("stepone before", stepOne)
+                            } else if (item.last_acknowledgement == 'timer') {
                                 setstepOne({
                                     ...stepOne,
                                     timer: item.is_timer,
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    setAlarm: item.set_alarm,
                                 })
-                                console.log("stepone after", stepOne)
-                            } if (item.last_acknowledgement == 'alarm') {
+                                console.log("!!!!before set", stepOne)
+                            } else if (item.last_acknowledgement == 'alarm') {
                                 setstepOne({
                                     ...stepOne,
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                })
+                            } else {
+                                setstepOne({
+                                    ...stepOne,
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
                             }
+
+
                         }
                         //second device
                         if (item.device_row_type == 'second') {
@@ -288,34 +337,58 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     ...stepTwo,
                                     manual: item.is_manual,
                                     switch: JSON.parse(item.is_switch),
-                                    confirmManual: item.is_manual_confirm
+                                    confirmManual: item.is_manual_confirm,
+
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'hvac') {
+                            } else if (item.last_acknowledgement == 'hvac') {
                                 setstepTwo({
                                     ...stepTwo,
                                     HAVC: item.is_hvac,
                                     setPoints: item.set_points,
                                     confirmHAVC: item.is_hvac_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'timer') {
-                                console.log(typeof (Number(item.turn_on)), item.turn_on)
-                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("stepone before", stepTwo)
+                            } else if (item.last_acknowledgement == 'timer') {
                                 setstepTwo({
                                     ...stepTwo,
                                     timer: item.is_timer,
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    setAlarm: item.set_alarm,
                                 })
                                 console.log("stepone after", stepTwo)
-                            } if (item.last_acknowledgement == 'alarm') {
+                            } else if (item.last_acknowledgement == 'alarm') {
                                 setstepTwo({
                                     ...stepTwo,
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                })
+                            } else {
+                                setstepTwo({
+                                    ...stepOne,
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
                             }
                         }
@@ -328,35 +401,58 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     ...stepThree,
                                     manual: item.is_manual,
                                     switch: JSON.parse(item.is_switch),
-                                    confirmManual: item.is_manual_confirm
+                                    confirmManual: item.is_manual_confirm,
+
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'hvac') {
+                            } else if (item.last_acknowledgement == 'hvac') {
                                 setstepThree({
                                     ...stepThree,
                                     HAVC: item.is_hvac,
                                     setPoints: item.set_points,
                                     confirmHAVC: item.is_hvac_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'timer') {
-                                console.log(typeof (Number(item.turn_on)), item.turn_on)
-                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("stepone before", stepThree)
-                                console.log("stepone before", item)
+                            } else if (item.last_acknowledgement == 'timer') {
                                 setstepThree({
                                     ...stepThree,
                                     timer: item.is_timer,
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    setAlarm: item.set_alarm,
                                 })
                                 console.log("stepone after", stepThree)
-                            } if (item.last_acknowledgement == 'alarm') {
+                            } else if (item.last_acknowledgement == 'alarm') {
                                 setstepThree({
                                     ...stepThree,
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                })
+                            } else {
+                                setstepThree({
+                                    ...stepOne,
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
                             }
                         }
@@ -369,35 +465,58 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     ...stepFour,
                                     manual: item.is_manual,
                                     switch: JSON.parse(item.is_switch),
-                                    confirmManual: item.is_manual_confirm
+                                    confirmManual: item.is_manual_confirm,
+
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'hvac') {
+                            } else if (item.last_acknowledgement == 'hvac') {
                                 setstepFour({
                                     ...stepFour,
                                     HAVC: item.is_hvac,
                                     setPoints: item.set_points,
                                     confirmHAVC: item.is_hvac_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'timer') {
-                                console.log(typeof (Number(item.turn_on)), item.turn_on)
-                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("stepone before", stepFour)
-                                console.log("stepone before", item)
+                            } else if (item.last_acknowledgement == 'timer') {
                                 setstepFour({
                                     ...stepFour,
                                     timer: item.is_timer,
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    setAlarm: item.set_alarm,
                                 })
                                 console.log("stepone after", stepFour)
-                            } if (item.last_acknowledgement == 'alarm') {
+                            } else if (item.last_acknowledgement == 'alarm') {
                                 setstepFour({
                                     ...stepFour,
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                })
+                            } else {
+                                setstepFour({
+                                    ...stepOne,
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
                             }
                         }
@@ -410,35 +529,59 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     ...stepFive,
                                     manual: item.is_manual,
                                     switch: JSON.parse(item.is_switch),
-                                    confirmManual: item.is_manual_confirm
+                                    confirmManual: item.is_manual_confirm,
+
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'hvac') {
+                            } else if (item.last_acknowledgement == 'hvac') {
                                 setstepFive({
                                     ...stepFive,
                                     HAVC: item.is_hvac,
                                     setPoints: item.set_points,
                                     confirmHAVC: item.is_hvac_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
-                            } if (item.last_acknowledgement == 'timer') {
-                                console.log(typeof (Number(item.turn_on)), item.turn_on)
-                                console.log("turn on:", moment(item.turn_on, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("turn off:", moment(item.turn_off, [moment.ISO_8601, 'HH:mm']).format("HH:mm"))
-                                console.log("stepone before", stepFive)
-                                console.log("stepone before", item)
+                            } else if (item.last_acknowledgement == 'timer') {
                                 setstepFive({
                                     ...stepFive,
                                     timer: item.is_timer,
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    setAlarm: item.set_alarm,
+
                                 })
                                 console.log("stepone after", stepFive)
-                            } if (item.last_acknowledgement == 'alarm') {
+                            } else if (item.last_acknowledgement == 'alarm') {
                                 setstepFive({
                                     ...stepFive,
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                })
+                            } else {
+                                setstepFive({
+                                    ...stepOne,
+                                    switch: JSON.parse(item.is_switch),
+                                    setPoints: item.set_points,
+                                    turnOn: item.turn_on,
+                                    turnOff: item.turn_off,
+                                    setAlarm: item.set_alarm,
                                 })
                             }
                         }
@@ -1127,6 +1270,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: false,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         let mamualVal = stepOne.manual
         let switchVal = stepOne.switch
@@ -1145,36 +1292,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, 'first', "mode1-manual", data)
             .then((res) => {
                 console.log("get Manual data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> manual) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepOne({
+                        ...stepOne,
+                        isManualLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 manual")
@@ -1185,17 +1308,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepOne({
+                                        ...stepOne,
+                                        isManualLoading: false,
+                                        confirmManual: true,
+                                        confirmHAVC: false,
+                                        confirmTimer: false,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
 
@@ -1205,7 +1336,6 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             })
     }
     const stepOneHVACCfmHandler = () => {
-
         let HVACVal = stepOne.HAVC
         let setPointsVal = stepOne.setPoints
         if (setPointsVal != '') {
@@ -1216,6 +1346,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: true,
                 confirmTimer: false,
                 confirmAlarm: false,
+                isManualLoading: false,
+                isHVACLoading: true,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             let data = [{
                 "CM-1-Mode": 20,
@@ -1230,36 +1364,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'first', "mode1-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepOne({
+                            ...stepOne,
+                            isHVACLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 HVAC")
@@ -1270,17 +1380,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepOne({
+                                            ...stepOne,
+                                            isHVACLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: true,
+                                            confirmTimer: false,
+                                            confirmAlarm: false
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -1300,6 +1418,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: true,
             confirmAlarm: false,
+            isManualLoading: false,
+            isHVACLoading: false,
+            isTimerLoading: true,
+            isAlarmLoading: false,
         })
         console.log(stepOne)
         let data = [{
@@ -1316,36 +1438,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, 'first', "mode1-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepOne({
+                        ...stepOne,
+                        isTimerLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -1356,17 +1454,20 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepOne({
+                                        ...stepOne,
+                                        isTimerLoading: false,
+                                        confirmManual: false,
+                                        confirmHAVC: false,
+                                        confirmTimer: true,
+                                        confirmAlarm: false
+                                    })
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -1386,6 +1487,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: false,
                 confirmTimer: false,
                 confirmAlarm: true,
+                isManualLoading: false,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: true,
             })
             console.log(stepOne)
             let data = [{
@@ -1401,36 +1506,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'first', "mode1-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepOne({
+                            ...stepOne,
+                            isAlarmLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 Timer")
@@ -1441,17 +1522,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
+                                        setstepOne({
+                                            ...stepOne,
+                                            isAlarmLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: false,
+                                            confirmTimer: false,
+                                            confirmAlarm: true
+                                        })
                                         Swal.fire(
                                             'Acknowledgement received successfully.',
                                             '',
                                             'success'
                                         )
-                                        clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -1470,6 +1559,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: false,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         console.log(stepTwo)
         let mamualVal = stepTwo.manual
@@ -1487,37 +1580,13 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         }
         UserService.postControlData(device_id, userID, "second", "mode2-manual", data)
             .then((res) => {
-                console.log("get Alarm data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                console.log("get manual data------------------", res.data)
+                setTimeout(() => {
+                    setstepTwo({
+                        ...stepTwo,
+                        isManualLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -1528,17 +1597,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepTwo({
+                                        ...stepTwo,
+                                        isManualLoading: false,
+                                        confirmManual: true,
+                                        confirmHAVC: false,
+                                        confirmTimer: false,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -1558,6 +1635,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: true,
                 confirmTimer: false,
                 confirmAlarm: false,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             let data = [{
                 "CM-2-Mode": 20,
@@ -1572,36 +1653,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'second', "mode2-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepTwo({
+                            ...stepTwo,
+                            isHVACLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 HVAC")
@@ -1612,17 +1669,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepTwo({
+                                            ...stepTwo,
+                                            isHVACLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: true,
+                                            confirmTimer: false,
+                                            confirmAlarm: false
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -1642,8 +1707,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: true,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
-        console.log("stepTwo---",stepTwo)
+        console.log("stepTwo---", stepTwo)
         let data = [{
             "CM-2-Mode": 30,
             "CM-2-T-ON": stepTwo.turnOn,
@@ -1657,36 +1726,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, 'second', "mode2-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepTwo({
+                        ...stepTwo,
+                        isTimerLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -1697,17 +1742,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepTwo({
+                                        ...stepTwo,
+                                        isTimerLoading: false,
+                                        confirmManual: false,
+                                        confirmHAVC: false,
+                                        confirmTimer: true,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -1727,6 +1780,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: false,
                 confirmTimer: false,
                 confirmAlarm: true,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             console.log(stepTwo)
             let data = [{
@@ -1742,36 +1799,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'second', "mode2-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepTwo({
+                            ...stepTwo,
+                            isAlarmLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 Timer")
@@ -1782,17 +1815,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepTwo({
+                                            ...stepTwo,
+                                            isAlarmLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: false,
+                                            confirmTimer: false,
+                                            confirmAlarm: true
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -1811,6 +1852,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: false,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         console.log(stepThree)
         let mamualVal = stepThree.manual
@@ -1829,36 +1874,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, "third", "mode3-manual", data)
             .then((res) => {
                 console.log("get Alarm data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepThree({
+                        ...stepThree,
+                        isManualLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -1869,17 +1890,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepThree({
+                                        ...stepThree,
+                                        isManualLoading: false,
+                                        confirmManual: true,
+                                        confirmHAVC: false,
+                                        confirmTimer: false,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -1898,6 +1927,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: true,
                 confirmTimer: false,
                 confirmAlarm: false,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             let data = [{
                 "CM-3-Mode": 20,
@@ -1912,36 +1945,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'third', "mode3-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepThree({
+                            ...stepThree,
+                            isHVACLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 HVAC")
@@ -1952,17 +1961,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepThree({
+                                            ...stepThree,
+                                            isHVACLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: true,
+                                            confirmTimer: false,
+                                            confirmAlarm: false
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -1982,6 +1999,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: true,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         console.log(stepThree)
         let data = [{
@@ -1997,36 +2018,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, 'third', "mode3-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepThree({
+                        ...stepThree,
+                        isTimerLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -2037,17 +2034,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepThree({
+                                        ...stepThree,
+                                        isTimerLoading: false,
+                                        confirmManual: false,
+                                        confirmHAVC: false,
+                                        confirmTimer: true,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -2067,6 +2072,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: false,
                 confirmTimer: false,
                 confirmAlarm: true,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             console.log(stepThree)
             let data = [{
@@ -2081,36 +2090,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'third', "mode3-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepThree({
+                            ...stepThree,
+                            isAlarmLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 Timer")
@@ -2121,17 +2106,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepThree({
+                                            ...stepThree,
+                                            isAlarmLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: false,
+                                            confirmTimer: false,
+                                            confirmAlarm: true
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -2150,6 +2143,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: false,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         console.log(stepFour)
         let mamualVal = stepFour.manual
@@ -2168,36 +2165,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, "four", "mode4-manual", data)
             .then((res) => {
                 console.log("get Alarm data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepFour({
+                        ...stepFour,
+                        isManualLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -2208,17 +2181,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepFour({
+                                        ...stepFour,
+                                        isManualLoading: false,
+                                        confirmManual: true,
+                                        confirmHAVC: false,
+                                        confirmTimer: false,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -2237,6 +2218,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: true,
                 confirmTimer: false,
                 confirmAlarm: false,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             let data = [{
                 "CM-4-Mode": 20,
@@ -2250,36 +2235,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'four', "mode4-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepFour({
+                            ...stepFour,
+                            isHVACLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 HVAC")
@@ -2290,17 +2251,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepFour({
+                                            ...stepFour,
+                                            isHVACLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: true,
+                                            confirmTimer: false,
+                                            confirmAlarm: false
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -2320,6 +2289,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: true,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         console.log(stepFour)
         let data = [{
@@ -2335,36 +2308,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, 'four', "mode4-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepFour({
+                        ...stepFour,
+                        isTimerLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -2375,17 +2324,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepFour({
+                                        ...stepFour,
+                                        isTimerLoading: false,
+                                        confirmManual: false,
+                                        confirmHAVC: false,
+                                        confirmTimer: true,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -2405,6 +2362,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: false,
                 confirmTimer: false,
                 confirmAlarm: true,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             console.log(stepFour)
             let data = [{
@@ -2419,36 +2380,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'four', "mode4-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepFour({
+                            ...stepFour,
+                            isAlarmLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 Timer")
@@ -2459,17 +2396,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepFour({
+                                            ...stepFour,
+                                            isAlarmLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: false,
+                                            confirmTimer: false,
+                                            confirmAlarm: true
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -2488,6 +2433,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: false,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         console.log(stepFive)
         let mamualVal = stepFive.manual
@@ -2506,36 +2455,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, "five", "mode5-manual", data)
             .then((res) => {
                 console.log("get Alarm data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepFive({
+                        ...stepFive,
+                        isManualLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -2546,17 +2471,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepFive({
+                                        ...stepFive,
+                                        isManualLoading: false,
+                                        confirmManual: true,
+                                        confirmHAVC: false,
+                                        confirmTimer: false,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -2575,6 +2508,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: true,
                 confirmTimer: false,
                 confirmAlarm: false,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             let data = [{
                 "CM-5-Mode": 20,
@@ -2588,36 +2525,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'five', "mode5-hvac", data)
                 .then((res) => {
                     console.log("get HVAC data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> HVAC) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepFive({
+                            ...stepFive,
+                            isHVACLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 HVAC")
@@ -2628,17 +2541,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepFive({
+                                            ...stepFive,
+                                            isHVACLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: true,
+                                            confirmTimer: false,
+                                            confirmAlarm: false
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -2658,6 +2579,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             confirmHAVC: false,
             confirmTimer: true,
             confirmAlarm: false,
+            isManualLoading: true,
+            isHVACLoading: false,
+            isTimerLoading: false,
+            isAlarmLoading: false,
         })
         console.log(stepFive)
         let data = [{
@@ -2673,36 +2598,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         UserService.postControlData(device_id, userID, 'five', "mode5-timer", data)
             .then((res) => {
                 console.log("get Timer data------------------", res.data)
-                let timerInterval
-                Swal.fire({
-                    title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                    html: 'It will be close in <b></b> seconds.',
-                    icon: 'info',
-                    timer: 60000,
-                    timerProgressBar: true,
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: "Exit",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            Swal.getHtmlContainer().querySelector('b')
-                                .textContent = (Swal.getTimerLeft() / 1000)
-                                    .toFixed(0)
-                        }, 100)
-                    },
-                    willClose: () => {
-                        Swal.fire(
-                            'Acknowledgement not received, Please try again!',
-                            '',
-                            'error'
-                        )
-                        clearInterval(timerInterval)
-                        clearInterval(interval);
-                    }
-                })
+                setTimeout(() => {
+                    setstepFive({
+                        ...stepFive,
+                        isTimerLoading: false,
+                    })
+                }, 60000) // 1min
 
                 const interval = setInterval(() => {
                     console.log("call check acknoledgement for device 1 Timer")
@@ -2713,17 +2614,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 console.log("controlDeviceData", controlData)
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
-                                    Swal.fire(
-                                        'Acknowledgement received successfully.',
-                                        '',
-                                        'success'
-                                    )
-                                    clearInterval(timerInterval)
+                                    setstepFive({
+                                        ...stepFive,
+                                        isTimerLoading: false,
+                                        confirmManual: false,
+                                        confirmHAVC: false,
+                                        confirmTimer: true,
+                                        confirmAlarm: false
+                                    })
+                                    // Swal.fire(
+                                    //     'Acknowledgement received successfully.',
+                                    //     '',
+                                    //     'success'
+                                    // )
                                     clearInterval(interval);
                                 }
 
                             }).catch(err => {
                                 console.log('err', err)
+                                clearInterval(interval);
                             })
                     }
                 }, 5000)
@@ -2743,6 +2652,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                 confirmHAVC: false,
                 confirmTimer: false,
                 confirmAlarm: true,
+                isManualLoading: true,
+                isHVACLoading: false,
+                isTimerLoading: false,
+                isAlarmLoading: false,
             })
             console.log(stepFive)
             let data = [{
@@ -2757,36 +2670,12 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             UserService.postControlData(device_id, userID, 'five', "mode5-alarm", data)
                 .then((res) => {
                     console.log("get Alarm data------------------", res.data)
-                    let timerInterval
-                    Swal.fire({
-                        title: `Please send acknowledgement for (<b>${firstDeviceName}</b> timer) from the device terminal.`,
-                        html: 'It will be close in <b></b> seconds.',
-                        icon: 'info',
-                        timer: 60000,
-                        timerProgressBar: true,
-                        showCancelButton: true,
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Exit",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                Swal.getHtmlContainer().querySelector('b')
-                                    .textContent = (Swal.getTimerLeft() / 1000)
-                                        .toFixed(0)
-                            }, 100)
-                        },
-                        willClose: () => {
-                            Swal.fire(
-                                'Acknowledgement not received, Please try again!',
-                                '',
-                                'error'
-                            )
-                            clearInterval(timerInterval)
-                            clearInterval(interval);
-                        }
-                    })
+                    setTimeout(() => {
+                        setstepFive({
+                            ...stepFive,
+                            isAlarmLoading: false,
+                        })
+                    }, 60000) // 1min
 
                     const interval = setInterval(() => {
                         console.log("call check acknoledgement for device 1 Timer")
@@ -2797,17 +2686,25 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
-                                        clearInterval(timerInterval)
+                                        setstepFive({
+                                            ...stepFive,
+                                            isAlarmLoading: false,
+                                            confirmManual: false,
+                                            confirmHAVC: false,
+                                            confirmTimer: false,
+                                            confirmAlarm: true
+                                        })
+                                        // Swal.fire(
+                                        //     'Acknowledgement received successfully.',
+                                        //     '',
+                                        //     'success'
+                                        // )
                                         clearInterval(interval);
                                     }
 
                                 }).catch(err => {
                                     console.log('err', err)
+                                    clearInterval(interval);
                                 })
                         }
                     }, 5000)
@@ -2863,7 +2760,17 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 <Switch {...label} defaultChecked disabled={stepOne.isDisableswitch ? true : false} onChange={stepOneSwitchHandler} checked={stepOne.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmManual ? true : false} onClick={stepOneManualCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmManual ? true : false} onClick={stepOneManualCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+
+                                                    {stepOne.isManualLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepOne.confirmManual ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -2894,7 +2801,16 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmHAVC ? true : false} onClick={stepOneHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmHAVC ? true : false} onClick={stepOneHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+
+                                                    {stepOne.isHVACLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepOne.confirmHAVC ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2967,7 +2883,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmTimer ? true : false} onClick={stepOneTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmTimer ? true : false} onClick={stepOneTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepOne.isTimerLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepOne.confirmTimer ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2998,7 +2922,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmAlarm ? true : false} onClick={stepOneAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmAlarm ? 'active-confirm-btn' : null} `} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepOne.isDisableconfirmAlarm ? true : false} onClick={stepOneAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepOne.confirmAlarm ? 'active-confirm-btn' : null} `} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepOne.isAlarmLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepOne.confirmAlarm ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -3016,7 +2948,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 <Switch {...label} defaultChecked disabled={stepTwo.isDisableswitch ? true : false} onChange={stepTwoSwitchHandler} checked={stepTwo.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmManual ? true : false} onClick={stepTwoManualCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmManual ? true : false} onClick={stepTwoManualCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepTwo.isManualLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepTwo.confirmManual ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3046,7 +2986,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmHAVC ? true : false} onClick={stepTwoHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmHAVC ? true : false} onClick={stepTwoHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepTwo.isHVACLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepTwo.confirmHAVC ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3119,7 +3067,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmTimer ? true : false} onClick={stepTwoTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmTimer ? true : false} onClick={stepTwoTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepTwo.isTimerLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepTwo.confirmTimer ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3150,7 +3106,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmAlarm ? true : false} onClick={stepTwoAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepTwo.isDisableconfirmAlarm ? true : false} onClick={stepTwoAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepTwo.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepTwo.isAlarmLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepTwo.confirmAlarm ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -3168,7 +3132,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 <Switch {...label} defaultChecked disabled={stepThree.isDisableswitch ? true : false} onChange={stepThreeSwitchHandler} checked={stepThree.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmManual ? true : false} onClick={stepThreeManualCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmManual ? true : false} onClick={stepThreeManualCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepThree.isManualLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepThree.confirmManual ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3198,7 +3170,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmHAVC ? true : false} onClick={stepThreeHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmHAVC ? true : false} onClick={stepThreeHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepThree.isHVACLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepThree.confirmHAVC ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3271,7 +3251,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmTimer ? true : false} onClick={stepThreeTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmTimer ? true : false} onClick={stepThreeTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepThree.isTimerLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepThree.confirmTimer ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3302,7 +3290,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmAlarm ? true : false} onClick={stepThreeAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepThree.isDisableconfirmAlarm ? true : false} onClick={stepThreeAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepThree.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepThree.isAlarmLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepThree.confirmAlarm ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -3320,7 +3316,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 <Switch {...label} defaultChecked disabled={stepFour.isDisableswitch ? true : false} onChange={stepFourSwitchHandler} checked={stepFour.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmManual ? true : false} onClick={stepFourManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmManual ? true : false} onClick={stepFourManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFour.isManualLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFour.confirmManual ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3350,7 +3354,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmHAVC ? true : false} onClick={stepFourHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmHAVC ? true : false} onClick={stepFourHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFour.isHVACLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFour.confirmHAVC ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3423,7 +3435,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmTimer ? true : false} onClick={stepFourTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmTimer ? true : false} onClick={stepFourTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFour.isTimerLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFour.confirmTimer ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3454,7 +3474,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmAlarm ? true : false} onClick={stepFourAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFour.isDisableconfirmAlarm ? true : false} onClick={stepFourAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFour.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFour.isAlarmLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFour.confirmAlarm ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -3472,7 +3500,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 <Switch {...label} defaultChecked disabled={stepFive.isDisableswitch ? true : false} onChange={stepFiveSwitchHandler} checked={stepFive.switch} />
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmManual ? true : false} onClick={stepFiveManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmManual ? true : false} onClick={stepFiveManualCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmManual ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFive.isManualLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFive.confirmManual ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3502,7 +3538,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmHAVC ? true : false} onClick={stepFiveHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmHAVC ? true : false} onClick={stepFiveHVACCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmHAVC ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFive.isHVACLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFive.confirmHAVC ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3575,7 +3619,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
 
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmTimer ? true : false} onClick={stepFiveTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmTimer ? true : false} onClick={stepFiveTimerCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmTimer ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFive.isTimerLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFive.confirmTimer ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                         <tr>
@@ -3606,7 +3658,15 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmAlarm ? true : false} onClick={stepFiveAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                <Stack direction={'row'} spacing={1}>
+                                                    <Button variant="contained" size="large" disabled={stepFive.isDisableconfirmAlarm ? true : false} onClick={stepFiveAlarmCfmHandler} className={`btn btn-secondary btn-sm ${stepFive.confirmAlarm ? 'active-confirm-btn' : null}`} style={{ borderRadius: 25, backgroundColor: 'gray' }}>Confirm</Button>
+                                                    {stepFive.isAlarmLoading
+                                                        ?
+                                                        <CircularProgress size={35} sx={{ color: '#fff' }} />
+                                                        :
+                                                        stepFive.confirmAlarm ? <CheckCircleOutlineIcon sx={{ color: '#00e600', fontSize: '40px' }} /> : null
+                                                    }
+                                                </Stack>
                                             </td>
                                         </tr>
                                     </tbody>
