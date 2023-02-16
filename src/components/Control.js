@@ -311,6 +311,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+                                    isTimerTick: item.is_timer_confirm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isAlarmTick: false
@@ -322,6 +323,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+                                    isAlarmTick: item.is_confirm_alarm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isTimerTick: false
@@ -361,6 +363,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+                                    isTimerTick: item.is_timer_confirm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isAlarmTick: false
@@ -372,6 +375,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+                                    isAlarmTick: item.is_confirm_alarm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isTimerTick: false
@@ -411,6 +415,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+                                    isTimerTick: item.is_timer_confirm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isAlarmTick: false
@@ -422,6 +427,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+                                    isAlarmTick: item.is_confirm_alarm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isTimerTick: false
@@ -461,6 +467,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+                                    isTimerTick: item.is_timer_confirm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isAlarmTick: false
@@ -472,6 +479,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+                                    isAlarmTick: item.is_confirm_alarm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isTimerTick: false
@@ -511,6 +519,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     turnOn: item.turn_on,
                                     turnOff: item.turn_off,
                                     confirmTimer: item.is_timer_confirm,
+                                    isTimerTick: item.is_timer_confirm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isAlarmTick: false
@@ -520,8 +529,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 setstepFive({
                                     ...stepFive,
                                     alarm: item.is_alarm,
+                                    alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
+                                    isAlarmTick: item.is_confirm_alarm,
                                     isManualTick: false,
                                     isHVACTick: false,
                                     isTimerTick: false
@@ -1543,11 +1554,11 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.fire(
+                                            'Acknowledgement received successfully.',
+                                            '',
+                                            'success'
+                                        )
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
