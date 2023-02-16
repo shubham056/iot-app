@@ -529,7 +529,6 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 setstepFive({
                                     ...stepFive,
                                     alarm: item.is_alarm,
-                                    alarm: item.is_alarm,
                                     setAlarm: item.set_alarm,
                                     confirmAlarm: item.is_confirm_alarm,
                                     isAlarmTick: item.is_confirm_alarm,
