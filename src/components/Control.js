@@ -174,8 +174,8 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
         HAVC: false,
         setPoints: false,
         timer: false,
-        turnOn: dt.format("HH:mm"),
-        turnOff: dt.format("HH:mm"),
+        turnOn: '',
+        turnOff: '',
         alarm: false,
         setAlarm: false,
         confirmManual: false,
@@ -994,12 +994,11 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
     }
     const fiveHVACHandler = () => {
         setstepFive({
-            ...stepFour,
+            ...stepFive,
             HAVC: true,
             manual: false,
             timer: false,
             alarm: false,
-            confirmAlarm: false,
             isDisableManual: false,
             isDisableswitch: true,
             isDisableHAVC: false,
@@ -1008,7 +1007,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
             isTurnOnDisable: true,
             isTurnOffDisable: true,
             isDisablealarm: false,
-            isSetAlarmDisable: false,
+            isSetAlarmDisable: true,
             isDisableconfirmManual: true,
             isDisableconfirmHAVC: false,
             isDisableconfirmTimer: true,
