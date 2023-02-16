@@ -1281,11 +1281,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
                                     setCheckTick(Math.random())
-                                    // Swal.fire(
-                                    //     'Acknowledgement received successfully.',
-                                    //     '',
-                                    //     'success'
-                                    // )
+                                    Swal.close()
                                     clearInterval(timerInterval)
                                     clearInterval(interval);
                                 }
@@ -1373,11 +1369,8 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                             isAlarmTick: false,
                                         })
 
-                                        setCheckTick(Math.random())          // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        setCheckTick(Math.random())
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -1464,11 +1457,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -1552,14 +1541,10 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     console.log("controlDeviceData", controlData)
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
-                                        setCheckTick(Math.random())
-                                        Swal.fire(
-                                            'Acknowledgement received successfully.',
-                                            '',
-                                            'success'
-                                        )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
+                                        setCheckTick(Math.random())
                                     }
 
                                 }).catch(err => {
@@ -1641,11 +1626,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
                                     setCheckTick(Math.random())
-                                    // Swal.fire(
-                                    //     'Acknowledgement received successfully.',
-                                    //     '',
-                                    //     'success'
-                                    // )
+                                    Swal.close()
                                     clearInterval(timerInterval)
                                     clearInterval(interval);
                                 }
@@ -1726,11 +1707,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -1816,11 +1793,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -1905,11 +1878,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -1993,11 +1962,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
                                     setCheckTick(Math.random())
-                                    // Swal.fire(
-                                    //     'Acknowledgement received successfully.',
-                                    //     '',
-                                    //     'success'
-                                    // )
+                                    Swal.close()
                                     clearInterval(timerInterval)
                                     clearInterval(interval);
                                 }
@@ -2077,11 +2042,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2166,11 +2127,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2254,11 +2211,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2342,11 +2295,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
                                     setCheckTick(Math.random())
-                                    // Swal.fire(
-                                    //     'Acknowledgement received successfully.',
-                                    //     '',
-                                    //     'success'
-                                    // )
+                                    Swal.close()
                                     clearInterval(timerInterval)
                                     clearInterval(interval);
                                 }
@@ -2425,11 +2374,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2514,11 +2459,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2602,11 +2543,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2690,11 +2627,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                 if (controlData.is_acknowledgement_updated == "true") {
                                     console.log("got acknowledgement")
                                     setCheckTick(Math.random())
-                                    // Swal.fire(
-                                    //     'Acknowledgement received successfully.',
-                                    //     '',
-                                    //     'success'
-                                    // )
+                                    Swal.close()
                                     clearInterval(timerInterval)
                                     clearInterval(interval);
                                 }
@@ -2773,11 +2706,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2862,11 +2791,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
@@ -2950,11 +2875,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                     if (controlData.is_acknowledgement_updated == "true") {
                                         console.log("got acknowledgement")
                                         setCheckTick(Math.random())
-                                        // Swal.fire(
-                                        //     'Acknowledgement received successfully.',
-                                        //     '',
-                                        //     'success'
-                                        // )
+                                        Swal.close()
                                         clearInterval(timerInterval)
                                         clearInterval(interval);
                                     }
