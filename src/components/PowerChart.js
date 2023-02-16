@@ -154,6 +154,9 @@ export default function App(props) {
   // };
 
   const options = {
+    legend: {
+      display: false
+    },
     tooltips: {
       callbacks: {
         label: function (tooltipItem, data) {
@@ -164,8 +167,8 @@ export default function App(props) {
           return data['labels'][tooltipItem[0]['index']];
           //return "Frequency (Hz)"
         },
-        
-        afterLabel: function(tooltipItem, data) {
+
+        afterLabel: function (tooltipItem, data) {
           // var dataset = data['datasets'][0];
           // return dataset['data'][tooltipItem['index']];
         }
