@@ -1,30 +1,72 @@
+import { useCustomCompareEffect } from "use-custom-compare";
+import isEqual from "lodash/isEqual";
+import UserService from "../services/user.service";
 import React, { useState, useEffect } from "react";
 import * as zoom from "chartjs-plugin-zoom";
 import { Line } from "react-chartjs-2";
 import moment from "moment-timezone";
 
+// var res = [
+//   { date: new Date("2019-08-20 10:10:10"), value: 35.98 },
+//   { date: new Date("2019-08-20 10:10:15"), value: 12.49 },
+//   { date: new Date("2019-08-20 10:10:20"), value: 12.93 },
+//   { date: new Date("2019-08-20 10:10:25"), value: 139.89 },
+//   { date: new Date("2019-08-20 10:10:30"), value: 15.6 },
+//   { date: new Date("2019-08-20 10:10:35"), value: 15.6 },
+// ];
 
 export default function App(props) {
   const chartRef = React.useRef(null);
-
-  const handleResetZoom = () => {
-    if (chartRef && chartRef.current) {
-      chartRef.current.resetZoom();
-    }
-  };
   const [gData, setGData] = useState([]);
-  // var res = [
-  //   { date: new Date("2019-08-20 10:10:10"), value: 35.98 },
-  //   { date: new Date("2019-08-20 10:10:15"), value: 12.49 },
-  //   { date: new Date("2019-08-20 10:10:20"), value: 12.93 },
-  //   { date: new Date("2019-08-20 10:10:25"), value: 139.89 },
-  //   { date: new Date("2019-08-20 10:10:30"), value: 15.6 },
-  //   { date: new Date("2019-08-20 10:10:35"), value: 15.6 },
-  // ];
+  const [initCandles, setInitCandles] = useState([])
+  const [isLoadingGraph, setisLoadingGraph] = useState(false)
+
   const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props
 
-  useEffect(() => {
-    console.log("is filter data:", isFilterGraphData, "is socket data:", isGraphDataFromSocket, graphDataFromSocket)
+    useEffect(() => {
+      // get initial data from API
+      if (device_id) {
+        //console.log("!!!!!call power initial use effect!!!!!!!!!!")
+        setisLoadingGraph(true)
+        UserService.GetLinkedDeviceData(device_id, "T_power_A")
+          .then((res) => {
+            //console.log("power initial res:", res.data.data.deviceData)
+            let powerDataFromDB = res.data.data.deviceData
+            let myData
+            if (typeof (powerDataFromDB) != "undefined") {
+              myData = Object.keys(powerDataFromDB).map(key => {
+                return powerDataFromDB[key];
+              })
+            } else {
+              myData = []
+            }
+            setInitCandles(myData)
+            if (myData.length > 0) {
+              setGData({
+                labels: myData.map((e) => e.date),
+                datasets: [
+                  {
+                    label: "Frequency (Hz)",
+                    data: myData.map((e) => e.value),
+                    fill: true,
+                    backgroundColor: "rgba(75,192,192,0.2)",
+                    borderColor: "rgba(75,192,192,1)",
+                    tension: 0,
+                    pointRadius: 3,
+                  }
+                ]
+              })
+            }
+            setisLoadingGraph(false)
+          }).catch(err => {
+            setisLoadingGraph(false)
+            console.log(err)
+          })
+      }
+    }, [device_id])
+
+  useCustomCompareEffect(() => {
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@is filter data:", isFilterGraphData, "is socket data:", isGraphDataFromSocket, graphDataFromSocket)
 
     if (isFilterGraphData) {
       console.log("filter data:", graphDataFromFilter)
@@ -88,70 +130,11 @@ export default function App(props) {
       }
       console.log("socket g data!!!!!!!", gData)
     }
-  }, [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket])
+  },
+    [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket],
+    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
+  )
 
-
-
-  // const data = {
-  //   labels: myData.map((e) => e.date),
-  //   datasets: [
-  //     {
-  //       label: "Frequency(Hz)",
-  //       data: myData.map((e) => e.value),
-  //       fill: true,
-  //       backgroundColor: "rgba(75,192,192,0.2)",
-  //       borderColor: "rgba(75,192,192,1)"
-  //     }
-  //   ]
-  // };
-
-  // const options = {
-  //   responsive: true,
-  //   layout: {
-  //     padding: 20
-  //   },
-  //   scales: {
-  //     yAxes: [
-  //       {
-
-  //         position: "right",
-  //         ticks: {
-  //           beginAtZero: true
-  //         }
-  //       }
-  //     ],
-  //     xAxes: [
-  //       {
-  //         type: "time",
-  //         time: {
-  //           tooltipFormat: 'YYYY-MM-DD HH:mm:ss',
-  //           displayFormats: {
-  //             millisecond: 'HH:mm:ss.SSS',
-  //             second: 'HH:mm:ss',
-  //             minute: 'HH:mm',
-  //             hour: 'HH'
-  //           }
-
-  //         }
-  //       }
-  //     ]
-  //   },
-  //   pan: {
-  //     enabled: true,
-  //     mode: "x"
-  //   },
-  //   zoom: {
-  //     enabled: true,
-  //     mode: "x",
-  //     sensitivity: 0.5,
-  //     wheel: {
-  //       enabled: true // SET SCROOL ZOOM TO TRUE
-  //     },
-  //     pinch: {
-  //       enabled: true       // Enable pinch zooming
-  //     },
-  //   }
-  // };
 
   const options = {
     legend: {
@@ -217,12 +200,20 @@ export default function App(props) {
       enabled: true,
       mode: "x",
       sensitivity: 0.5
-    }
+    },
   };
 
   return (
     <div className="App">
-      <Line data={gData} options={options} />
+      {
+        isLoadingGraph
+          ?
+          <p style={{ textAlign: 'center', padding: 108 }}>Loading...</p>
+          :
+          <Line data={gData} options={options} />
+      }
     </div>
   );
 }
+
+
