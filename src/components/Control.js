@@ -1600,7 +1600,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                     console.log('clear manual interval')
                     clearInterval(interval);
                     setclearFManual(Math.random())
-                }, 20000) // 1min
+                }, 60000) // 1min
             }).catch(err => {
                 console.log(err)
             })
@@ -1671,7 +1671,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear Hvac interval f')
                         clearInterval(interval);
                         setclearFHVAC(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1747,7 +1747,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear timer interval f')
                         clearInterval(interval);
                         setclearFTimer(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1822,7 +1822,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear alarm interval f')
                         clearInterval(interval);
                         setclearFAlarm(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -1897,7 +1897,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                     console.log('clear sec manual interval')
                     clearInterval(interval);
                     setclearSecManual(Math.random())
-                }, 20000) // 1min
+                }, 60000) // 1min
             }).catch(err => {
                 console.log(err)
             })
@@ -1967,7 +1967,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear Hvac interval s')
                         clearInterval(interval);
                         setclearSecHVAC(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2044,7 +2044,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear timer interval Sec')
                         clearInterval(interval);
                         setclearSecTimer(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2118,7 +2118,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear alarm interval Sec')
                         clearInterval(interval);
                         setclearSecAlarm(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2191,7 +2191,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                     console.log('clear third manual interval')
                     clearInterval(interval);
                     setclearTManual(Math.random())
-                }, 20000) // 1min
+                }, 60000) // 1min
             }).catch(err => {
                 console.log(err)
             })
@@ -2255,7 +2255,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                         console.log('clear third Hvac interval')
                                         clearInterval(interval);
                                         setclearTHVAC(Math.random())
-                                    }, 20000) // 1min
+                                    }, 60000) // 1min
                                 }).catch(err => {
                                     console.log('err', err)
                                 })
@@ -2334,7 +2334,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear third timer interval')
                         clearInterval(interval);
                         setclearTTimer(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2407,7 +2407,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear third alarm interval')
                         clearInterval(interval);
                         setclearTAlarm(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2481,7 +2481,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                     console.log('clear fourth manual interval')
                     clearInterval(interval);
                     setclearFouManual(Math.random())
-                }, 20000) // 1min
+                }, 60000) // 1min
             }).catch(err => {
                 console.log(err)
             })
@@ -2549,7 +2549,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear fourth hvac interval')
                         clearInterval(interval);
                         setclearFouHVAC(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2623,7 +2623,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear fourth timer interval')
                         clearInterval(interval);
                         setclearFouTimer(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2696,7 +2696,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear fourth timer interval')
                         clearInterval(interval);
                         setclearFouAlarm(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2770,7 +2770,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                     console.log('clear five manual interval')
                     clearInterval(interval);
                     setclearFivManual(Math.random())
-                }, 20000) // 1min
+                }, 60000) // 1min
             }).catch(err => {
                 console.log(err)
             })
@@ -2840,7 +2840,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear five hvac interval')
                         clearInterval(interval);
                         setclearFivHVAC(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2915,7 +2915,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear five timer interval')
                         clearInterval(interval);
                         setclearFivTimer(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2990,7 +2990,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear five alarm interval')
                         clearInterval(interval);
                         setclearFivAlarm(Math.random())
-                    }, 20000) // 1min
+                    }, 60000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
