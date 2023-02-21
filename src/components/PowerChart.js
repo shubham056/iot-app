@@ -23,47 +23,47 @@ export default function App(props) {
 
   const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props
 
-    useEffect(() => {
-      // get initial data from API
-      if (device_id) {
-        //console.log("!!!!!call power initial use effect!!!!!!!!!!")
-        setisLoadingGraph(true)
-        UserService.GetLinkedDeviceData(device_id, "T_power_A")
-          .then((res) => {
-            //console.log("power initial res:", res.data.data.deviceData)
-            let powerDataFromDB = res.data.data.deviceData
-            let myData
-            if (typeof (powerDataFromDB) != "undefined") {
-              myData = Object.keys(powerDataFromDB).map(key => {
-                return powerDataFromDB[key];
-              })
-            } else {
-              myData = []
-            }
-            setInitCandles(myData)
-            if (myData.length > 0) {
-              setGData({
-                labels: myData.map((e) => e.date),
-                datasets: [
-                  {
-                    label: "Frequency (Hz)",
-                    data: myData.map((e) => e.value),
-                    fill: true,
-                    backgroundColor: "rgba(75,192,192,0.2)",
-                    borderColor: "rgba(75,192,192,1)",
-                    tension: 0,
-                    pointRadius: 3,
-                  }
-                ]
-              })
-            }
-            setisLoadingGraph(false)
-          }).catch(err => {
-            setisLoadingGraph(false)
-            console.log(err)
-          })
-      }
-    }, [device_id])
+  useEffect(() => {
+    // get initial data from API
+    if (device_id) {
+      //console.log("!!!!!call power initial use effect!!!!!!!!!!")
+      setisLoadingGraph(true)
+      UserService.GetLinkedDeviceData(device_id, "T_power_A")
+        .then((res) => {
+          //console.log("power initial res:", res.data.data.deviceData)
+          let powerDataFromDB = res.data.data.deviceData
+          let myData
+          if (typeof (powerDataFromDB) != "undefined") {
+            myData = Object.keys(powerDataFromDB).map(key => {
+              return powerDataFromDB[key];
+            })
+          } else {
+            myData = []
+          }
+          setInitCandles(myData)
+          if (myData.length > 0) {
+            setGData({
+              labels: myData.map((e) => e.date),
+              datasets: [
+                {
+                  label: "Frequency (Hz)",
+                  data: myData.map((e) => e.value),
+                  fill: true,
+                  backgroundColor: "rgba(75,192,192,0.2)",
+                  borderColor: "rgba(75,192,192,1)",
+                  tension: 0,
+                  pointRadius: 0.5,
+                }
+              ]
+            })
+          }
+          setisLoadingGraph(false)
+        }).catch(err => {
+          setisLoadingGraph(false)
+          console.log(err)
+        })
+    }
+  }, [device_id])
 
   useCustomCompareEffect(() => {
     console.log("!!!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@is filter data:", isFilterGraphData, "is socket data:", isGraphDataFromSocket, graphDataFromSocket)
@@ -94,7 +94,7 @@ export default function App(props) {
               backgroundColor: "rgba(75,192,192,0.2)",
               borderColor: "rgba(75,192,192,1)",
               tension: 0,
-              pointRadius: 3,
+              pointRadius: 0.5,
             }
           ]
         })
@@ -123,7 +123,7 @@ export default function App(props) {
               backgroundColor: "rgba(75,192,192,0.2)",
               borderColor: "rgba(75,192,192,1)",
               tension: 0,
-              pointRadius: 3,
+              pointRadius: 0.5,
             }
           ]
         })
@@ -142,15 +142,15 @@ export default function App(props) {
     },
     tooltips: {
       callbacks: {
+        
+        title: function (tooltipItem, data) {
+        //return data['labels'][tooltipItem[0]['index']];
+        return "Total Power"
+        },
         label: function (tooltipItem, data) {
           //console.log("@@@@@@data",data['labels'][tooltipItem[0]['index']])
           return parseFloat(data['datasets'][0]['data'][tooltipItem['index']]).toFixed(1)
         },
-        title: function (tooltipItem, data) {
-          return data['labels'][tooltipItem[0]['index']];
-          //return "Frequency (Hz)"
-        },
-
         afterLabel: function (tooltipItem, data) {
           // var dataset = data['datasets'][0];
           // return dataset['data'][tooltipItem['index']];

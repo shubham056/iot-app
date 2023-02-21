@@ -1727,7 +1727,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                         setstepOne({
                                             ...stepOne,
                                             isTimerLoading: false,
-                                            isTimerLoading: true,
+                                            isTimerTick: true,
                                             confirmManual: false,
                                             confirmHAVC: false,
                                             confirmTimer: true,
@@ -1747,7 +1747,7 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                         console.log('clear timer interval f')
                         clearInterval(interval);
                         setclearFTimer(Math.random())
-                    }, 60000) // 1min
+                    }, 20000) // 1min
                 }).catch(err => {
                     console.log(err)
                 })
@@ -2024,7 +2024,6 @@ const Control = ({ device_id, userID, isSharedDevice, isDeviceStatus }) => {
                                         setstepTwo({
                                             ...stepTwo,
                                             isTimerLoading: false,
-                                            isTimerTick: true,
                                             isTimerTick: true,
                                             confirmManual: false,
                                             confirmHAVC: false,
