@@ -92,7 +92,7 @@ export default function App(props) {
             item.value
           ])
         })
-        if (chartRef) {
+        if (chartRef && chartRef.current != null) {
           chartRef.current.chart.ctx.appendData([
             {
               data: myData
