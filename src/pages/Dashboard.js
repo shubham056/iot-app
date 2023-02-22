@@ -13,6 +13,7 @@ import { set, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
+//import ApexPowerChart from '../components/ApexPowerChart';
 import PowerChart from '../components/PowerChart';
 import PowerCharts from '../components/PowerCharts';
 import TempetureChart from "../components/TempetureChart";
@@ -2830,7 +2831,7 @@ const Dashboard = () => {
                                             setisStaticValue2(l1_current)
                                             setisStaticValue3(AP_power_l1)
                                             setisStaticValue4(T_Energy_L1)
-                                            setisStaticTemperature(temperature) 
+                                            setisStaticTemperature(temperature)
                                           }).catch(err => {
                                             console.log(err)
                                           })
@@ -3219,15 +3220,7 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <>
-                                                {/* <PowerCharts
-                                                  device_id={isDeviceID}
-                                                  isFilterGraphData={isFilterGraphData}
-                                                  graphDataFromFilter={graphDataFromFilter}
-
-                                                  isGraphDataFromSocket={isGraphDataFromSocket}
-                                                  graphDataFromSocket={powerDataFromDB}
-                                                /> */}
-                                                <PowerChart
+                                                <PowerCharts
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
@@ -3235,6 +3228,22 @@ const Dashboard = () => {
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
                                                 />
+                                                {/* <PowerChart
+                                                  device_id={isDeviceID}
+                                                  isFilterGraphData={isFilterGraphData}
+                                                  graphDataFromFilter={graphDataFromFilter}
+
+                                                  isGraphDataFromSocket={isGraphDataFromSocket}
+                                                  graphDataFromSocket={powerDataFromDB}
+                                                /> */}
+                                                {/* <ApexPowerChart
+                                                  device_id={isDeviceID}
+                                                  isFilterGraphData={isFilterGraphData}
+                                                  graphDataFromFilter={graphDataFromFilter}
+
+                                                  isGraphDataFromSocket={isGraphDataFromSocket}
+                                                  graphDataFromSocket={powerDataFromDB}
+                                                /> */}
                                               </>
 
                                               :
