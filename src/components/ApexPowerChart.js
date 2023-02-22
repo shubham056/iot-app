@@ -8,10 +8,107 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions, ApexCharts } from "apexcharts";
 
 export default function App(props) {
-  const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props;
   const chartRef = useRef();
   const [gData, setGData] = useState([]);
+  const [initCandles, setInitCandles] = useState([12, 13])
   const [isLoadingGraph, setisLoadingGraph] = useState(false)
+
+  const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props;
+
+  useEffect(() => {
+    // get initial data from API
+    if (device_id) {
+      //console.log("!!!!!call power initial use effect!!!!!!!!!!")
+      setisLoadingGraph(true)
+      UserService.GetLinkedDeviceData(device_id, "T_power_A")
+        .then((res) => {
+          //console.log("power initial res:", res.data.data.deviceData)
+          let powerDataFromDB = res.data.data.deviceData
+          console.log("res Data!!!!!!!!!", powerDataFromDB)
+          let myData
+          if (typeof (powerDataFromDB) != "undefined") {
+            myData = Object.keys(powerDataFromDB).map(key => {
+              return ([
+                graphDataFromFilter[key].time,
+                graphDataFromFilter[key].value
+              ])
+              //return powerDataFromDB[key];
+            })
+          } else {
+            myData = []
+          }
+          if (myData.length > 0) {
+            console.log("Graph Data!!!!!", myData)
+            setGData(
+              [{
+                name: "T-Power",
+                data: myData
+              }]
+            )
+          }
+          setisLoadingGraph(false)
+        }).catch(err => {
+          setisLoadingGraph(false)
+          console.log(err)
+        })
+    }
+  }, [device_id])
+
+  useCustomCompareEffect(() => {
+
+    if (isFilterGraphData) {
+      console.log("filter data:", graphDataFromFilter)
+      let myData;
+      if (typeof (graphDataFromFilter) != "undefined") {
+        myData = Object.keys(graphDataFromFilter).map(key => {
+          return ([
+            new Date(graphDataFromFilter[key].time),
+            graphDataFromFilter[key].value
+          ])
+        })
+      } else {
+        myData = []
+      }
+      console.log("filter array data: ", myData)
+      // console.log("res array data: ", res)
+      if (myData.length > 0) {
+        setGData(
+          [{
+            name: "T-Power",
+            data: myData
+          }]
+        )
+      }
+
+      console.log("upp!!!!!!!", gData)
+    }
+    //Socket data
+    if (isGraphDataFromSocket) {
+      console.log("!!!!!!!!!!!!!!!!!!!!!!!!! Graph data from socket:", graphDataFromSocket)
+      if (graphDataFromSocket.length > 0) {
+        let myData = graphDataFromSocket.map(item => {
+          return ([
+            new Date(item.time),
+            item.value
+          ])
+        })
+        if (chartRef) {
+          chartRef.current.chart.ctx.appendData([
+            {
+              data: myData
+            }
+          ]);
+        }
+      }
+      console.log("socket g data!!!!!!!", gData)
+    }
+  },
+    [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket],
+    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
+  )
+
+
+
 
 
   const [chartConfig] = useState({
@@ -114,75 +211,44 @@ export default function App(props) {
         //width: 400
         position: 'top',
       }
-    }
+    },
+    series: [
+      {
+        name: "T-Power",
+        data: [
+          [1361487600000, 5],
+          [1461746800000, 10],
+          [1561833200000, 15],
+          [1671919600000, 20],
+          [1465487600000, 15],
+          [1463746800000, 30],
+          [1421833200000, 45],
+          [1661919600000, 50],
+
+        ]
+      }
+    ]
   });
 
-  useEffect(() => {
-    // get initial data from API
-    if (device_id) {
-      //console.log("!!!!!call power initial use effect!!!!!!!!!!")
-      setisLoadingGraph(true)
-      UserService.GetLinkedDeviceData(device_id, "T_power_A")
-        .then((res) => {
-          setisLoadingGraph(false)
-        }).catch(err => {
-          setisLoadingGraph(false)
-          console.log(err)
-        })
-    }
-  }, [device_id])
 
-  useCustomCompareEffect(() => {
-    if (isFilterGraphData) {
-      console.log("filter data:", graphDataFromFilter)
-      let myData;
-      if (typeof (graphDataFromFilter) != "undefined") {
-        myData = Object.keys(graphDataFromFilter).map(key => {
-          return ([
-            new Date(graphDataFromFilter[key].time),
-            graphDataFromFilter[key].value
-          ])
-        })
-      } else {
-        myData = []
-      }
-      console.log("filter array data: ", myData)
-      // console.log("res array data: ", res)
-      if (myData.length > 0) {
-        setGData(
-          [{
-            name: "Power",
-            data: myData
-          }]
-        )
-      }
 
-      console.log("upp!!!!!!!", gData)
-    }
-    //Socket data
-    if (isGraphDataFromSocket) {
-      console.log("!!!!!!!!!!!!!!!!!!!!!!!!! Graph data from socket:", graphDataFromSocket)
-      if (graphDataFromSocket.length > 0) {
-        let myData = graphDataFromSocket.map(item => {
-          return ([
-            new Date(item.time),
-            item.value
-          ])
-        })
-        if (chartRef) {
-          chartRef.current.chart.ctx.appendData([
-            {
-              data: myData
-            }
-          ]);
-        }
-      }
-      console.log("socket g data!!!!!!!", gData)
-    }
-  },
-    [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket],
-    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
-  )
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log("call timeout")
+  //     if (chartRef) {
+  //       chartRef.current.chart.ctx.appendData([
+  //         {
+  //           data: [
+  //             [1551833200000, 150],
+  //             [1161919600000, 200],
+  //           ]
+  //         }
+  //       ]);
+  //     }
+  //   }, 10000)
+  // }, []);
+
+
   return (
     <>
       {
