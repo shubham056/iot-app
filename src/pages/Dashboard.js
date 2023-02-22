@@ -3220,14 +3220,14 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <>
-                                                {/* <PowerCharts
+                                                <PowerCharts
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                /> */}
+                                                />
                                                 {/* <PowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
@@ -3236,14 +3236,14 @@ const Dashboard = () => {
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
                                                 /> */}
-                                                <ApexPowerChart
+                                                {/* <ApexPowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                />
+                                                /> */}
                                               </>
 
                                               :
