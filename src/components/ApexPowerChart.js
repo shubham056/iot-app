@@ -21,15 +21,6 @@ export default function App(props) {
         type: "line",
         stacked: true,
         height: 350,
-        animations: {
-          enabled: true,
-          easing: 'linear',
-          speed: 800,
-          dynamicAnimation: {
-            enabled: true,
-            speed: 700
-          }
-        },
         zoom: {
           type: 'x',
           enabled: true,
