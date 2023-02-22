@@ -13,7 +13,7 @@ import { set, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
-//import ApexPowerChart from '../components/ApexPowerChart';
+import ApexPowerChart from '../components/ApexPowerChart';
 import PowerChart from '../components/PowerChart';
 import PowerCharts from '../components/PowerCharts';
 import TempetureChart from "../components/TempetureChart";
@@ -3220,14 +3220,14 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <>
-                                                <PowerCharts
+                                                {/* <PowerCharts
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                />
+                                                /> */}
                                                 {/* <PowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
@@ -3236,14 +3236,14 @@ const Dashboard = () => {
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
                                                 /> */}
-                                                {/* <ApexPowerChart
+                                                <ApexPowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                /> */}
+                                                />
                                               </>
 
                                               :
