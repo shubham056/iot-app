@@ -124,6 +124,8 @@ const Dashboard = () => {
   const userID = user.data.profile.id
   const keyRef = useRef(Date.now());
 
+  const format = "daterange-initial";
+
   let today = moment().tz(tzone).format('YYYY/MM/DD')
   let pastDate = moment().tz(tzone).subtract(6, "month").startOf("month").format('YYYY/MM/DD')
   const NodeWithContextMenu = (props) => {
@@ -314,7 +316,10 @@ const Dashboard = () => {
 
                 }).catch(err => console.log(err))
 
-              UserService.GetLinkedDeviceData(device_id, "T_power_A")
+              const firstDate = moment().startOf('month').format("YYYY-MM-DD HH:mm:ss");
+              const lastDate = moment().endOf('month').format("YYYY-MM-DD HH:mm:ss");
+              //UserService.GetLinkedDeviceData(device_id, "T_power_A")
+              UserService.GetLinkedDeviceData(device_id, "T_power_A", format, firstDate, lastDate)
                 .then((res) => {
                   // console.log("!!!!!!!!!!!!!!!!!!!!**********888on change api call:", res.data.data.deviceData)
                   setIsFilterGraphData(true)
@@ -430,7 +435,7 @@ const Dashboard = () => {
     console.log("start Date", picker.startDate);
     console.log("start Date", moment(picker.startDate._d).tz(tzone).format());
     console.log("End Date", picker.endDate._d.toISOString().split('T')[0]);
-    const format = "daterange";
+
 
     let startDateObj = picker.startDate._d;
     let startDateObjDate = new Date(startDateObj);
@@ -625,10 +630,10 @@ const Dashboard = () => {
 
 
   const [isInitialDateData, setisInitialDateData] = useState({
-    startDate: pastDate,
-    endDate: today,
-    minDate: pastDate,
-    maxDate: today,
+    // startDate: pastDate,
+    // endDate: today,
+    // minDate: pastDate,
+    // maxDate: today,
     drops: 'down',
     opens: 'left',
     applyButtonClasses: 'btn-info',
@@ -647,8 +652,8 @@ const Dashboard = () => {
     if (isstartDate) {
       setisInitialDateData({
         ...isInitialDateData,
-        startDate: isstartDate,
-        minDate: isstartDate,
+        // startDate: isstartDate,
+        //minDate: isstartDate,
       })
 
       //console.log("!!!!!!!!!!call set start date in filter !!!!!!!!", isstartDate, isInitialDateData)
@@ -656,8 +661,8 @@ const Dashboard = () => {
     if (isstartDate == undefined) {
       setisInitialDateData({
         ...isInitialDateData,
-        startDate: today,
-        minDate: today,
+        // startDate: today,
+        //minDate: today,
       })
     }
   }, [isstartDateChange, isstartDate, isInitialDateData.startDate]);
@@ -3220,14 +3225,14 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <>
-                                                <PowerCharts
+                                                {/* <PowerCharts
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                />
+                                                /> */}
                                                 {/* <PowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
@@ -3236,14 +3241,14 @@ const Dashboard = () => {
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
                                                 /> */}
-                                                {/* <ApexPowerChart
+                                                <ApexPowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                /> */}
+                                                />
                                               </>
 
                                               :

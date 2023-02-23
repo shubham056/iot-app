@@ -23,6 +23,7 @@
     "jwt-decode": "^3.1.2",
     "kaktana-react-lightweight-charts": "^2.0.0",
     "lightweight-charts": "^3.8.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.38",
     "npm": "^8.19.2",
     "randomcolor": "^0.6.2",

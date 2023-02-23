@@ -12,8 +12,17 @@ export default function App(props) {
   const [gData, setGData] = useState([]);
   const [initCandles, setInitCandles] = useState([12, 13])
   const [isLoadingGraph, setisLoadingGraph] = useState(false)
+  const format = "daterange-initial";
 
   const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props;
+
+  //console.log("current month first date");
+  const firstdate = moment().startOf('month').unix();
+  //console.log("firstdate", firstdate);
+
+  //console.log("current month last date");
+  const lastdate = moment().endOf('month').unix();
+  //console.log("lastdate", lastdate);
 
   useEffect(() => {
     // get initial data from API
@@ -49,12 +58,13 @@ export default function App(props) {
           setisLoadingGraph(false)
         }).catch(err => {
           setisLoadingGraph(false)
-          console.log(err)
+          // console.log(err)
         })
     }
   }, [device_id])
 
   useCustomCompareEffect(() => {
+
 
     if (isFilterGraphData) {
       console.log("filter data:", graphDataFromFilter)
@@ -88,7 +98,7 @@ export default function App(props) {
       if (graphDataFromSocket.length > 0) {
         let myData = graphDataFromSocket.map(item => {
           return ([
-            new Date(item.time),
+            item.time,
             item.value
           ])
         })
@@ -116,6 +126,93 @@ export default function App(props) {
       chart: {
         id: "total-power-chart",
         type: "line",
+        // min: firstdate,
+        // max: lastdate,
+        events: {
+          scrolled: function (chartContext, { xaxis }) {
+            console.log("xaxis data pan scroll!!", xaxis)
+            console.log("xaxis data pan scroll!!", xaxis, moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss'), moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss'))
+
+            if (xaxis.min != undefined && xaxis.max != undefined) {
+              let startDate = moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss')
+              let endDate = moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss')
+
+              UserService.GetLinkedDeviceData(device_id, "T_power_A", format, startDate, endDate)
+                .then((res) => {
+                  // setIsGraphDataFromSocket(false)
+                  let myData
+                  console.log("filter data from min and max date!!!!!!!!!!!!:", res.data.data.deviceData)
+                  let filterData = res.data.data.deviceData
+                  if (typeof (filterData) != "undefined") {
+                    myData = Object.keys(filterData).map(key => {
+                      return ([
+                        filterData[key].time,
+                        filterData[key].value
+                      ])
+                    })
+                  } else {
+                    myData = []
+                  }
+                  console.log("filter array data!!!!!!!!!!!: ", myData)
+                  // console.log("res array data: ", res)
+                  if (myData.length > 0) {
+                    setGData(
+                      [{
+                        name: "T-Power",
+                        data: myData
+                      }]
+                    )
+                  }
+
+                }).catch(err => {
+                  //setIsFilterGraphData(false)
+                  console.log(err)
+                })
+            }
+          },
+          zoomed: function (chartContext, { xaxis, yaxis }) {
+            //console.log("chartContext data!!", chartContext)
+            console.log("xaxis data!!", xaxis, moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss'), moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss'))
+            if (xaxis.min != undefined && xaxis.max != undefined) {
+              let startDate = moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss')
+              let endDate = moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss')
+
+              UserService.GetLinkedDeviceData(device_id, "T_power_A", format, startDate, endDate)
+                .then((res) => {
+                  // setIsGraphDataFromSocket(false)
+                  let myData
+                  console.log("filter data from min and max date!!!!!!!!!!!!:", res.data.data.deviceData)
+                  let filterData = res.data.data.deviceData
+                  if (typeof (filterData) != "undefined") {
+                    myData = Object.keys(filterData).map(key => {
+                      return ([
+                        filterData[key].time,
+                        filterData[key].value
+                      ])
+                    })
+                  } else {
+                    myData = []
+                  }
+                  console.log("filter array data!!!!!!!!!!!: ", myData)
+                  // console.log("res array data: ", res)
+                  if (myData.length > 0) {
+                    setGData(
+                      [{
+                        name: "T-Power",
+                        data: myData
+                      }]
+                    )
+                  }
+
+                }).catch(err => {
+                  //setIsFilterGraphData(false)
+                  console.log(err)
+                })
+            }
+
+            console.log("yaxis data!!", yaxis)
+          }
+        },
         stacked: true,
         height: 350,
         zoom: {
@@ -126,6 +223,22 @@ export default function App(props) {
         toolbar: {
           autoSelected: 'zoom'
         }
+      },
+      annotations: {
+        yaxis: [
+          {
+            y: 80.03,
+            borderColor: '#00E396',
+            label: {
+              borderColor: '#00E396',
+              style: {
+                color: '#fff',
+                background: '#00E396'
+              },
+              text: 'Y-axis annotation on 8800'
+            }
+          }
+        ]
       },
       dataLabels: {
         enabled: false
