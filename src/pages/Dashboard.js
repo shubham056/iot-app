@@ -316,8 +316,8 @@ const Dashboard = () => {
 
                 }).catch(err => console.log(err))
 
-              const firstDate = moment().startOf('month').format("YYYY-MM-DD HH:mm:ss");
-              const lastDate = moment().endOf('month').format("YYYY-MM-DD HH:mm:ss");
+              const firstDate = moment().subtract(7,'d').format("YYYY-MM-DD HH:mm:ss");
+              const lastDate = moment().format("YYYY-MM-DD HH:mm:ss");
               //UserService.GetLinkedDeviceData(device_id, "T_power_A")
               UserService.GetLinkedDeviceData(device_id, "T_power_A", format, firstDate, lastDate)
                 .then((res) => {

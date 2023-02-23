@@ -224,22 +224,6 @@ export default function App(props) {
           autoSelected: 'zoom'
         }
       },
-      annotations: {
-        yaxis: [
-          {
-            y: 80.03,
-            borderColor: '#00E396',
-            label: {
-              borderColor: '#00E396',
-              style: {
-                color: '#fff',
-                background: '#00E396'
-              },
-              text: 'Y-axis annotation on 8800'
-            }
-          }
-        ]
-      },
       dataLabels: {
         enabled: false
       },
