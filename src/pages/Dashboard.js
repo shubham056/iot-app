@@ -25,10 +25,11 @@ import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import Control from '../components/Control';
 import DeviceStats from '../components/DeviceStats';
+import HighchartsGraph from '../components/Highcharts';
 const tzone = "Asia/Amman";
 
-const SocketServer = "http://localhost:5001/";
-//const SocketServer = "https://iot.cwsbuild.com/";
+//const SocketServer = "http://localhost:5001/";
+const SocketServer = "https://iot.cwsbuild.com/";
 const connectionOptions = {
   //"force new connection": true,
   //"reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
@@ -3220,14 +3221,14 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <>
-                                                <PowerCharts
+                                                {/* <PowerCharts
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                />
+                                                /> */}
                                                 {/* <PowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
@@ -3244,6 +3245,15 @@ const Dashboard = () => {
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
                                                 /> */}
+
+                                                <HighchartsGraph
+                                                  device_id={isDeviceID}
+                                                  isFilterGraphData={isFilterGraphData}
+                                                  graphDataFromFilter={graphDataFromFilter}
+
+                                                  isGraphDataFromSocket={isGraphDataFromSocket}
+                                                  graphDataFromSocket={powerDataFromDB}
+                                                />
                                               </>
 
                                               :

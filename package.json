@@ -19,6 +19,8 @@
     "chakra-ui-steps": "^1.7.4",
     "chart.js": "2.9.3",
     "chartjs-plugin-zoom": "0.7.7",
+    "highcharts": "^10.3.3",
+    "highcharts-react-official": "^3.1.0",
     "i": "^0.3.7",
     "jwt-decode": "^3.1.2",
     "kaktana-react-lightweight-charts": "^2.0.0",
