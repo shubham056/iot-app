@@ -2656,11 +2656,12 @@ section {
 }
 
 .right_wraper a {
-    background: #33a4a5;
-    color: #fff;
-    border-color: #33a4a5;
-    width: 20%;
+    /* background: #33a4a5; */
+    color: #000;
+    /* border-color: #33a4a5; */
+    width: 100% !important;
     border-radius: 4px;
+    font-size: 13px;
 }
 
 .top_heding i {
@@ -3566,9 +3567,20 @@ a.disabled {
 .react-ios-time-picker {
     margin-bottom: 200px !important;
 }
-.MuiCollapse-vertical{
+
+.MuiCollapse-vertical {
     max-height: 470px;
     overflow: auto;
 }
 
+.page-item.active .page-link {
+    background-color: #1e4a75 !important;
+    border-color: #1e4a75 !important;
+}
 
+.page-link {
+    border: none !important;
+}
+.pagination {
+    padding-bottom: 10px;
+}

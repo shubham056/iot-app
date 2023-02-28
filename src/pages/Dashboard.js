@@ -3197,7 +3197,7 @@ const Dashboard = () => {
 
                                         <div className="tags ">
                                           <span>{isGraphLabelTxt}</span>
-                                          <span>
+                                          {/* <span>
                                             {
                                               isPower || isTemperature
                                                 ?
@@ -3212,7 +3212,7 @@ const Dashboard = () => {
                                                 :
                                                 null
                                             }
-                                          </span>
+                                          </span> */}
 
                                         </div>
 
@@ -3221,14 +3221,14 @@ const Dashboard = () => {
                                             isPower
                                               ?
                                               <>
-                                                <PowerCharts
+                                                {/* <PowerCharts
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                />
+                                                /> */}
                                                 {/* <PowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
@@ -3237,14 +3237,14 @@ const Dashboard = () => {
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
                                                 /> */}
-                                                {/* <ApexPowerChart
+                                                <ApexPowerChart
                                                   device_id={isDeviceID}
                                                   isFilterGraphData={isFilterGraphData}
                                                   graphDataFromFilter={graphDataFromFilter}
 
                                                   isGraphDataFromSocket={isGraphDataFromSocket}
                                                   graphDataFromSocket={powerDataFromDB}
-                                                /> */}
+                                                />
 
                                                 {/* <HighchartsGraph
                                                   device_id={isDeviceID}

@@ -3,124 +3,25 @@ import isEqual from "lodash/isEqual";
 import UserService from "../services/user.service";
 import React, { useState, useEffect, useRef } from "react";
 import moment from "moment-timezone";
-
+import ReactPaginate from "react-paginate";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ReactApexChart from "react-apexcharts";
-import { ApexOptions, ApexCharts } from "apexcharts";
 
 export default function App(props) {
+  const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props;
   const chartRef = useRef();
   const [gData, setGData] = useState([]);
-  const [initCandles, setInitCandles] = useState([12, 13])
   const [isLoadingGraph, setisLoadingGraph] = useState(false)
+  const PER_PAGE = 3000;
+  const [currentPage, setCurrentPage] = useState(0);
+  const [data, setData] = useState([]);
   const format = "daterange-initial";
 
-  const { isGraphDataFromSocket, graphDataFromSocket, isFilterGraphData, graphDataFromFilter, device_id } = props;
-
-  //console.log("current month first date");
   const firstdate = moment().startOf('month').unix();
   //console.log("firstdate", firstdate);
-
-  //console.log("current month last date");
   const lastdate = moment().endOf('month').unix();
   //console.log("lastdate", lastdate);
-
-  useEffect(() => {
-    // get initial data from API
-    if (device_id) {
-      //console.log("!!!!!call power initial use effect!!!!!!!!!!")
-      setisLoadingGraph(true)
-      UserService.GetLinkedDeviceData(device_id, "T_power_A")
-        .then((res) => {
-          //console.log("power initial res:", res.data.data.deviceData)
-          let powerDataFromDB = res.data.data.deviceData
-          console.log("res Data!!!!!!!!!", powerDataFromDB)
-          let myData
-          if (typeof (powerDataFromDB) != "undefined") {
-            myData = Object.keys(powerDataFromDB).map(key => {
-              return ([
-                graphDataFromFilter[key].time,
-                graphDataFromFilter[key].value
-              ])
-              //return powerDataFromDB[key];
-            })
-          } else {
-            myData = []
-          }
-          if (myData.length > 0) {
-            console.log("Graph Data!!!!!", myData)
-            setGData(
-              [{
-                name: "T-Power",
-                data: myData
-              }]
-            )
-          }
-          setisLoadingGraph(false)
-        }).catch(err => {
-          setisLoadingGraph(false)
-          // console.log(err)
-        })
-    }
-  }, [device_id])
-
-  useCustomCompareEffect(() => {
-
-
-    if (isFilterGraphData) {
-      console.log("filter data:", graphDataFromFilter)
-      let myData;
-      if (typeof (graphDataFromFilter) != "undefined") {
-        myData = Object.keys(graphDataFromFilter).map(key => {
-          return ([
-            new Date(graphDataFromFilter[key].time),
-            graphDataFromFilter[key].value
-          ])
-        })
-      } else {
-        myData = []
-      }
-      console.log("filter array data: ", myData)
-      // console.log("res array data: ", res)
-      if (myData.length > 0) {
-        setGData(
-          [{
-            name: "T-Power",
-            data: myData
-          }]
-        )
-      }
-
-      console.log("upp!!!!!!!", gData)
-    }
-    //Socket data
-    if (isGraphDataFromSocket) {
-      console.log("!!!!!!!!!!!!!!!!!!!!!!!!! Graph data from socket:", graphDataFromSocket)
-      if (graphDataFromSocket.length > 0) {
-        let myData = graphDataFromSocket.map(item => {
-          return ([
-            item.time,
-            item.value
-          ])
-        })
-        if (chartRef && chartRef.current != null) {
-          chartRef.current.chart.ctx.appendData([
-            {
-              data: myData
-            }
-          ]);
-        }
-      }
-      console.log("socket g data!!!!!!!", gData)
-    }
-  },
-    [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket],
-    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
-  )
-
-
-
-
-
   const [chartConfig] = useState({
     options: {
       chart: {
@@ -128,91 +29,107 @@ export default function App(props) {
         type: "line",
         // min: firstdate,
         // max: lastdate,
-        events: {
-          scrolled: function (chartContext, { xaxis }) {
-            console.log("xaxis data pan scroll!!", xaxis)
-            console.log("xaxis data pan scroll!!", xaxis, moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss'), moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss'))
+        // events: {
+        //   scrolled: function (chartContext, { xaxis }) {
+        //     console.log("xaxis data pan scroll!!", xaxis)
+        //     console.log("xaxis data pan scroll!!", xaxis, moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss'), moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss'))
 
-            if (xaxis.min != undefined && xaxis.max != undefined) {
-              let startDate = moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss')
-              let endDate = moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss')
+        //     if (xaxis.min != undefined && xaxis.max != undefined) {
+        //       let startDate = moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss')
+        //       let endDate = moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss')
 
-              UserService.GetLinkedDeviceData(device_id, "T_power_A", format, startDate, endDate)
-                .then((res) => {
-                  // setIsGraphDataFromSocket(false)
-                  let myData
-                  console.log("filter data from min and max date!!!!!!!!!!!!:", res.data.data.deviceData)
-                  let filterData = res.data.data.deviceData
-                  if (typeof (filterData) != "undefined") {
-                    myData = Object.keys(filterData).map(key => {
-                      return ([
-                        filterData[key].time,
-                        filterData[key].value
-                      ])
-                    })
-                  } else {
-                    myData = []
-                  }
-                  console.log("filter array data!!!!!!!!!!!: ", myData)
-                  // console.log("res array data: ", res)
-                  if (myData.length > 0) {
-                    setGData(
-                      [{
-                        name: "T-Power",
-                        data: myData
-                      }]
-                    )
-                  }
+        //       UserService.GetLinkedDeviceData(device_id, "T_power_A", format, startDate, endDate)
+        //         .then((res) => {
+        //           // setIsGraphDataFromSocket(false)
+        //           let myData
+        //           console.log("filter data from min and max date!!!!!!!!!!!!:", res.data.data.deviceData)
+        //           let filterData = res.data.data.deviceData
+        //           if (typeof (filterData) != "undefined") {
+        //             myData = Object.keys(filterData).map(key => {
+        //               return ([
+        //                 filterData[key].time,
+        //                 filterData[key].value
+        //               ])
+        //             })
+        //           } else {
+        //             myData = []
+        //           }
+        //           console.log("filter array data!!!!!!!!!!!: ", myData)
+        //           // console.log("res array data: ", res)
+        //           if (myData.length > 0) {
+        //             if (chartRef && chartRef.current != null) {
+        //               chartRef.current.chart.ctx.updateSeries([
+        //                 {
+        //                   data: myData
+        //                 }
+        //               ]);
+        //             }
 
-                }).catch(err => {
-                  //setIsFilterGraphData(false)
-                  console.log(err)
-                })
-            }
-          },
-          zoomed: function (chartContext, { xaxis, yaxis }) {
-            //console.log("chartContext data!!", chartContext)
-            console.log("xaxis data!!", xaxis, moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss'), moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss'))
-            if (xaxis.min != undefined && xaxis.max != undefined) {
-              let startDate = moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss')
-              let endDate = moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss')
+        //             // setGData(
+        //             //   [{
+        //             //     name: "T-Power",
+        //             //     data: myData
+        //             //   }]
+        //             // )
+        //           }
 
-              UserService.GetLinkedDeviceData(device_id, "T_power_A", format, startDate, endDate)
-                .then((res) => {
-                  // setIsGraphDataFromSocket(false)
-                  let myData
-                  console.log("filter data from min and max date!!!!!!!!!!!!:", res.data.data.deviceData)
-                  let filterData = res.data.data.deviceData
-                  if (typeof (filterData) != "undefined") {
-                    myData = Object.keys(filterData).map(key => {
-                      return ([
-                        filterData[key].time,
-                        filterData[key].value
-                      ])
-                    })
-                  } else {
-                    myData = []
-                  }
-                  console.log("filter array data!!!!!!!!!!!: ", myData)
-                  // console.log("res array data: ", res)
-                  if (myData.length > 0) {
-                    setGData(
-                      [{
-                        name: "T-Power",
-                        data: myData
-                      }]
-                    )
-                  }
+        //         }).catch(err => {
+        //           //setIsFilterGraphData(false)
+        //           console.log(err)
+        //         })
+        //     }
+        //   },
+        //   zoomed: function (chartContext, { xaxis, yaxis }) {
+        //     //console.log("chartContext data!!", chartContext)
+        //     console.log("xaxis data!!", xaxis, moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss'), moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss'))
+        //     if (xaxis.min != undefined && xaxis.max != undefined) {
+        //       let startDate = moment(xaxis.min).format('YYYY-MM-DD HH:mm:ss')
+        //       let endDate = moment(xaxis.max).format('YYYY-MM-DD HH:mm:ss')
 
-                }).catch(err => {
-                  //setIsFilterGraphData(false)
-                  console.log(err)
-                })
-            }
+        //       UserService.GetLinkedDeviceData(device_id, "T_power_A", format, startDate, endDate)
+        //         .then((res) => {
+        //           // setIsGraphDataFromSocket(false)
+        //           let myData
+        //           console.log("filter data from min and max date!!!!!!!!!!!!:", res.data.data.deviceData)
+        //           let filterData = res.data.data.deviceData
+        //           if (typeof (filterData) != "undefined") {
+        //             myData = Object.keys(filterData).map(key => {
+        //               return ([
+        //                 filterData[key].time,
+        //                 filterData[key].value
+        //               ])
+        //             })
+        //           } else {
+        //             myData = []
+        //           }
+        //           console.log("filter array data!!!!!!!!!!!: ", myData)
+        //           // console.log("res array data: ", res)
+        //           if (myData.length > 0) {
+        //             // if (chartRef && chartRef.current != null) {
+        //             //   console.log("update seriesss", chartRef.current.chart.ctx.updateSeries())
+        //             //   chartRef.current.chart.ctx.updateSeries([
+        //             //     {
+        //             //       data: myData
+        //             //     }
+        //             //   ]);
+        //             // }
+        //             setGData(
+        //               [{
+        //                 name: "T-Power",
+        //                 data: myData
+        //               }]
+        //             )
+        //           }
 
-            console.log("yaxis data!!", yaxis)
-          }
-        },
+        //         }).catch(err => {
+        //           //setIsFilterGraphData(false)
+        //           console.log(err)
+        //         })
+        //     }
+
+        //     console.log("yaxis data!!", yaxis)
+        //   }
+        // },
         stacked: true,
         height: 350,
         zoom: {
@@ -224,6 +141,29 @@ export default function App(props) {
           autoSelected: 'zoom'
         }
       },
+      // annotations: {
+      //   points: [{
+      //     x: new Date('2023-02-27 13:22:42'),
+      //     y: 68.52,
+      //     marker: {
+      //       size: 5,
+      //       fillColor: '#fff',
+      //       strokeColor: 'red',
+      //       radius: 2,
+      //       cssClass: 'apexcharts-custom-class'
+      //     },
+      //     label: {
+      //       borderColor: '#FF4560',
+      //       offsetY: 0,
+      //       style: {
+      //         color: '#fff',
+      //         background: '#FF4560',
+      //       },
+
+      //      // text: 'Point Annotation',
+      //     }
+      //   }]
+      // },
       dataLabels: {
         enabled: false
       },
@@ -251,19 +191,7 @@ export default function App(props) {
           offsetX: 0,
           offsetY: 0
         },
-        title: {
-          text: "Total Power",
-          rotate: -90,
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            color: undefined,
-            fontSize: '12px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 600,
-            cssClass: 'apexcharts-yaxis-title',
-          },
-        },
+
         crosshairs: {
           show: true,
           position: 'back',
@@ -274,7 +202,7 @@ export default function App(props) {
           },
         },
         tooltip: {
-          enabled: true,
+          enabled: false,
           offsetX: 10,
         },
       },
@@ -282,32 +210,16 @@ export default function App(props) {
         enabled: true,
         shared: false,
         x: {
-          format: 'dd MMM yyyy'
+          format: 'dd MMM yyyy hh:mm'
         }
       },
       stroke: {
         width: 2.5,
       },
       colors: ['#1d9b9c'],
-      //fill: {
-      //type: "solid",
-      // gradient: {
-      //   shade: "light",
-      //   type: "horizontal",
-      //   shadeIntensity: 0.5,
-      //   gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
-      //   inverseColors: true,
-      //   opacityFrom: 1,
-      //   opacityTo: 1,
-      //   stops: [0, 50, 100]
-      //   // colorStops: []
-      // }
-      //},
-      legend: {
-        // position: '',
-        //width: 400
-        position: 'top',
-      }
+    },
+    noData: {
+      text: 'Loading...'
     },
     series: [
       {
@@ -327,7 +239,141 @@ export default function App(props) {
     ]
   });
 
+  useEffect(() => {
+    // get initial data from API
+    if (device_id) {
+      console.log("!!!!!call power initial use effect!!!!!!!!!!")
+      setisLoadingGraph(true)
+      UserService.GetLinkedDeviceData(device_id, "T_power_A")
+        .then((res) => {
+          //console.log("power initial res:", res.data.data.deviceData)
+          let powerDataFromDB = res.data.data.deviceData
+          console.log("res Data!!!!!!!!!", powerDataFromDB)
+          let myData
+          if (typeof (powerDataFromDB) != "undefined") {
+            
+            myData = Object.keys(powerDataFromDB).map(key => {
+              return ([
+                powerDataFromDB[key].time,
+                powerDataFromDB[key].value
+              ])
+            })
+          } else {
+            myData = []
+          }
+          if (myData.length > 0) {
+            console.log("Graph Data!!!!!", myData)
+            setData([{
+              name: "T-Power",
+              data: myData
+            }])
+            // setGData(
+            //   [{
+            //     name: "T-Power",
+            //     data: myData
+            //   }]
+            // )
+          }
+          setisLoadingGraph(false)
+        }).catch(err => {
+          setisLoadingGraph(false)
+          // console.log(err)
+        })
+    }
+  }, [device_id])
 
+  useCustomCompareEffect(() => {
+    if (isFilterGraphData) {
+      let myData;
+      if (typeof (graphDataFromFilter) != "undefined") {
+        myData = Object.keys(graphDataFromFilter).map(key => {
+          return ([
+            graphDataFromFilter[key].time,
+            graphDataFromFilter[key].value
+          ])
+        })
+      } else {
+        myData = []
+      }
+      console.log("filter array data: ", myData)
+      if (myData.length > 0) {
+        setData([{
+          name: "T-Power",
+          data: myData
+        }])
+        // setGData(
+        //   [{
+        //     name: "T-Power",
+        //     data: myData
+        //   }]
+        // )
+      }
+    }
+    //Socket data
+    if (isGraphDataFromSocket) {
+      console.log("!!!!!!!!!!!!!!!!!!!!!!!!! Graph data from socket:", graphDataFromSocket)
+      if (graphDataFromSocket.length > 0) {
+        let myData = graphDataFromSocket.map(item => {
+          return ([
+            item.time,
+            item.value
+          ])
+        })
+        // if (myData.length > 0) {
+        //   setData([{
+        //     name: "T-Power",
+        //     data: myData
+        //   }])
+        // }
+        if (chartRef && chartRef.current != null) {
+          chartRef.current.chart.ctx.appendData([
+            {
+              data: myData
+            }
+          ]);
+        }
+        console.log("socket g data!!!!!!!", myData)
+      }
+      
+    }
+  },
+    [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket],
+    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
+  )
+
+  const offset = currentPage * PER_PAGE;
+  const currentPageData = (data.length > 0) ? data[0].data.slice(offset, offset + PER_PAGE) : [].slice(offset, offset + PER_PAGE)
+  //const currentPageData = data[0].data.slice(offset, offset + PER_PAGE)
+  console.log("currentPageData", currentPageData)
+
+  const pageCount = (data.length > 0) ? Math.ceil(data[0].data.length / PER_PAGE) : 1
+  //const pageCount = Math.ceil(data.length / PER_PAGE);
+  console.log("pageCount", data, pageCount)
+
+  function handlePageClick({ selected: selectedPage }) {
+    setCurrentPage(selectedPage);
+  }
+
+  // let data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+  // let barnumber = 10;
+  // var page = 1;
+  // let lastPageNum = data.length / barnumber;
+  // let viewdata = data.slice((page - 1) * barnumber, page * barnumber);
+
+  // const handleNext = () => {
+  //   if (page < lastPageNum) {
+  //     page++;
+  //   }
+  //   viewdata = data.slice((page - 1) * barnumber, page * barnumber);
+  //   console.log(viewdata)
+  // }
+  // const handlePrevious = () => {
+  //   if (page > 1) {
+  //     page--;
+  //   }
+  //   viewdata = data.slice((page - 1) * barnumber, page * barnumber);
+  //   console.log(viewdata)
+  // }
 
   // useEffect(() => {
   //   setTimeout(() => {
@@ -353,7 +399,34 @@ export default function App(props) {
           ?
           <p style={{ textAlign: 'center', padding: 108 }}>Loading...</p>
           :
-          <ReactApexChart ref={chartRef} options={chartConfig.options} series={gData} />
+          <>
+            {/* <button id="prev" className="btn btn-primary btn-sm" onClick={handlePrevious}>prev</button>
+            <button id="next" className="btn btn-info btn-sm" onClick={handleNext}>next</button> */}
+
+            <ReactApexChart height={350} ref={chartRef} options={chartConfig.options} series={[{
+              name: "T-Power",
+              data: currentPageData
+            }]} />
+            <ReactPaginate
+              nextLabel={<ArrowForwardIosIcon style={{ fontSize: 18, width: 10 }} />}
+              previousLabel={<ArrowBackIosIcon style={{ fontSize: 18, width: 10 }} />}
+              renderOnZeroPageCount={null}
+              pageCount={pageCount}
+              onPageChange={handlePageClick}
+              activeClassName={'active'}
+              containerClassName={'pagination justify-content-center'}
+              pageClassName={'page-item'}
+              pageLinkClassName={'page-link'}
+              previousClassName={'page-item'}
+              previousLinkClassName={'page-link'}
+              nextClassName={'page-item'}
+              nextLinkClassName={'page-link'}
+              breakClassName={'page-item'}
+              breakLinkClassName={'page-link'}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+            />
+          </>
       }
     </>
   )
