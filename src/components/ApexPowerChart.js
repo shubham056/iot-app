@@ -13,7 +13,7 @@ export default function App(props) {
   const chartRef = useRef();
   const [gData, setGData] = useState([]);
   const [isLoadingGraph, setisLoadingGraph] = useState(false)
-  const PER_PAGE = 3000;
+  const PER_PAGE = 2500;
   const [currentPage, setCurrentPage] = useState(0);
   const [data, setData] = useState([]);
   const format = "daterange-initial";
@@ -251,7 +251,7 @@ export default function App(props) {
           console.log("res Data!!!!!!!!!", powerDataFromDB)
           let myData
           if (typeof (powerDataFromDB) != "undefined") {
-            
+
             myData = Object.keys(powerDataFromDB).map(key => {
               return ([
                 powerDataFromDB[key].time,
@@ -334,7 +334,7 @@ export default function App(props) {
         }
         console.log("socket g data!!!!!!!", myData)
       }
-      
+
     }
   },
     [isFilterGraphData, graphDataFromFilter, isGraphDataFromSocket, graphDataFromSocket],
