@@ -3581,6 +3581,23 @@ a.disabled {
 .page-link {
     border: none !important;
 }
+
 .pagination {
     padding-bottom: 10px;
+}
+
+@media (min-width:320px) and (max-width:767px) {
+    .tags.top_tag {
+        display: inherit;
+        width: 100%;
+    }
+    .tags a {
+        display: inline-block;
+        width: 100%;
+        margin: 2px 0;
+    }
+    .device_name {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
 }
