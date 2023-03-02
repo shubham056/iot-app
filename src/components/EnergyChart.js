@@ -1,3 +1,5 @@
+import { useCustomCompareEffect } from "use-custom-compare";
+import isEqual from "lodash/isEqual";
 import { createChart, ColorType } from 'lightweight-charts';
 import React, { useEffect, useRef } from 'react';
 
@@ -17,7 +19,7 @@ export const ChartComponent = props => {
   } = props;
   const chartContainerRef = useRef();
 
-  useEffect(
+  useCustomCompareEffect(
     () => {
       const handleResize = () => {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
@@ -66,7 +68,7 @@ export const ChartComponent = props => {
 
       chart.timeScale().fitContent();
 
-      const newSeries = chart.addHistogramSeries({  lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
+      const newSeries = chart.addHistogramSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
       //const newSeries = chart.addHistogramSeries({ color });
       newSeries.setData(data);
 
@@ -78,7 +80,8 @@ export const ChartComponent = props => {
         chart.remove();
       };
     },
-    [data, backgroundColor, color, lineColor, textColor, fontSize, areaTopColor, areaBottomColor]
+    [data, backgroundColor, color, lineColor, textColor, fontSize, areaTopColor, areaBottomColor],
+    (prevDeps, nextDeps) => isEqual(prevDeps, nextDeps)
   );
 
   return (
