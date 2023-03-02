@@ -14,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import ApexPowerChart from '../components/ApexPowerChart';
+import ApexTempetureChart from '../components/ApexTempetureChart';
 import PowerChart from '../components/PowerChart';
 import PowerCharts from '../components/PowerCharts';
 import TempetureChart from "../components/TempetureChart";
@@ -3263,7 +3264,15 @@ const Dashboard = () => {
                                           {
                                             isTemperature
                                               ?
-                                              <TempetureChart
+                                              // <TempetureChart
+                                              //   device_id={isDeviceID}
+                                              //   isFilterTemData={isFilterTemData}
+                                              //   tempetureDataFromFilter={tempetureDataFromFilter}
+
+                                              //   istempetureDataFromSocket={istempetureDataFromSocket}
+                                              //   tempetureDataFromSocket={tempetureDataFromSocket}
+                                              // />
+                                              <ApexTempetureChart
                                                 device_id={isDeviceID}
                                                 isFilterTemData={isFilterTemData}
                                                 tempetureDataFromFilter={tempetureDataFromFilter}

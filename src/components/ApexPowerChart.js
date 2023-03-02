@@ -267,6 +267,9 @@ export default function App(props) {
               name: "T-Power",
               data: myData
             }])
+            let pageCount = (data.length > 0) ? Math.ceil(data[0].data.length / PER_PAGE) : 1
+            setCurrentPage(pageCount - 1)
+
             // setGData(
             //   [{
             //     name: "T-Power",
@@ -283,6 +286,8 @@ export default function App(props) {
   }, [device_id])
 
   useCustomCompareEffect(() => {
+    // let pageCount = (data.length > 0) ? Math.ceil(data[0].data.length / PER_PAGE) : 1
+    // setCurrentPage(pageCount - 1)
     if (isFilterGraphData) {
       let myData;
       if (typeof (graphDataFromFilter) != "undefined") {
@@ -325,7 +330,10 @@ export default function App(props) {
         //     data: myData
         //   }])
         // }
-        if (chartRef && chartRef.current != null) {
+        //get last index of array
+        let pageCount = (data.length > 0) ? Math.ceil(data[0].data.length / PER_PAGE) : 0
+        console.log('last pageCount', pageCount)
+        if (chartRef && chartRef.current != null && pageCount - 1 == currentPage) {
           chartRef.current.chart.ctx.appendData([
             {
               data: myData
@@ -344,53 +352,14 @@ export default function App(props) {
   const offset = currentPage * PER_PAGE;
   const currentPageData = (data.length > 0) ? data[0].data.slice(offset, offset + PER_PAGE) : [].slice(offset, offset + PER_PAGE)
   //const currentPageData = data[0].data.slice(offset, offset + PER_PAGE)
-  console.log("currentPageData", currentPageData)
-
-  const pageCount = (data.length > 0) ? Math.ceil(data[0].data.length / PER_PAGE) : 1
+  console.log("currentPageData", currentPageData,)
+  const pageCount = (data.length > 0) ? Math.ceil(data[0].data.length / PER_PAGE) : 0
   //const pageCount = Math.ceil(data.length / PER_PAGE);
-  console.log("pageCount", data, pageCount)
-
+  console.log("pageCount", pageCount, currentPage)
+ 
   function handlePageClick({ selected: selectedPage }) {
     setCurrentPage(selectedPage);
   }
-
-  // let data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-  // let barnumber = 10;
-  // var page = 1;
-  // let lastPageNum = data.length / barnumber;
-  // let viewdata = data.slice((page - 1) * barnumber, page * barnumber);
-
-  // const handleNext = () => {
-  //   if (page < lastPageNum) {
-  //     page++;
-  //   }
-  //   viewdata = data.slice((page - 1) * barnumber, page * barnumber);
-  //   console.log(viewdata)
-  // }
-  // const handlePrevious = () => {
-  //   if (page > 1) {
-  //     page--;
-  //   }
-  //   viewdata = data.slice((page - 1) * barnumber, page * barnumber);
-  //   console.log(viewdata)
-  // }
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log("call timeout")
-  //     if (chartRef) {
-  //       chartRef.current.chart.ctx.appendData([
-  //         {
-  //           data: [
-  //             [1551833200000, 150],
-  //             [1161919600000, 200],
-  //           ]
-  //         }
-  //       ]);
-  //     }
-  //   }, 10000)
-  // }, []);
-
 
   return (
     <>
@@ -413,6 +382,7 @@ export default function App(props) {
               renderOnZeroPageCount={null}
               pageCount={pageCount}
               onPageChange={handlePageClick}
+              initialPage={currentPage}
               activeClassName={'active'}
               containerClassName={'pagination justify-content-center'}
               pageClassName={'page-item'}
