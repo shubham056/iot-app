@@ -30,7 +30,9 @@ import HighchartsGraph from '../components/Highcharts';
 const tzone = "Asia/Amman";
 
 //const SocketServer = "http://localhost:5001/";
-const SocketServer = window.location.origin;
+//const SocketServer = "https://iot.cwsbuild.com/";
+const SocketServer = `${window.location.origin}/`
+console.log("server url",SocketServer)
 const connectionOptions = {
   //"force new connection": true,
   //"reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
