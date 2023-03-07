@@ -694,7 +694,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    console.log("!!!!!!!!!!!!!!!!!!!! is socket connectec:", isSocketConnected)
+    console.log("!!!!!!!!!!!!!!!!!!!! is socket connectec:", isSocketConnected, io.current)
     if (isSocketConnected) {
       //socket connected
       if (isDeviceID != '' && userID != '') {
