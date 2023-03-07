@@ -31,6 +31,7 @@ const tzone = "Asia/Amman";
 
 //const SocketServer = "http://localhost:5001/";
 const SocketServer = "https://iot.cwsbuild.com/";
+
 const connectionOptions = {
   //"force new connection": true,
   //"reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
